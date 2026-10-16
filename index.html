@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>連打でムキムキ！ Ver.30 — スマホ表示修正版</title>
+<title>連打でムキムキ！ Ver.31 — スマホ弾幕操作改善</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0f1727;color:#f7f8ff;font-family:system-ui,'Noto Sans JP',sans-serif;text-align:center}
@@ -122,7 +122,7 @@ button,select,input{touch-action:manipulation;-webkit-tap-highlight-color:rgba(2
 <div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
 <div class="sur-controls"><button id="surStart">▶ START</button><button id="surTap" class="hidden">💪 懸垂！連打！</button><button id="surContinue" class="hidden">次のステージへ ▶</button></div>
 <div class="sur-debug"><label><input type="checkbox" id="surDebugToggle"> 開発用テストを有効にする</label><div id="surDebugTools" class="hidden"><button type="button" id="surTestTemple">🏛 STAGE 7（筋肉神殿）からテスト</button><p>デバッグ開始は通常記録とは別扱いです。</p></div></div>
-<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホは画面をドラッグして移動。被弾時は少し無敵になります。</p>
+<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホはキャラより下の位置を指でドラッグ（キャラは指の約70px上に表示）。被弾時は少し無敵になります。</p>
 </section>
 <div class="duration-settings" id="durationSettings"><label for="challengeDuration">⏱ 制限時間</label><select id="challengeDuration"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="30">30秒</option></select><span>時間ごとに自己ベストを記録</span></div><div id="rankGuideWrap" class="rank-guide"><strong>🏆 この時間のランク基準</strong><div id="rankGuide"></div><small>筋肉の見た目・100回の覚醒は従来どおり。ランク判定だけ制限時間別。</small></div>
 <div class="top">
@@ -727,10 +727,29 @@ function tap(){if(!prevSurvival||phase!=='train')return;if(performance.now()-sta
 $('surTap').addEventListener('click',e=>{e.preventDefault();tap()});
 window.addEventListener('keydown',e=>{if(!prevSurvival)return;const key=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' ','w','a','s','d','shift'].includes(key)){e.preventDefault();keys.add(key)}if(e.code==='Space'&&!e.repeat)tap()});
 window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
-function aim(e){const r=canvas.getBoundingClientRect();px=Math.max(14,Math.min(W-14,(e.clientX-r.left)/r.width*W));py=Math.max(84,Math.min(H-13,(e.clientY-r.top)/r.height*H))}
-canvas.addEventListener('pointerdown',e=>{if(phase==='dodge'){drag=true;canvas.setPointerCapture(e.pointerId);aim(e)}});
-canvas.addEventListener('pointermove',e=>{if(drag&&phase==='dodge')aim(e)});
-canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
+// Mobile: player appears above the fingertip so bullets remain visible.
+// Touch uses an 82px in-game offset; mouse/pen preserves exact targeting.
+let activePointer=null;
+function aim(e){
+ const r=canvas.getBoundingClientRect();
+ const x=(e.clientX-r.left)/r.width*W;
+ const y=(e.clientY-r.top)/r.height*H;
+ const offset=e.pointerType==='touch'?82:0;
+ px=Math.max(14,Math.min(W-14,x));
+ py=Math.max(84,Math.min(H-14,y-offset));
+}
+canvas.addEventListener('pointerdown',e=>{
+ if(phase!=='dodge'||activePointer!==null)return;
+ e.preventDefault();drag=true;activePointer=e.pointerId;
+ canvas.setPointerCapture?.(e.pointerId);aim(e);
+});
+canvas.addEventListener('pointermove',e=>{
+ if(drag&&phase==='dodge'&&activePointer===e.pointerId){e.preventDefault();aim(e)}
+});
+function finishDrag(e){if(activePointer===e.pointerId){drag=false;activePointer=null}}
+canvas.addEventListener('pointerup',finishDrag);
+canvas.addEventListener('pointercancel',finishDrag);
+canvas.addEventListener('lostpointercapture',finishDrag);
 function startDodge(now){phase='dodge';clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);message(`HP ${hp}で弾幕開始！20秒生き残れ！ 弾速・弾数アップ！`);update();}
 function clearStage(){phase='clear';if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}message(`STAGE ${stage} クリア！ 残りHP ${Math.round(hp)}。次の懸垂でさらに回復！`);show('surContinue',true);stage++;update();}
 function gameOver(){
