@@ -1,0 +1,1007 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>連打でムキムキ！ Ver.30 — スマホ表示修正版</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0f1727;color:#f7f8ff;font-family:system-ui,'Noto Sans JP',sans-serif;text-align:center}
+main{max-width:520px;margin:auto;padding:18px 14px 34px}
+h1{font-size:28px;margin:6px 0 15px;color:#ffd15d;text-shadow:3px 3px #5b381d}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.stat{background:#1f2d43;border:2px solid #445775;padding:10px;border-radius:12px;min-width:110px;box-shadow:inset 0 0 0 2px #162131}
+.muted{color:#b5c3d8;font-size:12px;font-weight:700;letter-spacing:.04em}.num{font-weight:1000;font-size:33px;color:#ffd15d}
+.stage{background:linear-gradient(#304966,#16253b);margin:14px 0 10px;border:3px solid #5a6e89;border-radius:14px;overflow:hidden;position:relative}
+.level{font-size:18px;font-weight:900;padding:9px 8px 5px;color:#ffe18d;text-shadow:2px 2px #3d2f16}
+canvas{display:block;width:100%;max-width:420px;height:auto;margin:0 auto;image-rendering:pixelated;image-rendering:crisp-edges}
+.bar{height:14px;background:#101a2b;border-radius:999px;overflow:hidden;border:2px solid #354760}
+.fill{height:100%;width:0;background:linear-gradient(90deg,#ff8a31,#ffd966);transition:width .12s}
+.hint{margin:9px 0 6px;color:#deebff;font-size:14px;min-height:1.4em}
+.btn{width:100%;padding:17px;border:none;border-radius:14px;font-size:23px;font-weight:1000;cursor:pointer;touch-action:manipulation}
+.tap{background:#ffaa2b;color:#311700;box-shadow:0 6px #aa5c13;margin:16px 0 8px;user-select:none;-webkit-user-select:none}
+.tap:active{transform:translateY(4px);box-shadow:0 2px #aa5c13}
+.tap:disabled{opacity:.45}
+.start{background:#3e69c8;color:#fff;font-size:18px;box-shadow:0 5px #203c7a}
+.result{background:#1f2d43;border:2px solid #ffd15d;border-radius:14px;padding:15px;margin:12px 0 0}
+.hidden{display:none !important}.rank{font-size:46px;font-weight:1000;color:#ffd76e;margin-top:2px}.subrank{font-size:24px;font-weight:900;margin:4px 0 8px}
+a.share{display:block;margin:10px 0 6px;padding:13px;background:#284e74;border-radius:10px;color:white;text-decoration:none;font-weight:700}
+.voice-settings{margin-top:12px;background:#1b2940;border:1px solid #465b7a;padding:12px;border-radius:12px;text-align:left;font-size:13px}
+.voice-settings summary{font-weight:850;cursor:pointer;color:#ffdc8b}
+.voice-settings label{display:block;margin:10px 0}
+.voice-settings input{max-width:100%;display:block;margin-top:5px}
+.voice-settings button{background:#466ad0;border:0;color:white;padding:9px 15px;border-radius:8px;font-weight:750}
+.small{font-size:12px;color:#aabcda;margin-top:8px}
+.legend{margin-top:10px;text-align:left;background:#172235;border:1px solid #334863;border-radius:10px;padding:10px 12px;font-size:13px;color:#dbe8ff}
+.legend b{color:#ffd775}
+
+.mode-panel.hidden{display:none !important}
+.mode-panel{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;background:#1b2940;border:1px solid #465b7a;padding:12px;border-radius:12px;margin-top:14px}
+.mode-panel label{font-size:13px;font-weight:800;color:#ffda88}
+.mode-panel select{background:#283c58;color:white;border:1px solid #6982a8;border-radius:8px;padding:8px 6px;font-weight:700;max-width:260px}
+.mode-panel p{width:100%;margin:2px 0 0;color:#d3e2fc;font-size:12px}
+.music-note{font-size:16px;font-weight:900;color:#f8de86;min-height:22px;padding-top:4px}
+
+.mode-switch{display:flex;gap:8px;margin:12px 0}
+.mode-switch button{flex:1;border:2px solid #56749a;background:#203451;color:#dce7fd;border-radius:12px;padding:12px 5px;font-weight:900;font-size:15px;cursor:pointer}
+.mode-switch button.active{background:#ffba41;color:#251b0a;border-color:#ffdf91}
+.song-progress{height:13px;background:#101a2b;border-radius:10px;overflow:hidden;border:2px solid #405571;margin-top:9px}
+.song-progress>div{height:100%;background:#6ccde6;width:0;transition:width .1s}
+#songStatus{font-size:13px;color:#c9eafa;margin-top:5px}
+.leaderboard{margin:12px 0;background:#1b2940;border:1px solid #536f94;border-radius:12px;padding:13px;text-align:left}
+.leaderboard h2{font-size:17px;color:#ffe08e;margin:0 0 9px}
+.leaderboard ol{padding-left:28px;margin:8px 0}
+.leaderboard li{padding:7px 5px;border-bottom:1px solid #354862;font-size:13px}
+.leaderboard li:first-child{color:#ffe08e;font-weight:bold}
+.ranking-btn{border:1px solid #7392bf;border-radius:9px;background:#253f66;color:#fff;padding:9px 12px;font-weight:800;cursor:pointer}
+.ranking-tools{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.ranking-empty{font-size:13px;color:#acbdd4}
+.profile-settings{display:flex;align-items:center;gap:7px;flex-wrap:wrap;background:#1b2940;border:1px solid #465b7a;border-radius:12px;padding:10px;text-align:left}
+.profile-settings label{font-size:13px;font-weight:800;color:#ffda88}.profile-settings input{min-width:110px;flex:1;border-radius:8px;border:1px solid #6982a8;background:#273a55;color:white;padding:9px;font-size:14px}
+.profile-settings button{border:0;background:#386f9c;color:#fff;border-radius:8px;padding:9px 13px;font-weight:800}
+.profile-settings span{width:100%;font-size:12px;color:#b8cce5}
+.duration-settings{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;background:#1b2940;border:1px solid #465b7a;border-radius:12px;padding:10px;margin:10px 0}.duration-settings label{font-weight:900;color:#ffd57c}.duration-settings select{border:1px solid #6982a8;background:#273a55;color:#fff;font-size:16px;border-radius:8px;padding:8px 16px}.duration-settings span{font-size:12px;color:#c3d1e6}
+.rank-guide{background:#1b2940;border:1px solid #465b7a;border-radius:10px;padding:10px;margin:0 0 12px;font-size:12px;color:#deebfd;text-align:left;line-height:1.7}.rank-guide strong{color:#ffd57c}.rank-guide small{display:block;color:#a8bed8}
+
+body.survival-active main > :is(.duration-settings,.rank-guide,.top,.mode-panel,.leaderboard,.stage,.bar,.hint,.tap,.start,#modeHelp,#result,.legend),
+body.survival-active main > p.small {display:none!important}
+body:not(.survival-active) #survivalPanel{display:none!important}
+#survivalPanel{border:2px solid #e3a74c;border-radius:14px;padding:14px 10px;background:#19283e;margin-top:15px}
+#survivalPanel .sur-stats{display:flex;justify-content:space-around;gap:7px;margin:10px 0}
+#survivalPanel .sur-stats>div{flex:1;background:#273d57;padding:8px 4px;border-radius:9px;font-weight:900}
+#survivalPanel .sur-stats small{display:block;font-size:11px;color:#bbcee8}
+#surCanvas{width:100%;max-width:440px;display:block;margin:10px auto;background:#152136;border:2px solid #586e8d;border-radius:10px;touch-action:none;image-rendering:pixelated}
+#survivalPanel button{touch-action:manipulation;border:0;border-radius:10px;padding:13px 14px;color:#16243b;background:#ffbe47;font-weight:900;cursor:pointer;font-size:17px}
+#survivalPanel button:disabled{opacity:.45}
+#survivalPanel .sur-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#surTap{width:100%;padding:22px!important;font-size:24px!important}
+#survivalPanel .sur-msg{min-height:2.5em;color:#f9d98f;font-weight:800;margin:10px}
+#survivalPanel .sur-info{font-size:12px;color:#bdcee2;margin:7px 0}
+#survivalPanel .sur-health{height:12px;background:#46536a;border-radius:8px;overflow:hidden}
+#surHealthFill{width:0;height:100%;background:#66e29a;transition:width .15s}
+#survivalPanel .hidden{display:none!important}
+#survivalPanel .sur-result{border:2px solid #ffd16d;background:#26344f;border-radius:12px;padding:12px;margin:12px 0;color:#fff}
+#survivalPanel .sur-result-title{font-size:18px;font-weight:900;color:#ffd16d;margin-bottom:10px}
+#survivalPanel .sur-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#survivalPanel .sur-result-grid>div{background:#142339;border-radius:9px;padding:12px 5px}
+#survivalPanel .sur-result-grid small{display:block;color:#b7c9df;font-size:12px}
+#survivalPanel .sur-result-grid strong{display:block;font-size:22px;color:#fff;margin-top:6px}
+#survivalPanel .sur-share{display:block;margin-top:12px;padding:12px;border-radius:10px;background:#28537c;color:white;font-weight:900;text-decoration:none}
+#survivalPanel .sur-debug{margin:14px 0 0;border:1px dashed #67768b;border-radius:9px;padding:8px;font-size:12px;color:#bdcee2}
+#survivalPanel .sur-debug button{font-size:12px;padding:8px 10px;background:#3b587b;color:white}
+
+/* Mobile friendly input and embedded HTML preview diagnostics */
+#previewNotice{padding:12px;margin:10px 0;background:#4a2933;border:2px solid #fca5a5;border-radius:12px;color:white;font-weight:700;font-size:13px;line-height:1.6}
+button,select,input{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,220,110,.15)}
+/* Main game canvas: no second fallback character behind it */
+.stage{position:relative}
+.stage canvas{display:block;position:relative;z-index:1;background:#263a55;aspect-ratio:384/320;max-width:100%;height:auto}
+@media(max-width:480px){
+ main{padding:12px 10px 24px;width:100%;max-width:100%;overflow-x:hidden}
+ .mode-switch{gap:5px}.mode-switch button{font-size:12px;padding:11px 2px;min-width:0;line-height:1.25}
+ .top{gap:5px}.stat{padding:7px 3px;min-width:0;flex:1}.num{font-size:clamp(20px,6vw,31px)}
+ .duration-settings{gap:6px}.duration-settings span{flex-basis:100%}
+ .stage{margin-top:10px}
+ .btn{font-size:20px}
+}
+</style>
+</head>
+<body>
+<main>
+<div id="previewNotice" role="alert">⚠️ この画面ではゲームのJavaScriptが実行されていません。STARTや連打ボタンも動かない場合、HTMLプレビューではなくSafari / Chromeで直接開くか、Webサイトとして公開して開いてください。</div>
+<h1>💪 連打でムキムキ！</h1>
+<section class="profile-settings" aria-label="プレイヤー設定"><label for="playerName">👤 ユーザー名</label><input id="playerName" type="text" maxlength="16" placeholder="例：マッスル太郎" autocomplete="nickname"><button type="button" id="saveName">保存</button><span id="nameStatus" aria-live="polite">ランキング表示名を設定しよう</span></section>
+<div class="mode-switch"><button type="button" id="challengeMode" class="active">💪 連打チャレンジ</button><button type="button" id="musicMode">🎵 演奏モード</button><button type="button" id="survivalMode">🔥 サバイバル懸垂</button></div>
+<section id="survivalPanel" aria-label="サバイバル懸垂">
+<h2>🔥 サバイバル懸垂</h2>
+<p class="sur-info">10秒懸垂でHP回復 → 20秒の弾幕を回避！毎ステージ繰り返す</p>
+<div class="sur-stats"><div><small>STAGE</small><span id="surStage">1</span></div><div><small>HP</small><span id="surHp">0 / 300</span></div><div><small>残り時間</small><span id="surTime">10.0</span></div><div><small>最高到達</small><span id="surBest">0</span></div></div>
+<div class="sur-health"><div id="surHealthFill"></div></div>
+<canvas id="surCanvas" width="384" height="320"></canvas>
+<p id="surMessage" class="sur-msg">STARTを押して懸垂でHPを貯めよう！</p>
+<div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
+<div class="sur-controls"><button id="surStart">▶ START</button><button id="surTap" class="hidden">💪 懸垂！連打！</button><button id="surContinue" class="hidden">次のステージへ ▶</button></div>
+<div class="sur-debug"><label><input type="checkbox" id="surDebugToggle"> 開発用テストを有効にする</label><div id="surDebugTools" class="hidden"><button type="button" id="surTestTemple">🏛 STAGE 7（筋肉神殿）からテスト</button><p>デバッグ開始は通常記録とは別扱いです。</p></div></div>
+<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホは画面をドラッグして移動。被弾時は少し無敵になります。</p>
+</section>
+<div class="duration-settings" id="durationSettings"><label for="challengeDuration">⏱ 制限時間</label><select id="challengeDuration"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="30">30秒</option></select><span>時間ごとに自己ベストを記録</span></div><div id="rankGuideWrap" class="rank-guide"><strong>🏆 この時間のランク基準</strong><div id="rankGuide"></div><small>筋肉の見た目・100回の覚醒は従来どおり。ランク判定だけ制限時間別。</small></div>
+<div class="top">
+  <div class="stat"><div class="muted" id="timeLabel">TIME</div><div class="num" id="time">10.0</div></div>
+  <div class="stat"><div class="muted">PULL UPS</div><div class="num" id="score">0</div></div>
+  <div class="stat"><div class="muted" id="bestLabel">BEST</div><div class="num" id="best">0</div></div>
+</div>
+<div class="mode-panel hidden" id="modePanel">
+  <label for="song" id="songLabel">曲を選ぶ</label>
+  <select id="song">
+    <option value="star">きらきら星</option>
+    <option value="ode">歓喜の歌</option>
+    <option value="mary">メリーさんのひつじ</option>
+    <option value="london">ロンドン橋</option>
+    <option value="brother">グーチョキパーでなにつくろう（伝承曲）</option>
+    <option value="scale">ドレミ階段</option>
+    <option value="original">マッスルマーチ</option>
+    <option value="boss">筋肉ボスバトル</option>
+  </select>
+  <p id="modeDesc">10秒で何回連打できるか挑戦！</p>
+  <button type="button" class="ranking-btn" id="toggleRanking">🏆 この曲のランキングを見る</button>
+  <div style="width:100%" id="songProgressWrap" class="hidden"><div class="song-progress"><div id="songFill"></div></div><div id="songStatus">0 / 0 音</div></div>
+</div>
+<section class="leaderboard hidden" id="leaderboard" aria-label="曲別ランキング">
+  <div class="ranking-tools"><h2 id="rankingTitle">🏆 曲別ランキング TOP 10</h2><button class="ranking-btn" type="button" id="hideRanking">閉じる</button></div>
+  <ol id="rankingList"></ol><div id="rankingEmpty" class="ranking-empty">まだ記録がありません。最初のクリアを目指そう！</div>
+  <div class="small" id="rankingSource">オンライン未接続：この端末に保存した記録を表示しています。</div>
+</section>
+<div class="stage">
+  <div class="music-note" id="musicNote" aria-live="off">♪</div>
+  <div class="level" id="level">Lv.1 ヒョロガリ</div><canvas id="scene" width="384" height="320" aria-label="懸垂するドット絵キャラクター"></canvas>
+</div>
+<div class="bar" id="rankProgressBar"><div class="fill" id="progress"></div></div>
+<p class="hint" id="hint">STARTで10秒勝負！ タップ / クリック / スペースキー</p>
+<button class="btn tap" id="tap" disabled>連打！！</button>
+<button class="btn start" id="start">START ▶</button>
+<p class="small" id="modeHelp">通常モードは10秒連打！演奏モードは時間無制限で8曲から選べるよ。</p>
+<section id="result" class="result hidden">
+  <div class="muted">RESULT</div>
+  <div class="rank" id="rank">RANK E</div>
+  <div class="subrank" id="rankName">ヒョロガリ</div>
+  <div id="musicRankPanel" class="hidden" style="margin:12px 0;padding:13px;border:2px solid #73ddeb;border-radius:12px;background:#132b42">
+    <div class="muted">🎵 演奏スピードランク</div>
+    <div id="musicRank" style="font-size:44px;font-weight:1000;color:#80efff">RANK C</div>
+    <div id="musicRankNote" style="font-size:13px;color:#d3e8fc"></div>
+  </div>
+  <p id="summary"></p>
+  <a class="share" id="share" target="_blank" rel="noopener noreferrer">𝕏 で結果をシェア</a>
+  <div class="small" id="resultNote">※筋肉ランクは連打回数、演奏ランクは1音あたりの速度で決定します。</div>
+</section>
+<div class="legend">
+  <b>ランク基準</b><br>
+  E: 0–24 / D: 25–44 / C: 45–64 / B: 65–84 / A: 85–99 / S: 100–119 / SS: 120–159 / <b>SSS: 160+</b>
+</div>
+<p class="small">100回で覚醒！160回でSSSランク。懸垂するたびにピコピコ音、100回で覚醒ファンファーレ！</p>
+</main>
+<script>
+document.getElementById("previewNotice").style.display="none";
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const canvas=$('scene');
+const ctx=canvas.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+
+const rankTiers=[
+  {n:0, rank:'E', rankName:'ヒョロガリ', label:'Lv.1 ヒョロガリ'},
+  {n:25, rank:'D', rankName:'筋トレ初心者', label:'Lv.2 見習いトレーニー'},
+  {n:45, rank:'C', rankName:'細マッチョ', label:'Lv.3 細マッチョ'},
+  {n:65, rank:'B', rankName:'ゴリマッチョ', label:'Lv.4 ゴリマッチョ'},
+  {n:85, rank:'A', rankName:'筋肉超人', label:'Lv.5 筋肉超人'},
+  {n:100, rank:'S', rankName:'覚醒マッチョ', label:'Lv.6 覚醒！'},
+  {n:120, rank:'SS', rankName:'筋肉の化身', label:'Lv.7 筋肉の化身'},
+  {n:160, rank:'SSS', rankName:'連打の神', label:'Lv.MAX 連打の神'}
+];
+
+let score=0,best=0,playing=false,end=0,frame=0,upUntil=0,lastStage=-1,flashUntil=0,awakenFlashUntil=0,awakened=false;
+// Generated 8-bit-style sound effects; no voice, files or external assets needed.
+let audioCtx=null,lastBeep=0;
+const noteNames=['ド','レ','ミ','ファ','ソ','ラ','シ','ド↑'];
+// Public-domain traditional tune + an original melody, semitone offsets relative to C5.
+const melodies={
+ star:{name:'きらきら星',steps:[0,0,7,7,9,9,7,5,5,4,4,2,2,0,7,7,5,5,4,4,2,7,7,5,5,4,4,2,0,0,7,7,9,9,7,5,5,4,4,2,2,0]},
+ ode:{name:'歓喜の歌',steps:[4,4,5,7,7,5,4,2,0,0,2,4,4,2,2,4,4,5,7,7,5,4,2,0,0,2,4,2,0,0]},
+ mary:{name:'メリーさんのひつじ',steps:[4,2,0,2,4,4,4,2,2,2,4,7,7,4,2,0,2,4,4,4,4,2,2,4,2,0]},
+ london:{name:'ロンドン橋',steps:[7,9,7,5,4,5,7,2,4,5,4,5,7,7,9,7,5,4,5,7,2,7,4,0]},
+ brother:{name:'グーチョキパー',steps:[0,2,4,0,0,2,4,0,4,5,7,4,5,7,7,9,7,5,4,0,7,9,7,5,4,0,0,-5,0,0,-5,0]},
+ scale:{name:'ドレミ階段',steps:[0,2,4,5,7,9,11,12,12,11,9,7,5,4,2,0]},
+ original:{name:'マッスルマーチ',steps:[0,4,7,12,11,7,4,7,5,9,12,14,12,9,7,5,4,7,9,7,4,2,0,0]},
+ boss:{name:'筋肉ボスバトル',steps:[0,0,3,7,0,10,7,3,5,5,8,12,10,8,7,3,0,3,7,12,15,12,10,7]}
+};
+let noteIndex=0;
+let mode='challenge',startedAt=0,musicElapsed=0;
+const challengeLength=()=>Number($('challengeDuration').value);
+const rankThresholds={
+  5:[0,12,22,32,42,50,60,80],
+  10:[0,25,45,65,85,100,120,160],
+  15:[0,38,68,98,128,150,180,240],
+  30:[0,75,135,195,255,300,360,480]
+};
+function currentRankTiers(){
+  if(mode!=='challenge')return rankTiers;
+  const limits=rankThresholds[challengeLength()]||rankThresholds[10];
+  return rankTiers.map((tier,i)=>({...tier,n:limits[i]}));
+}
+function updateRankGuide(){
+  const t=currentRankTiers();
+  const guide=$('rankGuide');
+  if(!guide)return;
+  guide.textContent=t.map((v,i)=>v.rank+': '+v.n+(t[i+1]?'–'+(t[i+1].n-1):'+')).join(' / ');
+}
+
+let bestByDuration={};
+try{bestByDuration=JSON.parse(localStorage.getItem('pullup_best_by_duration_v14')||'{}')}catch(e){}
+if(!bestByDuration['10']){bestByDuration['10']=best;}
+function getChallengeBest(){return Number(bestByDuration[String(challengeLength())])||0;}
+
+// オンライン公開する場合のみ、ご自身のSupabaseプロジェクトの情報を入力
+// service_roleキーや秘密鍵は絶対にここに入れない
+const SUPABASE_URL = '';
+const SUPABASE_ANON_KEY = '';
+const cloudEnabled=Boolean(SUPABASE_URL&&SUPABASE_ANON_KEY);
+let playerName='';
+try{playerName=localStorage.getItem('pullup_player_name_v13')||''}catch(e){}
+$('playerName').value=playerName;
+function savePlayerName(){
+ const n=$('playerName').value.trim().replace(/[\\r\\n\\t]/g,' ').slice(0,16);
+ if(!n){$('nameStatus').textContent='ユーザー名を入力してください';return false;}
+ playerName=n;
+ try{localStorage.setItem('pullup_player_name_v13',n)}catch(e){}
+ $('nameStatus').textContent='保存しました：'+n;
+ return true;
+}
+$('saveName').addEventListener('click',savePlayerName);
+$('playerName').addEventListener('change',savePlayerName);
+async function cloudRequest(path,opts={}){
+ const r=await fetch(SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/'+path,{
+  ...opts,headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,
+   ...(opts.headers||{})}
+ });
+ if(!r.ok)throw new Error('通信エラー '+r.status);
+ return r.status===204?null:r.json();
+}
+async function submitCloudScore(key,ms){
+ if(!cloudEnabled)return;
+ if(!playerName){$('nameStatus').textContent='オンライン登録するにはユーザー名を保存してください';return;}
+ try{
+  await cloudRequest('music_scores',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({song_key:key,player_name:playerName,duration_ms:Math.round(ms)})});
+  $('nameStatus').textContent='オンラインランキングに登録しました';
+  await renderRanking();
+ }catch(e){$('nameStatus').textContent='送信失敗：'+e.message; }
+}
+
+// 演奏ランクは「1音あたりの平均時間」で判定。曲の長さによらず公平に比較。
+const musicRankTable=[{max:0.095,rank:'S',title:'神速プレイヤー'},{max:0.14,rank:'A',title:'高速プレイヤー'},{max:0.22,rank:'B',title:'リズムマスター'},{max:Infinity,rank:'C',title:'練習中'}];
+function musicRankFor(ms,count){const pace=(ms/1000)/Math.max(1,count);return {...musicRankTable.find(r=>pace<=r.max),pace};}
+const musicTimes={};
+const historyKey='pullup_music_top10_v11';
+let musicHistory={};
+try{musicHistory=JSON.parse(localStorage.getItem(historyKey)||'{}');if(!musicHistory||typeof musicHistory!=='object'||Array.isArray(musicHistory))musicHistory={};}catch(e){musicHistory={}}
+function recordMusicTime(key,ms){
+  const a=Array.isArray(musicHistory[key])?musicHistory[key]:[];
+  a.push({ms:Math.round(ms),date:new Date().toLocaleDateString('ja-JP'),player:playerName||'ゲスト'});
+  a.sort((x,y)=>x.ms-y.ms);
+  musicHistory[key]=a.slice(0,10);
+  try{localStorage.setItem(historyKey,JSON.stringify(musicHistory))}catch(e){}
+}
+async function renderRanking(){
+  const key=$('song').value,m=melodies[key];
+  $('rankingTitle').textContent='🏆 '+m.name+' TOP 10';
+  let a=Array.isArray(musicHistory[key])?musicHistory[key]:[];
+  if(cloudEnabled){
+    $('rankingSource').textContent='オンラインランキングを読み込み中...';
+    try{
+      const online=await cloudRequest('music_scores?song_key=eq.'+encodeURIComponent(key)+'&select=player_name,duration_ms,created_at&order=duration_ms.asc&limit=10');
+      if($('song').value!==key)return;
+      a=online.map(x=>({ms:x.duration_ms,date:new Date(x.created_at).toLocaleDateString('ja-JP'),player:x.player_name}));
+      $('rankingSource').textContent='全プレイヤー共通のオンラインランキング（Supabase）';
+    }catch(e){$('rankingSource').textContent='オンライン取得失敗。端末内ランキングを表示中。';}
+  } else $('rankingSource').textContent='オンライン未接続：この端末に保存した記録を表示しています。';
+  $('rankingEmpty').classList.toggle('hidden',a.length>0);
+  $('rankingList').replaceChildren();
+  for(let i=0;i<a.length;i++){
+    const li=document.createElement('li');
+    const mr=musicRankFor(a[i].ms,m.steps.length);
+    li.textContent=`${a[i].player?a[i].player+' ／ ':''}${formatSeconds(a[i].ms)} ／ 演奏ランク ${mr.rank} ／ ${a[i].date}`;
+    $('rankingList').append(li);
+  }
+}
+try{Object.assign(musicTimes,JSON.parse(localStorage.getItem('pullup_music_records_v9')||'{}'))}catch(e){}
+function formatSeconds(ms){return (ms/1000).toFixed(3)+'秒'}
+function updateProgress(){
+ const mel=activeMelody(),count=Math.min(noteIndex,mel.steps.length);
+ $('songFill').style.width=(count/mel.steps.length*100)+'%';
+ $('songStatus').textContent=`${count} / ${mel.steps.length} 音`;
+}
+function displayBest(){
+ $('bestLabel').textContent=mode==='challenge'?'BEST':'最速';
+ const v=mode==='challenge'?String(getChallengeBest()):(musicTimes[$('song').value]?formatSeconds(musicTimes[$('song').value]):'—');
+ $('best').textContent=v;
+ $('best').style.fontSize=mode==='challenge'?'33px':'19px';
+}
+function setMode(m){
+ if(playing)return;
+ mode=m;
+ $('challengeMode').classList.toggle('active',m==='challenge');
+ $('musicMode').classList.toggle('active',m==='music');
+ $('timeLabel').textContent=m==='challenge'?'TIME':'経過時間';
+ $('time').textContent=m==='challenge'?challengeLength().toFixed(1):'0.0';
+ $('durationSettings').classList.toggle('hidden',m!=='challenge');$('rankGuideWrap').classList.toggle('hidden',m!=='challenge');
+ $('durationSettings').style.display=(m==='challenge'?'flex':'none');
+ $('rankGuideWrap').style.display=(m==='challenge'?'block':'none');
+ $('rankProgressBar').classList.toggle('hidden',m==='music');
+ $('songLabel').textContent='曲を選ぶ';
+ $('modePanel').classList.toggle('hidden',m!=='music');
+ $('leaderboard').classList.add('hidden');
+ $('modeDesc').textContent=m==='challenge'?challengeLength()+'秒で回数を競う！連打するとピコピコ音が鳴る。':'時間制限なし。曲の音をすべて演奏するとクリア！';
+ $('songProgressWrap').classList.toggle('hidden',m!=='music');
+ $('modeHelp').textContent=m==='challenge'?challengeLength()+'秒で何回できる？ Sは'+currentRankTiers()[5].n+'回、SSSは'+currentRankTiers()[7].n+'回から！ 100回で覚醒！':'全8曲。曲を完成すると演奏ランクC〜S判定！筋肉進化も継続。';
+ $('start').textContent=m==='challenge'?challengeLength()+'秒チャレンジ START ▶':'演奏 START ▶';
+ $('hint').textContent=m==='challenge'?'STARTで'+challengeLength()+'秒勝負！ タップ / クリック / スペースキー':'曲を選んでSTART！ 最後まで演奏してクリアしよう';
+ $('result').classList.add('hidden');
+ $('musicRankPanel').classList.add('hidden');
+ score=0;noteIndex=0;lastStage=-1;awakened=false;flashUntil=0;awakenFlashUntil=0;upUntil=0;
+ $('score').textContent='0';updateMode();updateProgress();updateRankGuide();updateUI();draw(performance.now());displayBest();
+}
+function activeMelody(){return melodies[$('song').value]||melodies.star}
+function updateMode(){
+ // Description is controlled by selected mode.
+ $('musicNote').textContent='🎵 '+activeMelody().name;
+}
+function playMelodyStep(){
+ audioReady();
+ const mel=activeMelody();const semitone=mel.steps[mode==='music'?noteIndex:noteIndex%mel.steps.length];
+ noteIndex++;
+ const frequency=523.25*Math.pow(2,semitone/12);
+ // Every tap plays its own distinct note; short tones avoid drowning fast inputs.
+ tone(frequency,0.075,0,0.035,'square');
+ $('musicNote').textContent='♫ '+mel.name+'  '+noteIndex+'音目';
+ updateProgress();
+}
+
+function audioReady(){
+  try {
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    if(!audioCtx)audioCtx=new AC();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+  }catch(e){}
+}
+function tone(freq,duration=0.055,when=0,volume=0.045,kind='square'){
+  if(!audioCtx)return;
+  const at=audioCtx.currentTime+when;
+  const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();
+  osc.type=kind;
+  osc.frequency.setValueAtTime(freq,at);
+  gain.gain.setValueAtTime(0.0001,at);
+  gain.gain.linearRampToValueAtTime(volume,at+0.005);
+  gain.gain.exponentialRampToValueAtTime(0.0001,at+duration);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(at); osc.stop(at+duration+0.005);
+}
+function beep(){
+  audioReady();
+  if(!audioCtx)return;
+  const now=performance.now();
+  if(now-lastBeep<48)return; // prevents audio pileup with extremely fast tapping
+  lastBeep=now;
+  tone([520,620,740,660][score%4],0.045,0,0.035);
+}
+function awakenSound(){
+  audioReady();
+  [523,659,784,1047,1319].forEach((f,i)=>tone(f,0.14,i*0.105,0.08,'square'));
+}
+try{best=Number(localStorage.getItem('pullup_best_v4'))||0}catch(e){}
+$('best').textContent=best;
+
+function currentTierIndex(){
+  let i=0;
+  for(let j=0;j<currentRankTiers().length;j++) if(score>=currentRankTiers()[j].n) i=j;
+  return i;
+}
+function nextTier(){
+  const i=currentTierIndex();
+  return currentRankTiers()[i+1]||null;
+}
+
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
+function text(msg,x,y,size,color,align='center'){
+  ctx.fillStyle=color; ctx.font=`bold ${size}px monospace`; ctx.textAlign=align; ctx.fillText(msg,x,y);
+}
+
+function muscleStage(){
+  if(score>=160) return 7;
+  if(score>=120) return 6;
+  if(score>=100) return 5;
+  if(score>=85) return 4;
+  if(score>=65) return 3;
+  if(score>=45) return 2;
+  if(score>=25) return 1;
+  return 0;
+}
+
+function drawBackground(now){
+  rect(0,0,384,320,'#263a55');
+  for(let x=0;x<384;x+=24){rect(x,252,2,68,'#33506f')}
+  rect(0,300,384,20,'#172435');
+  rect(32,34,12,266,'#61768f');
+  rect(340,34,12,266,'#61768f');
+  rect(28,28,328,12,'#bcc9d8');
+  rect(28,28,328,3,'#edf5ff');
+  // bar shadows
+  rect(28,40,328,2,'#6e7781');
+  if(awakened){
+    const pulse = 0.65 + 0.35*Math.sin(now/120);
+    for(let i=0;i<16;i++){
+      const a=i*(Math.PI*2/16)+now/560;
+      const rx=120+14*Math.sin(now/300+i), ry=95+14*Math.cos(now/270+i);
+      rect(192+Math.cos(a)*rx,165+Math.sin(a)*ry,6,6,`rgba(255,210,90,${0.35*pulse})`);
+    }
+  }
+  if(now<flashUntil) rect(0,0,384,320,'rgba(255,233,132,0.18)');
+  if(now<awakenFlashUntil) rect(0,0,384,320,'rgba(255,255,255,0.32)');
+}
+
+function drawAvatar(now){
+  const stage=muscleStage();
+  const bodyGrowth = Math.min(score,170)/170; // continuous scaling
+  const scale = 1.06 + bodyGrowth*0.50;
+  const yShift = now<upUntil ? -34 : 0;
+  const centerX=192;
+  const topY=96 + yShift;
+  const skin='#e7ae81', skin2='#c77f57', hair='#23232e', pants='#314159', shoe='#e8edf6';
+  const shirtColor = stage<5 ? '#f0a840' : '#c3472d';
+
+  // base proportions grow continuously + stage bonuses
+  const shoulderHalf = Math.round((26 + bodyGrowth*28 + stage*5)*scale*0.90);
+  const torsoHalf = Math.round((20 + bodyGrowth*22 + stage*4)*scale*0.90);
+  const torsoH = Math.round((56 + bodyGrowth*18 + stage*3)*scale*0.95);
+  const armThick = Math.round(13 + bodyGrowth*10 + stage*3);
+  const legThick = Math.round(16 + bodyGrowth*9 + Math.max(0,stage-1)*2);
+  const headSize = Math.max(24, Math.round(32 - bodyGrowth*4));
+  const shoulderY = 125 + yShift;
+  const handY = 42;
+  const handX1 = 123;
+  const handX2 = 261;
+
+  // aura under awakened body
+  if(stage>=5){
+    const pulse = 0.8 + 0.2*Math.sin(now/110);
+    for(let i=0;i<9;i++){
+      rect(centerX-shoulderHalf-16-i*2, shoulderY-18-i*3, shoulderHalf*2+32+i*4, torsoH+72+i*6, `rgba(255,205,80,${0.05*pulse})`);
+    }
+  }
+
+  // arms toward bar, clearer pixel art with outline pass
+  function limb(x1,y1,x2,y2,thick,color,outline='#5c3727'){
+    ctx.strokeStyle=outline; ctx.lineWidth=thick+4; ctx.lineCap='square'; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    ctx.strokeStyle=color; ctx.lineWidth=thick; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  }
+  // Two-part diagonal arms: elbows between hands and shoulders
+  const leftShoulder=centerX-shoulderHalf+4, rightShoulder=centerX+shoulderHalf-4;
+  const elbowY=95+yShift*0.45;
+  const elbowL=139, elbowR=245;
+  limb(handX1,handY,elbowL,elbowY,Math.max(10,armThick-2),skin);
+  limb(elbowL,elbowY,leftShoulder,shoulderY,armThick,skin);
+  limb(handX2,handY,elbowR,elbowY,Math.max(10,armThick-2),skin);
+  limb(elbowR,elbowY,rightShoulder,shoulderY,armThick,skin);
+  rect(handX1-9, handY-8, 18, 12, skin); rect(handX2-9, handY-8, 18, 12, skin);
+
+  // head
+  rect(centerX-headSize/2-2, topY-headSize/2-2, headSize+4, headSize+4, '#86563e');
+  rect(centerX-headSize/2, topY-headSize/2, headSize, headSize, skin);
+  rect(centerX-headSize/2-2, topY-headSize/2-5, headSize+4, 14, hair);
+  rect(centerX-10, topY+3, 4, 4, '#1f2029'); rect(centerX+6, topY+3, 4, 4, '#1f2029');
+  if(stage>=2) rect(centerX-5, topY+14, 10, 3, '#7a4e39');
+
+  // neck
+  const neckW = Math.max(12, Math.round(16 + bodyGrowth*6 + stage));
+  const neckTop = Math.round(topY + headSize/2 - 1);
+  const neckH = Math.max(10, Math.round(shoulderY - neckTop + 3));
+  rect(centerX-neckW/2-2, neckTop-2, neckW+4, neckH+4, '#86563e');
+  rect(centerX-neckW/2, neckTop, neckW, neckH, skin);
+
+  // shoulders and torso outline
+  rect(centerX-torsoHalf-3, shoulderY-1, torsoHalf*2+6, torsoH+4, '#8c563b');
+
+  if(stage<5){
+    // shirt on
+    rect(centerX-torsoHalf, shoulderY+1, torsoHalf*2, torsoH, shirtColor);
+    rect(centerX-torsoHalf+4, shoulderY+10, torsoHalf-6, 12, '#ffd585');
+    rect(centerX+2, shoulderY+10, torsoHalf-6, 12, '#ffd585');
+    if(stage>=1){
+      rect(centerX-torsoHalf+7, shoulderY+14, torsoHalf-9, 8, '#f8c470');
+      rect(centerX+2, shoulderY+14, torsoHalf-9, 8, '#f8c470');
+    }
+    if(stage>=2){
+      for(let ay=shoulderY+28; ay<shoulderY+torsoH-10; ay+=12){
+        rect(centerX-12, ay, 10, 6, '#ce7e35'); rect(centerX+2, ay, 10, 6, '#ce7e35');
+      }
+    }
+    if(stage>=4){
+      rect(centerX-torsoHalf+5, shoulderY+3, 6, torsoH-8, '#f6bd5f');
+      rect(centerX+torsoHalf-11, shoulderY+3, 6, torsoH-8, '#f6bd5f');
+    }
+  } else {
+    // awakened: shirt ripped open, exposed chest and abs
+    rect(centerX-torsoHalf, shoulderY+1, torsoHalf*2, torsoH, skin2);
+    rect(centerX-torsoHalf+3, shoulderY+3, torsoHalf*2-6, torsoH-6, skin);
+    // pecs
+    rect(centerX-torsoHalf+8, shoulderY+11, torsoHalf-10, 14, '#f0c29e');
+    rect(centerX+2, shoulderY+11, torsoHalf-10, 14, '#f0c29e');
+    // chest split
+    rect(centerX-2, shoulderY+10, 4, torsoH-16, '#b56d47');
+    // abs
+    for(let ay=shoulderY+32; ay<shoulderY+torsoH-14; ay+=12){
+      rect(centerX-14, ay, 12, 7, '#d88f61'); rect(centerX+2, ay, 12, 7, '#d88f61');
+    }
+    // lats / delts exaggeration
+    rect(centerX-torsoHalf-8, shoulderY+8, 8, torsoH-20, '#d4956c');
+    rect(centerX+torsoHalf, shoulderY+8, 8, torsoH-20, '#d4956c');
+    // torn shirt pieces
+    rect(centerX-torsoHalf-2, shoulderY+torsoH-10, 18, 8, '#c3472d');
+    rect(centerX+torsoHalf-16, shoulderY+torsoH-8, 18, 8, '#c3472d');
+    rect(centerX-9, shoulderY+torsoH-4, 18, 6, '#c3472d');
+  }
+
+  // legs
+  const legY=shoulderY+torsoH;
+  rect(centerX-20-legThick/2, legY, legThick, 56, '#465b7b');
+  rect(centerX+20-legThick/2, legY, legThick, 56, '#465b7b');
+  rect(centerX-26-legThick/2, legY+54, legThick+10, 10, shoe);
+  rect(centerX+14-legThick/2, legY+54, legThick+10, 10, shoe);
+
+  // shoulder muscles / biceps / forearm overlays for clarity
+  rect(centerX-shoulderHalf-10, shoulderY+2, 16, 20, '#efc5a1');
+  rect(centerX+shoulderHalf-6, shoulderY+2, 16, 20, '#efc5a1');
+
+  if(stage>=2){
+    rect(centerX-shoulderHalf-8, shoulderY+7, 12, 4, '#d59d79');
+    rect(centerX+shoulderHalf-4, shoulderY+7, 12, 4, '#d59d79');
+
+  }
+  if(stage>=4){
+    rect(centerX-torsoHalf-6, shoulderY+24, 6, torsoH-26, '#f3c8a6');
+    rect(centerX+torsoHalf, shoulderY+24, 6, torsoH-26, '#f3c8a6');
+  }
+
+  // sweat / power particles
+  if(score>=45 && !awakened){
+    const p = Math.floor(now/120)%4;
+    rect(centerX+torsoHalf+14+p*3, shoulderY+10, 3, 6, '#cce4ff');
+    rect(centerX-torsoHalf-18-p*3, shoulderY+22, 3, 6, '#cce4ff');
+  }
+}
+
+function draw(now){
+  drawBackground(now);
+  drawAvatar(now);
+  if(score>=160){ text('SSS GOD!', 192, 22, 23, '#ffe67f'); }
+  if(now<flashUntil){ text('LEVEL UP!', 192, 24, 22, '#ffe067'); }
+  if(now<awakenFlashUntil){ text('覚 醒 !!', 192, 48, 26, '#ffffff'); }
+}
+
+function updateUI(now=performance.now()){
+  const idx=currentTierIndex();
+  const tier=currentRankTiers()[idx];
+  $('level').textContent=tier.label;
+  const next=currentRankTiers()[idx+1];
+  if(next){
+    const base=tier.n;
+    const pct=Math.max(0,Math.min(1,(score-base)/(next.n-base)));
+    $('progress').style.width=(pct*100)+'%';
+  } else $('progress').style.width='100%';
+
+  if(idx>lastStage){
+    if(lastStage>=0){ flashUntil=now+520; }
+    lastStage=idx;
+  }
+  if(!awakened && score>=100){
+    awakened=true;
+    awakenSound();
+    awakenFlashUntil=now+900;
+    flashUntil=now+1200;
+    $('hint').textContent='覚醒！！ 服が破れて筋肉パワー解放！';
+  }
+}
+
+function finish(){
+  playing=false;
+  $('tap').disabled=true;
+  $('challengeDuration').disabled=false;
+  $('song').disabled=false;
+  $('start').classList.remove('hidden');
+  $('start').textContent='もう一度プレイ ↻';
+  const t=currentRankTiers()[currentTierIndex()];
+  $('rank').textContent='RANK '+t.rank;
+  $('rankName').textContent=t.rankName;
+  let newRecord=false;
+  $('musicRankPanel').classList.toggle('hidden',mode!=='music');
+  $('rank').classList.toggle('hidden',mode==='music');
+  $('rankName').classList.toggle('hidden',mode==='music');
+  $('resultNote').textContent=mode==='music'?'※演奏ランクは1音あたりの平均演奏時間で判定します。S≤0.095秒、A≤0.14秒、B≤0.22秒。':'※ランクはゲーム内の連打回数で決定します。';
+  if(mode==='challenge'){
+    if(score>getChallengeBest()){bestByDuration[String(challengeLength())]=score;newRecord=true;try{localStorage.setItem('pullup_best_by_duration_v14',JSON.stringify(bestByDuration))}catch(e){}}
+    $('summary').textContent=`${score}回達成！${newRecord?' 🏆 NEW RECORD!':''} ${nextTier()?`あと${nextTier().n-score}回で次のランク！`:'最終ランク到達！'}`;
+    $('share').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(`💪 懸垂連打${challengeLength()}秒チャレンジで${score}回！\n【ランク${t.rank}：${t.rankName}】\n#筋トレ攻略室 #連打でムキムキ`);
+    $('hint').textContent='結果をシェアして友達に挑戦！';
+  }else{
+    const ms=musicElapsed,key=$('song').value;
+    recordMusicTime(key,ms);renderRanking(); if(cloudEnabled)void submitCloudScore(key,ms);
+    if(!musicTimes[key]||ms<musicTimes[key]){musicTimes[key]=ms;newRecord=true;try{localStorage.setItem('pullup_music_records_v9',JSON.stringify(musicTimes))}catch(e){}}
+    const mr=musicRankFor(ms,score);
+    const pb=musicRankFor(musicTimes[key],score);
+    $('musicRank').textContent='RANK '+mr.rank;
+    $('musicRankNote').textContent=`${mr.title}！平均 ${mr.pace.toFixed(3)} 秒/音｜自己ベスト ${formatSeconds(musicTimes[key])}（${pb.rank}）`;
+    $('summary').textContent=`🎉 ${activeMelody().name} クリア！ 演奏タイム ${formatSeconds(ms)} ${newRecord?'🏆 最速記録更新！':''}`;
+    $('share').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(`🎵 懸垂で「${activeMelody().name}」を${formatSeconds(ms)}で演奏！\n演奏ランク${mr.rank}！\n#筋トレ攻略室 #連打でムキムキ`);
+    $('hint').textContent='🎉 演奏クリア！ 別の曲にも挑戦しよう';
+  }
+  displayBest();
+  $('result').classList.remove('hidden');
+}
+function startGame(){
+  cancelAnimationFrame(frame);
+  score=0;noteIndex=0;playing=true;startedAt=performance.now();end=startedAt+challengeLength()*1000;musicElapsed=0;
+  upUntil=0;lastStage=-1;flashUntil=0;awakenFlashUntil=0;awakened=false;
+  $('score').textContent='0';$('time').textContent=mode==='challenge'?challengeLength().toFixed(1):'0.0';
+  $('result').classList.add('hidden');$('musicRankPanel').classList.add('hidden');$('challengeDuration').disabled=true;$('song').disabled=true;$('tap').disabled=false;$('start').classList.add('hidden');
+  $('hint').textContent=mode==='challenge'?'全力で連打！！':'連打してメロディーを完成させよう！';
+  updateProgress();updateUI();
+  function loop(now){
+    if(!playing)return;
+    if(mode==='challenge'){
+      const left=Math.max(0,(end-now)/1000);
+      $('time').textContent=left.toFixed(1);
+      draw(now);
+      if(left<=0){finish();draw(now);return;}
+    }else{
+      $('time').textContent=((now-startedAt)/1000).toFixed(3);
+      draw(now);
+    }
+    frame=requestAnimationFrame(loop);
+  }
+  frame=requestAnimationFrame(loop);
+}
+function hit(){
+  const now=performance.now();
+  if(!playing||(mode==='challenge'&&now>=end))return;
+  score++;
+  if(mode==='music') playMelodyStep(); else beep();
+  $('score').textContent=String(score);
+  upUntil=now+120;
+  updateUI(now);draw(now);
+  if(mode==='music'&&noteIndex>=activeMelody().steps.length){
+    musicElapsed=now-startedAt;
+    $('time').textContent=(musicElapsed/1000).toFixed(3);
+    cancelAnimationFrame(frame);
+    finish();draw(now);
+  }
+}
+
+$('song').addEventListener('change',()=>{noteIndex=0;updateMode();updateProgress();displayBest();renderRanking()});
+$('toggleRanking').addEventListener('click',()=>{renderRanking();$('leaderboard').classList.toggle('hidden')});
+$('hideRanking').addEventListener('click',()=>{$('leaderboard').classList.add('hidden')});
+$('challengeMode').addEventListener('click',()=>setMode('challenge'));
+$('challengeDuration').addEventListener('change',()=>{if(!playing&&mode==='challenge')setMode('challenge');});
+$('musicMode').addEventListener('click',()=>setMode('music'));
+$('start').addEventListener('click', ()=>{audioReady();startGame()});
+// Mobile browsers and file viewers differ in pointer event support.
+// click is the most compatible input; touch-action:manipulation removes delay.
+$('tap').addEventListener('click', e=>{ e.preventDefault(); hit(); });
+document.addEventListener('keydown', e=>{ if(e.code==='Space' && !e.repeat){ e.preventDefault(); hit(); }});
+document.addEventListener('keyup', e=>{ if(e.code==='Space') e.preventDefault();});
+setMode('challenge');renderRanking();
+})();
+</script>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const canvas=$('surCanvas'), c=canvas.getContext('2d'); c.imageSmoothingEnabled=false;
+const W=384,H=320;
+let phase='ready',stage=1,hp=0,score=0,clock=0,startAt=0,lastFrame=0,raf=0,spawnAt=0,bullets=[],keys=new Set(),invUntil=0,drag=false,px=192,py=270,prevSurvival=false,earned=0,totalPullups=0;
+let debugRun=false;
+let best=0;try{best=Number(localStorage.getItem('survival_stage_best_v22'))||0}catch(e){} $('surBest').textContent=best;
+function show(id,on){$(id).classList.toggle('hidden',!on)}
+function update(){ $('surStage').textContent=stage;$('surHp').textContent=`${Math.max(0,Math.round(hp))} / 300`;$('surHealthFill').style.width=(Math.max(0,hp)/300*100)+'%';$('surTime').textContent=Math.max(0,clock).toFixed(1);}
+function message(t){$('surMessage').textContent=t}
+function stop(){cancelAnimationFrame(raf);show('surResult',false);phase='ready';show('surTap',false);show('surContinue',false);show('surStart',true);$('surStart').textContent='▶ START';}
+function survivalMode(){if(prevSurvival)return;prevSurvival=true;document.body.classList.add('survival-active');$('survivalMode').classList.add('active');$('challengeMode').classList.remove('active');$('musicMode').classList.remove('active'); stop();paint();}
+function exit(){if(!prevSurvival)return;prevSurvival=false;document.body.classList.remove('survival-active');$('survivalMode').classList.remove('active');stop();}
+$('survivalMode').addEventListener('click',survivalMode);
+$('challengeMode').addEventListener('click',exit);$('musicMode').addEventListener('click',exit);
+function beginTraining(){phase='train';score=0;earned=0;clock=10;startAt=performance.now();lastFrame=startAt;bullets=[];show('surStart',false);show('surTap',true);show('surContinue',false);message(`STAGE ${stage}｜10秒連打でHP回復！（上限300）`);update();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function newRun(){debugRun=false;hp=0;stage=1;totalPullups=0;show('surResult',false);beginTraining()}
+$('surDebugToggle').addEventListener('change',()=>show('surDebugTools',$('surDebugToggle').checked));
+$('surTestTemple').addEventListener('click',()=>{if(!$('surDebugToggle').checked)return;debugRun=true;stage=7;hp=140;totalPullups=0;show('surResult',false);beginTraining();});
+$('surStart').addEventListener('click',newRun);
+$('surContinue').addEventListener('click',beginTraining);
+function tap(){if(!prevSurvival||phase!=='train')return;if(performance.now()-startAt>=10000)return;score++;earned++;totalPullups++;hp=Math.min(300,hp+1);update();paint();}
+$('surTap').addEventListener('click',e=>{e.preventDefault();tap()});
+window.addEventListener('keydown',e=>{if(!prevSurvival)return;const key=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' ','w','a','s','d','shift'].includes(key)){e.preventDefault();keys.add(key)}if(e.code==='Space'&&!e.repeat)tap()});
+window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+function aim(e){const r=canvas.getBoundingClientRect();px=Math.max(14,Math.min(W-14,(e.clientX-r.left)/r.width*W));py=Math.max(84,Math.min(H-13,(e.clientY-r.top)/r.height*H))}
+canvas.addEventListener('pointerdown',e=>{if(phase==='dodge'){drag=true;canvas.setPointerCapture(e.pointerId);aim(e)}});
+canvas.addEventListener('pointermove',e=>{if(drag&&phase==='dodge')aim(e)});
+canvas.addEventListener('pointerup',()=>drag=false);canvas.addEventListener('pointercancel',()=>drag=false);
+function startDodge(now){phase='dodge';clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);message(`HP ${hp}で弾幕開始！20秒生き残れ！ 弾速・弾数アップ！`);update();}
+function clearStage(){phase='clear';if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}message(`STAGE ${stage} クリア！ 残りHP ${Math.round(hp)}。次の懸垂でさらに回復！`);show('surContinue',true);stage++;update();}
+function gameOver(){
+ phase='over';
+ if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}
+ $('surTotalPullups').textContent=totalPullups+' 回';
+ $('surReachedStage').textContent='STAGE '+stage+(debugRun?'（テスト）':'');
+ const tweet=`💪 連打でムキムキ！サバイバル懸垂\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}${debugRun?'（テストプレイ）':''}\nみんなは何ステージまで行ける？\n#筋トレ攻略室 #連打でムキムキ`;
+ $('surShare').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(tweet);
+ show('surResult',true);
+ message('GAME OVER！今回の記録はこちら！');
+ show('surTap',false);show('surContinue',false);show('surStart',true);
+ $('surStart').textContent='↻ 再挑戦';update();
+}
+
+function currentTheme(){
+  if(stage<=3) return 'gym';
+  if(stage<=6) return 'factory';
+  return 'temple';
+}
+function currentThemeName(){
+  const t=currentTheme();
+  return t==='gym'?'ジム':t==='factory'?'サプリ工場':'筋肉神殿';
+}
+
+
+function spawn(now){
+ const theme=currentTheme();
+ const rate=Math.max(110, theme==='temple'?360-stage*30: theme==='factory'?385-stage*32: 410-stage*35);
+ if(now-spawnAt<rate)return;
+ spawnAt=now;
+ const speedBoost=Math.min(stage-1,12);
+ const kind=Math.random();
+ if(theme==='gym'){
+   if(kind<0.26){
+     const x=18+Math.random()*348;
+     bullets.push({theme,type:'plate',x,y:-12,vx:0,vy:138+speedBoost*19,r:9,damage:12});
+   }else if(kind<0.60){
+     const x=15+Math.random()*355;
+     const ang=Math.atan2(py+10,px-x),v=148+speedBoost*18;
+     bullets.push({theme,type:'dumbbell',x,y:8,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v,r:10,damage:12,rot:Math.random()*6.28});
+   }else if(kind<0.80){
+     const x=20+Math.random()*344;
+     bullets.push({theme,type:'kettlebell',x,y:-12,vx:Math.sin(now/150)*39,vy:118+speedBoost*15,r:14,damage:28});
+   }else{
+     const x=50+Math.random()*284;
+     const count=stage>=4?5:stage>=2?3:2;
+     for(let i=0;i<count;i++){
+       const offset=i-(count-1)/2;
+       bullets.push({theme,type:'barbell',x,y:-8,vx:offset*56,vy:135+speedBoost*12,r:8,damage:12,rot:Math.random()*6.28});
+     }
+   }
+ }else if(theme==='factory'){
+   if(kind<0.28){
+     const x=18+Math.random()*348;
+     bullets.push({theme,type:'capsule',x,y:-10,vx:0,vy:150+speedBoost*17,r:8,damage:12,rot:Math.random()*6.28});
+   }else if(kind<0.58){
+     const x=30+Math.random()*324;
+     const spread=stage>=5?5:3;
+     for(let i=0;i<spread;i++){
+       const offset=i-(spread-1)/2;
+       bullets.push({theme,type:'shaker',x,y:-8,vx:offset*48,vy:136+speedBoost*13,r:8,damage:12,tilt:offset});
+     }
+   }else if(kind<0.82){
+     const side=Math.random()<0.5?-18:W+18;
+     const ang=Math.atan2(py-(90+Math.random()*160),px-side),v=160+speedBoost*14;
+     bullets.push({theme,type:'bottle',x:side,y:95+Math.random()*140,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v,r:12,damage:24,rot:Math.random()*6.28});
+   }else{
+     const x=28+Math.random()*330;
+     bullets.push({theme,type:'powder',x,y:-8,vx:Math.sin(now/130)*42,vy:128+speedBoost*14,r:12,damage:20});
+   }
+ }else{
+   if(kind<0.25){
+     const x=20+Math.random()*344;
+     bullets.push({theme,type:'goldPlate',x,y:-12,vx:0,vy:160+speedBoost*18,r:10,damage:16});
+   }else if(kind<0.55){
+     const x=22+Math.random()*340;
+     const count=stage>=9?5:3;
+     for(let i=0;i<count;i++){
+       const offset=i-(count-1)/2;
+       bullets.push({theme,type:'holyOrb',x,y:40,vx:offset*70,vy:130+speedBoost*10,r:9,damage:14});
+     }
+   }else if(kind<0.80){
+     const side=Math.random()<0.5?-12:W+12;
+     bullets.push({theme,type:'relicDumbbell',x:side,y:90+Math.random()*150,vx:(side<0?1:-1)*(150+speedBoost*9),vy:20,r:12,damage:24,rot:Math.random()*6.28});
+   }else{
+     const x=30+Math.random()*320;
+     bullets.push({theme,type:'sigil',x,y:-12,vx:Math.sin(now/140)*34,vy:120+speedBoost*12,r:14,damage:28,rot:Math.random()*6.28});
+   }
+ }
+ if(stage>=4 && Math.random()<0.18){
+   const fromLeft=Math.random()<0.5;
+   const themeType = theme==='gym'?'miniWeight':theme==='factory'?'miniCapsule':'miniOrb';
+   bullets.push({theme,type:themeType,x:fromLeft?3:W-3,y:100+Math.random()*160,vx:(fromLeft?1:-1)*(118+speedBoost*10),vy:25,r:8,damage:10,rot:Math.random()*6.28});
+ }
+}
+
+function drawThemeBullet(b){
+  const t=b.type;
+  if(t==='plate'||t==='goldPlate'){
+    const outer=t==='goldPlate'?'#cf9f2f':'#555b67', mid=t==='goldPlate'?'#f6d26e':'#8e97a7', inner=t==='goldPlate'?'#8b6720':'#35404f';
+    c.fillStyle=outer; c.beginPath(); c.arc(b.x,b.y,b.r,0,Math.PI*2); c.fill();
+    c.fillStyle=mid; c.beginPath(); c.arc(b.x,b.y,b.r-2,0,Math.PI*2); c.fill();
+    c.fillStyle=inner; c.beginPath(); c.arc(b.x,b.y,Math.max(2,b.r-6),0,Math.PI*2); c.fill();
+    return;
+  }
+  if(['dumbbell','barbell','relicDumbbell','miniWeight'].includes(t)){
+    const ang=(b.rot||0)+(performance.now()/180);
+    const dark=t==='relicDumbbell'?'#c08f2b':'#687487', rod=t==='relicDumbbell'?'#ffe8a1':'#ccd5e3';
+    c.save(); c.translate(b.x,b.y); c.rotate(ang);
+    rect(-2,-12,4,24,rod);
+    rect(-10,-14,6,10,dark); rect(4,-14,6,10,dark); rect(-10,4,6,10,dark); rect(4,4,6,10,dark);
+    if(t==='barbell'||t==='relicDumbbell'){ rect(-16,-4,10,8,dark); rect(6,-4,10,8,dark); }
+    if(t==='miniWeight'){ rect(-7,-9,4,6,dark); rect(3,-9,4,6,dark); }
+    c.restore();
+    return;
+  }
+  if(t==='kettlebell'){
+    rect(b.x-8,b.y-2,16,14,'#f0b448'); rect(b.x-5,b.y-10,10,8,'#f7d07a');
+    c.strokeStyle='#f7d07a'; c.lineWidth=3; c.beginPath(); c.arc(b.x,b.y-2,6,Math.PI,0); c.stroke(); return;
+  }
+  if(t==='shaker'){
+    c.save(); c.translate(b.x,b.y); c.rotate((b.tilt||0)*0.22);
+    rect(-6,-10,12,16,'#7ed7ff'); rect(-5,-12,10,4,'#f2f6ff'); rect(-3,6,6,4,'#f2f6ff'); rect(-2,-4,4,5,'#ffffff');
+    c.restore(); return;
+  }
+  if(t==='capsule'||t==='miniCapsule'){
+    c.save(); c.translate(b.x,b.y); c.rotate((b.rot||0)+(performance.now()/220));
+    rect(-8,-4,8,8,'#ff6a7c'); rect(0,-4,8,8,'#fff0f4'); rect(-1,-4,2,8,'#dbd6e3');
+    c.restore(); return;
+  }
+  if(t==='bottle'){
+    c.save(); c.translate(b.x,b.y); c.rotate((b.rot||0)+(performance.now()/250));
+    rect(-7,-10,14,20,'#99e2ff'); rect(-5,-14,10,5,'#f4fbff'); rect(-6,0,12,5,'#ff7c5e'); rect(-4,3,8,4,'#fff4cd');
+    c.restore(); return;
+  }
+  if(t==='powder'){
+    rect(b.x-10,b.y-8,20,16,'#fff5d6'); rect(b.x-8,b.y-10,16,5,'#f0d2a2'); rect(b.x-5,b.y-1,10,4,'#ffcb69'); return;
+  }
+  if(t==='holyOrb'||t==='miniOrb'){
+    c.fillStyle='#f6d96d'; c.beginPath(); c.arc(b.x,b.y,b.r,0,Math.PI*2); c.fill();
+    c.fillStyle='#fff4b6'; c.beginPath(); c.arc(b.x,b.y,Math.max(2,b.r-3),0,Math.PI*2); c.fill();
+    rect(b.x-1,b.y-b.r-4,2,b.r*2+8,'rgba(255,245,180,.55)'); rect(b.x-b.r-4,b.y-1,b.r*2+8,2,'rgba(255,245,180,.55)');
+    return;
+  }
+  if(t==='sigil'){
+    c.save(); c.translate(b.x,b.y); c.rotate((b.rot||0)+(performance.now()/260));
+    rect(-10,-2,20,4,'#e9be5a'); rect(-2,-10,4,20,'#e9be5a'); rect(-7,-7,14,14,'rgba(232,190,90,.55)');
+    c.restore(); return;
+  }
+  c.fillStyle=b.damage>12?'#ffb347':'#f46ca1'; c.beginPath(); c.arc(b.x,b.y,b.r,0,Math.PI*2); c.fill();
+}
+function loop(now){if(!prevSurvival)return;let dt=Math.min((now-lastFrame)/1000,.04);lastFrame=now;
+if(phase==='train'){clock=Math.max(0,10-(now-startAt)/1000);if(clock<=0){if(hp<=0){message('HPを1以上貯めよう！');gameOver()}else startDodge(now)}}
+if(phase==='dodge'){
+ clock=Math.max(0,20-(now-startAt)/1000);
+ const speed=(keys.has('shift')?90:185)*dt;
+ if(keys.has('arrowleft')||keys.has('a'))px-=speed;if(keys.has('arrowright')||keys.has('d'))px+=speed;if(keys.has('arrowup')||keys.has('w'))py-=speed;if(keys.has('arrowdown')||keys.has('s'))py+=speed;
+ px=Math.max(13,Math.min(W-13,px));py=Math.max(80,Math.min(H-14,py));spawn(now);
+ for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;if(now>=invUntil&&Math.hypot(b.x-px,b.y-py)<b.r+7){hp=Math.max(0,hp-b.damage);invUntil=now+700;b.y=H+100;}}
+ bullets=bullets.filter(b=>b.y<H+25&&b.x>-35&&b.x<W+35);
+ if(hp<=0){gameOver()}else if(clock<=0){clearStage()}
+}
+update();paint();if(phase==='train'||phase==='dodge')raf=requestAnimationFrame(loop);
+}
+function rect(x,y,w,h,color){c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+function txt(s,x,y,size=14,col='#fff'){c.fillStyle=col;c.font=`bold ${size}px monospace`;c.textAlign='center';c.fillText(s,x,y)}
+
+function paint(){
+ c.clearRect(0,0,W,H);
+ const theme=currentTheme();
+ // themed background
+ if(theme==='gym'){
+   rect(0,0,W,H,'#17253a');
+   for(let i=0;i<16;i++){rect((i*67)%W,(i*43)%H,2,2,'#334e70')}
+   rect(0,232,W,88,'#20324a'); rect(0,240,W,4,'#2d4766');
+   for(let x=18;x<W;x+=48){rect(x,244,3,76,'#314b67')}
+ }else if(theme==='factory'){
+   rect(0,0,W,H,'#141d28');
+   rect(0,228,W,92,'#252f3d'); rect(0,236,W,4,'#526077');
+   for(let x=0;x<W;x+=42){rect(x,255,28,10,'#455262'); rect(x+10,243,8,8,'#426277')}
+   rect(20,68,44,96,'#354352'); rect(30,86,24,60,'#41647a'); rect(320,58,36,120,'#354352'); rect(329,78,18,82,'#765645');
+ }else{
+   rect(0,0,W,H,'#231a33');
+   rect(0,228,W,92,'#352848'); rect(0,236,W,4,'#806a33');
+   for(let x=48;x<W;x+=96){rect(x,78,16,160,'#74624c'); rect(x+4,72,8,8,'#dac16f')}
+   for(let i=0;i<6;i++){rect(28+i*62,46+(i%2)*8,12,12,'rgba(246,217,109,.22)')}
+ }
+ if(phase==='ready'){
+   txt('SURVIVAL PULL-UP',192,100,23,'#ffcb62');
+   txt('連打でHPを貯めて',192,156,19);
+   txt('弾幕を避けろ！',192,193,19);
+   txt('STARTで挑戦',192,250,16,'#7fdbed');
+   txt('舞台: '+currentThemeName(),192,278,14,'#dce8fb');
+   return;
+ }
+ if(phase==='train'){
+   const grow=Math.min(score/120,1), up=score%2?8:0;
+   const barBend=Math.min(8,score/16);
+   // rack
+   rect(96,62,7,208,'#6a7f98'); rect(281,62,7,208,'#6a7f98');
+   rect(82,56+barBend/2,102,7,'#bfd1e5'); rect(184,56+barBend/2,118,7,'#bfd1e5'); rect(182,56+barBend,10,3,'#eff7ff');
+   for(let i=0;i<6;i++){ const off=(i*37+score*3)%W; rect((off)%W, 92+i*22, 8, 2, 'rgba(255,255,255,.14)'); }
+   for(let i=0;i<6;i++){ const dx=((i*19+score*5)%34)-17; rect(192+dx, 74+(i%3)*7, 2, 2, '#eef5ff'); }
+   // chibi macho character
+   const bodyY=116-up;
+   const shoulder=20+grow*12, torsoW=34+grow*10, torsoH=52+grow*10;
+   // Diagonal arms: hands remain attached to the bar while shoulders rise.
+   // Two thick, joined segments for each arm (hand -> elbow -> shoulder).
+   function pixelArm(points, main, shade){
+     c.lineJoin='bevel'; c.lineCap='square';
+     c.beginPath(); c.moveTo(points[0][0],points[0][1]);
+     for(let i=1;i<points.length;i++)c.lineTo(points[i][0],points[i][1]);
+     c.strokeStyle='#80533e';c.lineWidth=17;c.stroke();
+     c.strokeStyle=main;c.lineWidth=13;c.stroke();
+     c.beginPath();c.moveTo(points[1][0],points[1][1]);c.lineTo(points[2][0],points[2][1]);
+     c.strokeStyle=shade;c.lineWidth=4;c.stroke();
+   }
+   const leftShoulderX=192-torsoW/2+3, rightShoulderX=192+torsoW/2-3;
+   const shoulderY=bodyY+10;
+   pixelArm([[165,67],[156,96-up*0.5],[leftShoulderX,shoulderY]],'#e7b48f','#d99b75');
+   pixelArm([[219,67],[228,96-up*0.5],[rightShoulderX,shoulderY]],'#e7b48f','#d99b75');
+   // hands wrap around the fixed bar
+   rect(157,60,16,11,'#e7b48f'); rect(211,60,16,11,'#e7b48f');
+   // Connected neck: bridge the full distance from jaw to shirt neckline.
+   // Draw the neck behind the head and shirt, keeping the same bobbing offset.
+   const neckBottom=bodyY+5;
+   rect(186,100-up,12,neckBottom-(100-up),'#915e48');
+   rect(188,102-up,8,neckBottom-(102-up),'#e7ae87');
+   // natural neck-to-shoulder join
+   rect(182,bodyY-6,20,10,'#d89a74');
+   rect(185,bodyY-5,14,10,'#e7ae87');
+   // face and hair, a short neck below the chin
+   rect(180,80-up,24,22,'#efbe99'); rect(179,76-up,26,8,'#2a2936');
+   rect(186,88-up,3,3,'#222834'); rect(195,88-up,3,3,'#222834'); rect(188,96-up,8,2,'#8c5d46');
+   // delts / upper arms
+   rect(192-shoulder-8, bodyY+2, 14, 16, '#f0c5a3'); rect(192+shoulder-6, bodyY+2, 14, 16, '#f0c5a3');
+   // tank top torso
+   rect(192-torsoW/2, bodyY, torsoW, torsoH, '#38a7d9');
+   rect(192-torsoW/2+5, bodyY+8, torsoW-10, 6, '#7fd7ff');
+   rect(192-torsoW/2+6, bodyY+14, 6, torsoH-20, '#2d88bc'); rect(192+torsoW/2-12, bodyY+14, 6, torsoH-20, '#2d88bc');
+   // chest/ab lines subtle
+   rect(189, bodyY+12, 4, torsoH-18, '#22729e');
+   for(let ay=bodyY+24; ay<bodyY+torsoH-10; ay+=10){ rect(182,ay,8,5,'#2d88bc'); rect(194,ay,8,5,'#2d88bc'); }
+   // legs
+   rect(171,bodyY+torsoH,16,56,'#455e80'); rect(197,bodyY+torsoH,16,56,'#455e80');
+   rect(168,bodyY+torsoH+54,21,7,'#eef3fb'); rect(195,bodyY+torsoH+54,21,7,'#eef3fb');
+   // floating info
+   txt(`+${earned} HP`, 304, 88, 16, '#90f4a7');
+   txt(`${score} PULL UPS`,192,292,21,'#ffdc79');
+   txt('舞台: '+currentThemeName(), 80, 24, 12, '#dce8fb');
+   txt('筋肉をためて弾幕に備えろ！',224,24,12,'#9fd8ff');
+   return;
+ }
+ for(const b of bullets){
+   if(theme==='factory'){
+     // Dark separation halo + luminous warning ring make fast projectiles legible.
+     c.fillStyle='rgba(3,8,18,.92)'; c.beginPath(); c.arc(b.x,b.y,b.r+5,0,Math.PI*2); c.fill();
+     c.strokeStyle='#ffe56d'; c.lineWidth=2.5; c.beginPath(); c.arc(b.x,b.y,b.r+4,0,Math.PI*2); c.stroke();
+   }
+   drawThemeBullet(b);
+ }
+ // player
+ const bodyCol=theme==='temple'?'#f4e59d':theme==='factory'?'#9df0e7':'#90e5ce';
+ const shadowCol=theme==='temple'?'#7f6c2d':theme==='factory'?'#2d6e67':'#305d6b';
+ if(phase!=='over'||hp>0){c.fillStyle=bodyCol;c.beginPath();c.arc(px,py,10,0,Math.PI*2);c.fill();rect(px-4,py-3,8,6,shadowCol)}
+ txt('舞台: '+currentThemeName(),192,20,14,'#f5f2ff');
+ if(phase==='over'){txt('GAME OVER',192,138,33,'#ff8195')} if(phase==='clear'){txt('STAGE CLEAR!',192,138,29,'#f9da71')}
+}
+paint();
+})();
+</script>
+</body>
+</html>
