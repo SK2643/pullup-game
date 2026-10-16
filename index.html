@@ -119,12 +119,12 @@ button,select,input{touch-action:manipulation;-webkit-tap-highlight-color:rgba(2
 <div class="sur-health"><div id="surHealthFill"></div></div>
 <canvas id="surCanvas" width="384" height="320"></canvas>
 <p id="surMessage" class="sur-msg">STARTを押して懸垂でHPを貯めよう！</p>
-<div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
+<div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div><div><small>ノーミスクリア</small><strong id="surPerfectStages">0 ステージ</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
 <div class="sur-controls"><button id="surStart">▶ START</button><button id="surTap" class="hidden">💪 懸垂！連打！</button><button id="surContinue" class="hidden">次のステージへ ▶</button></div>
 <div class="sur-debug"><label><input type="checkbox" id="surDebugToggle"> 開発用テストを有効にする</label><div id="surDebugTools" class="hidden"><button type="button" id="surTestTemple">🏛 STAGE 7（筋肉神殿）からテスト</button><p>デバッグ開始は通常記録とは別扱いです。</p></div></div>
 <p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホはキャラより下の位置を指でドラッグ（キャラは指の約70px上に表示）。被弾時は少し無敵になります。</p>
 </section>
-<div class="duration-settings" id="durationSettings"><label for="challengeDuration">⏱ 制限時間</label><select id="challengeDuration"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="30">30秒</option></select><span>時間ごとに自己ベストを記録</span></div><div id="rankGuideWrap" class="rank-guide"><strong>🏆 この時間のランク基準</strong><div id="rankGuide"></div><small>筋肉の見た目・100回の覚醒は従来どおり。ランク判定だけ制限時間別。</small></div>
+<div class="duration-settings" id="durationSettings"><label for="challengeDuration">⏱ 制限時間</label><select id="challengeDuration"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="30">30秒</option></select><span>時間ごとに自己ベストを記録</span></div><div id="rankGuideWrap" class="rank-guide"><strong>🏆 この時間のランク基準</strong><div id="rankGuide"></div><small>覚醒ラインは制限時間に応じて変化：5秒＝50回／10秒＝100回／15秒＝150回／30秒＝300回。</small></div>
 <div class="top">
   <div class="stat"><div class="muted" id="timeLabel">TIME</div><div class="num" id="time">10.0</div></div>
   <div class="stat"><div class="muted">PULL UPS</div><div class="num" id="score">0</div></div>
@@ -177,7 +177,7 @@ button,select,input{touch-action:manipulation;-webkit-tap-highlight-color:rgba(2
   <b>ランク基準</b><br>
   E: 0–24 / D: 25–44 / C: 45–64 / B: 65–84 / A: 85–99 / S: 100–119 / SS: 120–159 / <b>SSS: 160+</b>
 </div>
-<p class="small">100回で覚醒！160回でSSSランク。懸垂するたびにピコピコ音、100回で覚醒ファンファーレ！</p>
+<p class="small">10秒なら100回で覚醒！時間設定に応じて覚醒ラインが変化。懸垂するたびにピコピコ音、100回で覚醒ファンファーレ！</p>
 </main>
 <script>
 document.getElementById("previewNotice").style.display="none";
@@ -217,6 +217,7 @@ const melodies={
 let noteIndex=0;
 let mode='challenge',startedAt=0,musicElapsed=0;
 const challengeLength=()=>Number($('challengeDuration').value);
+const awakenTarget=()=>mode==='challenge'?challengeLength()*10:100;
 const rankThresholds={
   5:[0,12,22,32,42,50,60,80],
   10:[0,25,45,65,85,100,120,160],
@@ -232,7 +233,7 @@ function updateRankGuide(){
   const t=currentRankTiers();
   const guide=$('rankGuide');
   if(!guide)return;
-  guide.textContent=t.map((v,i)=>v.rank+': '+v.n+(t[i+1]?'–'+(t[i+1].n-1):'+')).join(' / ');
+  guide.textContent=t.map((v,i)=>v.rank+': '+v.n+(t[i+1]?'–'+(t[i+1].n-1):'+')).join(' / ')+' ｜ 覚醒：'+awakenTarget()+'回';
 }
 
 let bestByDuration={};
@@ -341,7 +342,7 @@ function setMode(m){
  $('leaderboard').classList.add('hidden');
  $('modeDesc').textContent=m==='challenge'?challengeLength()+'秒で回数を競う！連打するとピコピコ音が鳴る。':'時間制限なし。曲の音をすべて演奏するとクリア！';
  $('songProgressWrap').classList.toggle('hidden',m!=='music');
- $('modeHelp').textContent=m==='challenge'?challengeLength()+'秒で何回できる？ Sは'+currentRankTiers()[5].n+'回、SSSは'+currentRankTiers()[7].n+'回から！ 100回で覚醒！':'全8曲。曲を完成すると演奏ランクC〜S判定！筋肉進化も継続。';
+ $('modeHelp').textContent=m==='challenge'?challengeLength()+'秒で何回できる？ Sは'+currentRankTiers()[5].n+'回、SSSは'+currentRankTiers()[7].n+'回から！ '+awakenTarget()+'回で覚醒！':'全8曲。曲を完成すると演奏ランクC〜S判定！筋肉進化も継続。';
  $('start').textContent=m==='challenge'?challengeLength()+'秒チャレンジ START ▶':'演奏 START ▶';
  $('hint').textContent=m==='challenge'?'STARTで'+challengeLength()+'秒勝負！ タップ / クリック / スペースキー':'曲を選んでSTART！ 最後まで演奏してクリアしよう';
  $('result').classList.add('hidden');
@@ -416,13 +417,14 @@ function text(msg,x,y,size,color,align='center'){
 }
 
 function muscleStage(){
-  if(score>=160) return 7;
-  if(score>=120) return 6;
-  if(score>=100) return 5;
-  if(score>=85) return 4;
-  if(score>=65) return 3;
-  if(score>=45) return 2;
-  if(score>=25) return 1;
+  const scale=mode==='challenge'?challengeLength()/10:1;
+  if(score>=160*scale) return 7;
+  if(score>=120*scale) return 6;
+  if(score>=100*scale) return 5;
+  if(score>=85*scale) return 4;
+  if(score>=65*scale) return 3;
+  if(score>=45*scale) return 2;
+  if(score>=25*scale) return 1;
   return 0;
 }
 
@@ -572,7 +574,7 @@ function drawAvatar(now){
   }
 
   // sweat / power particles
-  if(score>=45 && !awakened){
+  if(score>=45*(mode==='challenge'?challengeLength()/10:1) && !awakened){
     const p = Math.floor(now/120)%4;
     rect(centerX+torsoHalf+14+p*3, shoulderY+10, 3, 6, '#cce4ff');
     rect(centerX-torsoHalf-18-p*3, shoulderY+22, 3, 6, '#cce4ff');
@@ -602,7 +604,7 @@ function updateUI(now=performance.now()){
     if(lastStage>=0){ flashUntil=now+520; }
     lastStage=idx;
   }
-  if(!awakened && score>=100){
+  if(!awakened && score>=awakenTarget()){
     awakened=true;
     awakenSound();
     awakenFlashUntil=now+900;
@@ -706,7 +708,7 @@ setMode('challenge');renderRanking();
 const $=id=>document.getElementById(id);
 const canvas=$('surCanvas'), c=canvas.getContext('2d'); c.imageSmoothingEnabled=false;
 const W=384,H=320;
-let phase='ready',stage=1,hp=0,score=0,clock=0,startAt=0,lastFrame=0,raf=0,spawnAt=0,bullets=[],keys=new Set(),invUntil=0,drag=false,px=192,py=270,prevSurvival=false,earned=0,totalPullups=0;
+let phase='ready',stage=1,hp=0,score=0,clock=0,startAt=0,lastFrame=0,raf=0,spawnAt=0,bullets=[],keys=new Set(),invUntil=0,drag=false,px=192,py=270,prevSurvival=false,earned=0,totalPullups=0,stageHits=0,perfectStages=0;
 let debugRun=false;
 let best=0;try{best=Number(localStorage.getItem('survival_stage_best_v22'))||0}catch(e){} $('surBest').textContent=best;
 function show(id,on){$(id).classList.toggle('hidden',!on)}
@@ -718,9 +720,9 @@ function exit(){if(!prevSurvival)return;prevSurvival=false;document.body.classLi
 $('survivalMode').addEventListener('click',survivalMode);
 $('challengeMode').addEventListener('click',exit);$('musicMode').addEventListener('click',exit);
 function beginTraining(){phase='train';score=0;earned=0;clock=10;startAt=performance.now();lastFrame=startAt;bullets=[];show('surStart',false);show('surTap',true);show('surContinue',false);message(`STAGE ${stage}｜10秒連打でHP回復！（上限300）`);update();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
-function newRun(){debugRun=false;hp=0;stage=1;totalPullups=0;show('surResult',false);beginTraining()}
+function newRun(){debugRun=false;hp=0;stage=1;totalPullups=0;stageHits=0;perfectStages=0;show('surResult',false);beginTraining()}
 $('surDebugToggle').addEventListener('change',()=>show('surDebugTools',$('surDebugToggle').checked));
-$('surTestTemple').addEventListener('click',()=>{if(!$('surDebugToggle').checked)return;debugRun=true;stage=7;hp=140;totalPullups=0;show('surResult',false);beginTraining();});
+$('surTestTemple').addEventListener('click',()=>{if(!$('surDebugToggle').checked)return;debugRun=true;stage=7;hp=140;totalPullups=0;stageHits=0;perfectStages=0;show('surResult',false);beginTraining();});
 $('surStart').addEventListener('click',newRun);
 $('surContinue').addEventListener('click',beginTraining);
 function tap(){if(!prevSurvival||phase!=='train')return;if(performance.now()-startAt>=10000)return;score++;earned++;totalPullups++;hp=Math.min(300,hp+1);update();paint();}
@@ -750,14 +752,18 @@ function finishDrag(e){if(activePointer===e.pointerId){drag=false;activePointer=
 canvas.addEventListener('pointerup',finishDrag);
 canvas.addEventListener('pointercancel',finishDrag);
 canvas.addEventListener('lostpointercapture',finishDrag);
-function startDodge(now){phase='dodge';clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);message(`HP ${hp}で弾幕開始！20秒生き残れ！ 弾速・弾数アップ！`);update();}
-function clearStage(){phase='clear';if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}message(`STAGE ${stage} クリア！ 残りHP ${Math.round(hp)}。次の懸垂でさらに回復！`);show('surContinue',true);stage++;update();}
+function startDodge(now){phase='dodge';stageHits=0;clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);message(`HP ${hp}で弾幕開始！20秒生き残れ！ 弾速・弾数アップ！`);update();}
+function clearStage(){phase='clear';if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}const perfect=stageHits===0;
+if(perfect){hp=Math.min(300,hp+30);perfectStages++;}
+message(perfect?`🏆 STAGE ${stage} ノーミスクリア！ HP +30 ボーナス！ 残りHP ${Math.round(hp)}`:`STAGE ${stage} クリア！ 被弾 ${stageHits}回。残りHP ${Math.round(hp)}`);
+show('surContinue',true);stage++;update();}
 function gameOver(){
  phase='over';
  if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}
  $('surTotalPullups').textContent=totalPullups+' 回';
+ $('surPerfectStages').textContent=perfectStages+' ステージ';
  $('surReachedStage').textContent='STAGE '+stage+(debugRun?'（テスト）':'');
- const tweet=`💪 連打でムキムキ！サバイバル懸垂\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}${debugRun?'（テストプレイ）':''}\nみんなは何ステージまで行ける？\n#筋トレ攻略室 #連打でムキムキ`;
+ const tweet=`💪 連打でムキムキ！サバイバル懸垂\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}\nノーミスクリア：${perfectStages}ステージ${debugRun?'（テストプレイ）':''}\nみんなは何ステージまで行ける？\n#筋トレ攻略室 #連打でムキムキ`;
  $('surShare').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(tweet);
  show('surResult',true);
  message('GAME OVER！今回の記録はこちら！');
@@ -909,7 +915,7 @@ if(phase==='dodge'){
  const speed=(keys.has('shift')?90:185)*dt;
  if(keys.has('arrowleft')||keys.has('a'))px-=speed;if(keys.has('arrowright')||keys.has('d'))px+=speed;if(keys.has('arrowup')||keys.has('w'))py-=speed;if(keys.has('arrowdown')||keys.has('s'))py+=speed;
  px=Math.max(13,Math.min(W-13,px));py=Math.max(80,Math.min(H-14,py));spawn(now);
- for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;if(now>=invUntil&&Math.hypot(b.x-px,b.y-py)<b.r+7){hp=Math.max(0,hp-b.damage);invUntil=now+700;b.y=H+100;}}
+ for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;if(now>=invUntil&&Math.hypot(b.x-px,b.y-py)<b.r+7){hp=Math.max(0,hp-b.damage);stageHits++;invUntil=now+700;b.y=H+100;}}
  bullets=bullets.filter(b=>b.y<H+25&&b.x>-35&&b.x<W+35);
  if(hp<=0){gameOver()}else if(clock<=0){clearStage()}
 }
