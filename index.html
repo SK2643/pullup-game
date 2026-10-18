@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>連打でムキムキ！ Ver.31 — スマホ弾幕操作改善</title>
+<title>連打でムキムキ！ Ver.46 — NEO ARCADE</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0f1727;color:#f7f8ff;font-family:system-ui,'Noto Sans JP',sans-serif;text-align:center}
@@ -75,6 +75,8 @@ body:not(.survival-active) #survivalPanel{display:none!important}
 #survivalPanel button:disabled{opacity:.45}
 #survivalPanel .sur-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 #surTap{width:100%;padding:22px!important;font-size:24px!important}
+#surPower{width:100%;background:#6be5ff!important;color:#10283c!important;box-shadow:0 0 16px #38bdf855}
+#surPower:disabled{opacity:.45;box-shadow:none}
 #survivalPanel .sur-msg{min-height:2.5em;color:#f9d98f;font-weight:800;margin:10px}
 #survivalPanel .sur-info{font-size:12px;color:#bdcee2;margin:7px 0}
 #survivalPanel .sur-health{height:12px;background:#46536a;border-radius:8px;overflow:hidden}
@@ -104,25 +106,153 @@ button,select,input{touch-action:manipulation;-webkit-tap-highlight-color:rgba(2
  .stage{margin-top:10px}
  .btn{font-size:20px}
 }
+
+/* Survival visual-system refinements */
+.sur-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.sur-pill{background:linear-gradient(180deg,#304567,#1a2941);border:1px solid rgba(255,240,190,.19);border-radius:12px;padding:9px 10px;display:flex;flex-direction:column;gap:5px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.sur-pill small{font-size:11px;color:#b7c7de}.sur-pill span{font-weight:850;color:#fff1b8}
+#surSkin{width:100%;border:1px solid #61748e;background:#132139;color:#fff;border-radius:8px;padding:8px 10px;font:inherit}
+.sur-unlock{background:linear-gradient(180deg,#4a391b,#261c10);border:2px solid #ffdd80;color:#fff0ab;border-radius:12px;padding:10px;margin:8px 0;font-weight:850;text-align:center;box-shadow:0 0 12px #ffc9543b}
+#surCanvas{image-rendering:pixelated;background:#0d1728;border:3px solid #3a5675;border-radius:10px;touch-action:none}
+#survivalPanel .sur-result{box-shadow:0 4px 22px #0008}
+@media(max-width:480px){.sur-meta{grid-template-columns:1fr}}
+/* Ver.42: unified arcade presentation */
+body{background:radial-gradient(ellipse 70% 40% at 50% 0%,#1a3656 0%,transparent 90%),#0b1222}
+main{box-shadow:0 25px 72px rgba(0,0,0,.34),0 0 0 1px rgba(141,216,255,.10)}
+h1{text-shadow:0 3px 0 #0e2038,0 0 30px rgba(246,202,94,.28)}
+.mode-switch button{transition:transform .12s ease,box-shadow .12s ease;box-shadow:0 5px 0 rgba(4,13,26,.35)}
+.mode-switch button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(4,13,26,.35)}
+#surCanvas{display:block;max-width:100%;height:auto;image-rendering:pixelated;border:3px solid #7b9cc0;border-radius:12px;box-shadow:0 7px 22px #061020aa, inset 0 0 20px #050b18;touch-action:none}
+.stage canvas{image-rendering:pixelated}
+#surRouteHint{font-size:12px;font-weight:800;color:#9ff8f1;min-height:1.6em;margin:5px 0 0;text-align:center}
+
+.sur-danger{margin:7px auto 2px;padding:7px 10px;border:1px solid #476987;border-radius:9px;
+ background:linear-gradient(90deg,#13283e,#21415a);color:#bdeeff;font-weight:900;font-size:12px;letter-spacing:.03em;text-align:center}
+/* Ver.46: stage-by-stage pressure and readable late-game warnings */
+#survivalPanel{background:linear-gradient(145deg,#1c3150,#111d34);border-color:#a4cce7;box-shadow:0 12px 35px #070e1f99,inset 0 1px #dff5ff22}
+#survivalPanel .sur-stats>div{border:1px solid #83bfe83b;background:linear-gradient(#304b6a,#223750)}
+#survivalPanel .sur-stats span{font-variant-numeric:tabular-nums}
+#survivalPanel button{transition:filter .12s,transform .10s}
+#survivalPanel button:active:not(:disabled){filter:brightness(1.15);transform:translateY(2px)}
+.sur-zone{letter-spacing:1px;text-align:center;background:linear-gradient(90deg,#162944,#324c65,#162944);border-top:1px solid #92daf675;border-bottom:1px solid #92daf675;padding:9px 4px;border-radius:7px;font-size:12px;color:#def5ff;font-weight:900;margin:9px 0}
+.sur-tutorial{margin:10px 0;background:linear-gradient(160deg,#203954,#14253e);border:2px solid #ffe08b;border-radius:14px;padding:18px 14px;box-shadow:0 0 24px #f6d47b36,inset 0 0 20px #608fbd27;text-align:left;color:#e9f6ff}
+.sur-tutorial .guide-kicker{font:900 12px monospace;letter-spacing:2px;color:#7de6f6;margin-bottom:8px}
+.sur-tutorial .guide-title{font-size:23px;font-weight:1000;color:#ffde88;text-shadow:0 2px #63412a;line-height:1.3}
+.sur-tutorial p{line-height:1.75;white-space:pre-line;font-size:14px;margin:12px 0}
+.guide-tip{color:#cbf5e7;background:#10263c;border-left:4px solid #75e7ce;padding:11px;border-radius:6px;font-size:13px;line-height:1.65;margin:12px 0}
+#survivalPanel #surGuideConfirm{width:100%;min-height:54px;background:linear-gradient(#ffe08e,#ffb84f);font-size:17px;box-shadow:0 5px #965b22}
+#survivalPanel:has(.sur-tutorial:not(.hidden)) #surCanvas{filter:saturate(.8)}
+#surCanvas{box-shadow:0 7px 24px #061020ee,0 0 15px #5586c133}
+.mode-switch .active{box-shadow:inset 0 2px #fff8c5aa,0 5px 0 #44371b!important}
+#surPower:not(:disabled){background:linear-gradient(110deg,#6ddcff,#b7fff2,#7fe0ff)!important;box-shadow:0 0 14px #71e8ffaa}
+#surRouteHint{padding:3px}
+@media(prefers-reduced-motion:reduce){#survivalPanel button,.mode-switch button{transition:none}}
+
+/* --- NEO ARCADE visual design system --- */
+:root{--neo-ink:#080f20;--neo-panel:#12233e;--neo-cyan:#67e3ff;--neo-gold:#ffdb80;--neo-purple:#ba9bff}
+body{background:radial-gradient(ellipse at 50% 0%,#253959 0%,#111b30 40%,#080e1c 92%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;background:repeating-linear-gradient(0deg,transparent 0 3px,#fff 3px 4px);z-index:20;mix-blend-mode:soft-light}
+main{background:linear-gradient(160deg,#192943 0%,#101c32 56%,#111b31 100%);border:1px solid #57799c;box-shadow:0 20px 60px #030813bb,inset 0 1px #ffffff25}
+h1{font-weight:1000;letter-spacing:.04em;text-shadow:0 3px 0 #2c4d72,0 0 24px #48bdfc40}
+.mode-switch button{border:1px solid #6889b3;background:linear-gradient(#253e60,#192940);box-shadow:inset 0 2px #9fc4ee33,0 4px 0 #0b1323;transition:transform .12s,filter .12s}
+.mode-switch button.active{background:linear-gradient(#ffe39a,#ffb44f)!important;color:#1b2235!important;border-color:#ffe8b2;box-shadow:0 4px #93631f!important}
+#survivalPanel{border:2px solid #5c96c8;background:linear-gradient(180deg,#1b2d49,#111b2f);box-shadow:inset 0 1px #fff2,0 10px 40px #050b16bb}
+.stage{background:linear-gradient(180deg,#253f60,#14263e);border:2px solid #648cb9;box-shadow:0 0 0 3px #101c30,0 8px 22px #020b19aa}
+#scene,#surCanvas{image-rendering:pixelated;image-rendering:crisp-edges}
+.sur-stats>div,.stat{background:linear-gradient(180deg,#334c70,#1d2e4a)!important;box-shadow:inset 0 2px #aacaff2a,0 4px 0 #0d182b}
+.btn,.sur-controls button{letter-spacing:.035em;text-shadow:0 1px #fff6}
+#surCanvas{border:3px solid #739bc0;box-shadow:0 8px 28px #060e21ca,0 0 22px #63beff22}
+.arcade-rank{border:1px solid #486b92;border-radius:14px;margin:12px 0;padding:12px;background:linear-gradient(140deg,#213b5e,#15243e);box-shadow:inset 0 1px #ffffff20}
+.arcade-rank .rank-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.arcade-rank .rank-title{font-size:15px;font-weight:900;color:#ffdf87}
+.arcade-rank button{background:#2e5177;border:1px solid #83aeda;border-radius:9px;color:#ecfaff;padding:8px 12px;font-weight:800;cursor:pointer}
+.arcade-rank .rank-status{font-size:11px;color:#c4d7f0;text-align:left;margin:9px 0}
+.arcade-rank .rank-items{margin:10px 0 0;padding:0;list-style:none;display:grid;gap:5px}
+.arcade-rank .rank-items li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:7px;border:1px solid #38536f;background:#101e34;border-radius:8px;padding:8px 9px;text-align:left;font-size:12px}
+.arcade-rank .rank-items li:nth-child(1){border-color:#e9c369;background:#403519}
+.arcade-rank .rank-items li:nth-child(2){border-color:#b6d2e8}
+.arcade-rank .rank-items li:nth-child(3){border-color:#cc9a7c}
+.arcade-rank .rank-items .rank-person{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arcade-rank .rank-items .rank-score{color:#ffe19d;font-weight:900;font-variant-numeric:tabular-nums}
+.arcade-rank .rank-note{font-size:10px;color:#9db5d5;margin:8px 0 0;text-align:left}
+.sur-meta .sur-pill{border:1px solid #7692c144}
+#surSkin{font-weight:900;letter-spacing:.02em}
+@media(max-width:480px){.arcade-rank .rank-head{align-items:flex-start}.arcade-rank button{font-size:12px}}
+
+body.survival-active #challengeOnline{display:none!important}
+
+.skin-catalog{margin:10px 0;border:1px solid #536c8b;border-radius:12px;padding:10px;background:#101b2e;text-align:left}
+.skin-catalog summary{font-weight:850;color:#f4dfa9;cursor:pointer;list-style:disclosure-closed}
+.skin-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(91px,1fr));gap:8px;margin-top:12px}
+.skin-tile{display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(#273c5a,#1b2941)!important;border:1px solid #48627f!important;border-radius:10px;padding:8px 4px!important;color:#e6f2fa!important;min-width:0;font-size:11px!important}
+.skin-tile.selected{border-color:#ffdb7d!important;box-shadow:0 0 0 2px #ffdb7d55,inset 0 0 12px #ffdb7d17}
+.skin-tile.locked{opacity:.72}
+.skin-tile canvas{width:48px;height:64px;image-rendering:pixelated}
+.skin-tile strong{font-size:12px}
+.skin-tile small{font-size:10px;color:#b3c8db;min-height:23px;line-height:1.2}
+
+/* FINAL EDITION - consistent premium pixel arcade UI */
+:root{--pixel-gold:#ffe390;--pixel-cyan:#8ef5ff;--night:#0e1728}
+body{background:radial-gradient(ellipse at 48% -10%,#263d67 0,#101b30 42%,#080f1e 90%);}
+main{border:1px solid #4a6489;box-shadow:0 16px 70px #030713aa,0 0 0 4px #111e33 inset;background:linear-gradient(180deg,#14233d,#0c172b)}
+h1{letter-spacing:.045em;text-shadow:0 3px #100d1e,0 0 18px #ffcc7340}
+.mode-switch{background:#0b1729;border:1px solid #344965;border-radius:14px;padding:5px;box-shadow:inset 0 2px 4px #040a15aa}
+.mode-switch button{transition:background .15s,transform .1s,border-color .15s}
+.mode-switch button.active{box-shadow:0 4px 0 #684417,0 0 14px #ffc46930}
+.stage,#surCanvas{box-shadow:0 0 0 3px #080f1c,0 10px 30px #0009}
+.stage{border:3px solid #6c89b0;background:#0b1b30}
+#surCanvas{border:2px solid #6a93b8;border-radius:9px;background:#0b1b30;image-rendering:pixelated}
+.sur-stats>div,.stat{border:1px solid #4c6686;box-shadow:inset 0 2px #fff1,0 4px #050d1b75}
+#surPower,.tap,.btn{transition:transform .09s,filter .09s;box-shadow:0 5px 0 #17213b,0 8px 20px #040a1650}
+#surPower:active,.tap:active,.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #17213b}
+.final-badge{white-space:nowrap;display:inline-block;vertical-align:middle;font-size:9px;padding:2px 5px;background:linear-gradient(110deg,#705021,#b88b42,#62421a);border:1px solid #ecca78;color:#fff1be;border-radius:8px;padding:3px 9px;font-size:11px;font-weight:900;letter-spacing:1px}
+.game-guide{font-size:11px;color:#b7ccea;margin:4px 0}
+@media(prefers-reduced-motion:reduce){.mode-switch button,.tap,.btn,#surPower{transition:none}}
+@media(max-width:480px){h1{font-size:clamp(24px,7vw,36px)}}
 </style>
 </head>
 <body>
 <main>
 <div id="previewNotice" role="alert">⚠️ この画面ではゲームのJavaScriptが実行されていません。STARTや連打ボタンも動かない場合、HTMLプレビューではなくSafari / Chromeで直接開くか、Webサイトとして公開して開いてください。</div>
-<h1>💪 連打でムキムキ！</h1>
+<h1>💪 連打でムキムキ！ <span class="final-badge">FINAL EDITION</span></h1><p class="game-guide">全60ステージ＋エンドレス | 3モード | SEASON 1ランキング</p>
 <section class="profile-settings" aria-label="プレイヤー設定"><label for="playerName">👤 ユーザー名</label><input id="playerName" type="text" maxlength="16" placeholder="例：マッスル太郎" autocomplete="nickname"><button type="button" id="saveName">保存</button><span id="nameStatus" aria-live="polite">ランキング表示名を設定しよう</span></section>
 <div class="mode-switch"><button type="button" id="challengeMode" class="active">💪 連打チャレンジ</button><button type="button" id="musicMode">🎵 演奏モード</button><button type="button" id="survivalMode">🔥 サバイバル懸垂</button></div>
 <section id="survivalPanel" aria-label="サバイバル懸垂">
-<h2>🔥 サバイバル懸垂</h2>
-<p class="sur-info">10秒懸垂でHP回復 → 20秒の弾幕を回避！毎ステージ繰り返す</p>
+<h2>🔥 サバイバル懸垂 <small style="font-size:12px;color:#ffe09a">Ver.46</small></h2>
+<p class="sur-info">10秒懸垂2回でHP＋1・必殺技チャージ → 20秒弾幕！全60ステージ＋エンドレス！新ギミックは説明付き。3ステージごとにボスが登場！</p>
 <div class="sur-stats"><div><small>STAGE</small><span id="surStage">1</span></div><div><small>HP</small><span id="surHp">0 / 300</span></div><div><small>残り時間</small><span id="surTime">10.0</span></div><div><small>最高到達</small><span id="surBest">0</span></div></div>
-<div class="sur-health"><div id="surHealthFill"></div></div>
+<div class="sur-health"><div id="surHealthFill"></div></div><div id="surDanger" class="sur-danger" aria-live="polite">初級エリア ｜ HP最大300</div><div class="sur-meta"><div class="sur-pill"><small>🏅 獲得称号</small><span id="surTitle">見習いトレーニー</span></div><label class="sur-pill" for="surSkin"><small>🎨 キャラクタースキン</small><select id="surSkin"></select></label></div><div id="surUnlock" class="sur-unlock hidden" aria-live="polite"></div><details class="skin-catalog"><summary>🎭 7種類のスキン図鑑・解放条件</summary><div id="surSkinGallery" class="skin-tiles"></div></details><p class="sur-info" id="surPowerInfo">⚡必殺技：懸垂30回ごとに1回分（最大3回）</p>
+<div class="sur-zone" id="surZone">WORLD 1 / 6　🏋️ IRON GYM</div>
+<div id="surRouteHint" aria-live="polite"></div>
+<section id="surTutorial" class="sur-tutorial hidden" aria-live="polite" aria-label="新ギミックの遊び方">
+  <div class="guide-kicker" id="surGuideStage">NEW MECHANIC</div>
+  <div class="guide-title" id="surGuideTitle">新ギミック</div>
+  <p id="surGuideText"></p><div class="guide-tip" id="surGuideTip"></div>
+  <button type="button" id="surGuideConfirm">わかった！ スタート ▶</button>
+</section>
 <canvas id="surCanvas" width="384" height="320"></canvas>
-<p id="surMessage" class="sur-msg">STARTを押して懸垂でHPを貯めよう！</p>
-<div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div><div><small>ノーミスクリア</small><strong id="surPerfectStages">0 ステージ</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
-<div class="sur-controls"><button id="surStart">▶ START</button><button id="surTap" class="hidden">💪 懸垂！連打！</button><button id="surContinue" class="hidden">次のステージへ ▶</button></div>
-<div class="sur-debug"><label><input type="checkbox" id="surDebugToggle"> 開発用テストを有効にする</label><div id="surDebugTools" class="hidden"><button type="button" id="surTestTemple">🏛 STAGE 7（筋肉神殿）からテスト</button><p>デバッグ開始は通常記録とは別扱いです。</p></div></div>
-<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホはキャラより下の位置を指でドラッグ（キャラは指の約70px上に表示）。被弾時は少し無敵になります。</p>
+<p id="surMessage" class="sur-msg">STARTを押して懸垂2回でHP＋1！</p>
+<div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div><div><small>ノーミスクリア</small><strong id="surPerfectStages">0 ステージ</strong></div><div><small>ボス撃破・防御強化</small><strong id="surBossKills">0 体</strong></div><div><small>称号</small><strong id="surResultTitle">見習いトレーニー</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
+<div class="sur-controls"><button id="surPower" class="hidden" type="button" style="background:#72def1;margin-top:14px;min-height:58px">⚡ 筋肉衝撃波 ×0</button><button id="surStart">▶ START</button><button id="surTap" class="hidden">💪 懸垂！連打！</button><button id="surContinue" class="hidden">次のステージへ ▶</button></div>
+<section id="survivalOnline" class="arcade-rank" aria-label="サバイバル・オンラインランキング">
+ <div class="rank-head"><span class="rank-title">🏆 SEASON 1｜サバイバルランキング</span><button type="button" id="surRankRefresh">↻ 最新TOP 10</button></div>
+ <div class="rank-status" id="surRankStatus">オンライン接続を確認中...</div>
+ <ol class="rank-items" id="surRankItems"></ol>
+ <div class="rank-note">到達ステージ優先・同ステージなら懸垂回数で比較。テスト記録は送信されません。1端末1ベスト記録。</div>
+</section>
+<div class="sur-debug"><label><input type="checkbox" id="surDebugToggle"> 開発用テストを有効にする</label><div id="surDebugTools" class="hidden"><button type="button" id="surTestTemple">🏛 STAGE 7（筋肉神殿）からテスト</button><div class="sur-controls" style="margin:8px 0"><button type="button" id="surTestObstacle">🧭 STAGE 4 障害物をテスト</button><button type="button" data-teststage="13">🌌 STAGE 13 宇宙エリア</button><button type="button" data-teststage="14">🌀 STAGE 14 重力フィールド</button><button type="button" data-teststage="19">🔴 STAGE 19 要塞エリア</button><button type="button" data-teststage="25">✨ STAGE 25 最終エリア</button><button type="button" data-teststage="30">🏆 STAGE 30 コア決戦</button><button type="button" data-teststage="31">❄ STAGE 31 氷結道場</button>
+<button type="button" data-teststage="37">⚡ STAGE 37 雷神アリーナ</button>
+<button type="button" data-teststage="43">🧬 STAGE 43 サイバー都市</button>
+<button type="button" data-teststage="49">🕳 STAGE 49 虚無の深淵</button>
+<button type="button" data-teststage="55">🌟 STAGE 55 天頂神殿</button>
+<button type="button" data-teststage="60">👑 STAGE 60 最終決戦</button>
+<button type="button" data-teststage="61">♾ STAGE 61 エンドレス</button><button type="button" data-bosstest="3">🏋️ ジムボス STAGE 3</button><button type="button" data-bosstest="6">🧪 工場ボス STAGE 6</button><button type="button" data-bosstest="9">🏛 神殿ボス STAGE 9</button><button type="button" data-bosstest="15">🌌 宇宙ボス STAGE 15</button><button type="button" data-bosstest="21">🔴 要塞ボス STAGE 21</button><button type="button" data-bosstest="27">✨ コアボス STAGE 27</button>
+<button type="button" data-bosstest="36">❄ 氷結ボス STAGE 36</button>
+<button type="button" data-bosstest="42">⚡ 雷神ボス STAGE 42</button>
+<button type="button" data-bosstest="48">🧬 電脳ボス STAGE 48</button>
+<button type="button" data-bosstest="54">🕳 虚無ボス STAGE 54</button>
+<button type="button" data-bosstest="60">🌟 真・筋肉神 STAGE 60</button></div><p>ボス戦テストは懸垂をスキップして即開始します。テスト記録は通常記録とは別扱いです。</p></div></div>
+<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホはキャラより下の位置を指でドラッグ（キャラは指の約70px上に表示）。被弾時は少し無敵になります。PCのJキーは弾幕開始1.8秒後から有効。障害物のあるステージでは補給コアを順番に回収して突破！ STAGE 13以降は新エリアと重力ギミックが登場。 STAGE 5以降、同じ場所に居続けると赤い予告線付きの大型弾が狙ってきます。ボス撃破で以後の被ダメージが永久に3減少（最大9）。ボスは弱点OPEN1回につき必殺技1発しかダメージを与えられません。</p>
 </section>
 <div class="duration-settings" id="durationSettings"><label for="challengeDuration">⏱ 制限時間</label><select id="challengeDuration"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="30">30秒</option></select><span>時間ごとに自己ベストを記録</span></div><div id="rankGuideWrap" class="rank-guide"><strong>🏆 この時間のランク基準</strong><div id="rankGuide"></div><small>覚醒ラインは制限時間に応じて変化：5秒＝50回／10秒＝100回／15秒＝150回／30秒＝300回。</small></div>
 <div class="top">
@@ -172,6 +302,12 @@ button,select,input{touch-action:manipulation;-webkit-tap-highlight-color:rgba(2
   <p id="summary"></p>
   <a class="share" id="share" target="_blank" rel="noopener noreferrer">𝕏 で結果をシェア</a>
   <div class="small" id="resultNote">※筋肉ランクは連打回数、演奏ランクは1音あたりの速度で決定します。</div>
+</section>
+<section id="challengeOnline" class="arcade-rank" aria-label="連打チャレンジ・オンラインランキング">
+ <div class="rank-head"><span class="rank-title">🌍 SEASON 1｜連打ランキング</span><button type="button" id="challengeRankRefresh">↻ 最新TOP 10</button></div>
+ <div class="rank-status" id="challengeRankStatus">オンライン接続を確認中...</div>
+ <ol class="rank-items" id="challengeRankItems"></ol>
+ <div class="rank-note">制限時間別のTOP10。プレイ開始・経過時間・連打上限をサーバーで検査（完全な不正防止ではありません）。</div>
 </section>
 <div class="legend">
   <b>ランク基準</b><br>
@@ -250,7 +386,7 @@ let playerName='';
 try{playerName=localStorage.getItem('pullup_player_name_v13')||''}catch(e){}
 $('playerName').value=playerName;
 function savePlayerName(){
- const n=$('playerName').value.trim().replace(/[\\r\\n\\t]/g,' ').slice(0,16);
+ const n=$('playerName').value.trim().replace(/[\r\n\t]/g,' ').slice(0,16);
  if(!n){$('nameStatus').textContent='ユーザー名を入力してください';return false;}
  playerName=n;
  try{localStorage.setItem('pullup_player_name_v13',n)}catch(e){}
@@ -261,12 +397,72 @@ $('saveName').addEventListener('click',savePlayerName);
 $('playerName').addEventListener('change',savePlayerName);
 async function cloudRequest(path,opts={}){
  const r=await fetch(SUPABASE_URL.replace(/\/$/,'')+'/rest/v1/'+path,{
-  ...opts,headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+SUPABASE_ANON_KEY,
+  ...opts,headers:{apikey:SUPABASE_ANON_KEY,...(SUPABASE_ANON_KEY.startsWith('sb_publishable_')?{}:{Authorization:'Bearer '+SUPABASE_ANON_KEY}),
    ...(opts.headers||{})}
  });
  if(!r.ok)throw new Error('通信エラー '+r.status);
  return r.status===204?null:r.json();
 }
+
+// === Season 1 online ranking (Supabase RPC): starts each run server-side.
+// Public browsers cannot write score tables directly. This mitigates casual forgery,
+// but cannot completely verify inputs without server-run gameplay.
+const RANK_CLIENT_ID_KEY='muscle_rank_client_id_v45';
+let rankClientId='';
+try{rankClientId=localStorage.getItem(RANK_CLIENT_ID_KEY)||''}catch(e){}
+if(!/^[a-f0-9-]{36}$/.test(rankClientId)){
+ rankClientId=(typeof crypto!=='undefined'&&crypto.randomUUID)?crypto.randomUUID():
+ 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.floor(Math.random()*16);return(c==='x'?r:(r&3|8)).toString(16)});
+ try{localStorage.setItem(RANK_CLIENT_ID_KEY,rankClientId)}catch(e){}
+}
+function getRankingName(){return playerName.trim()||null}
+async function rankRpc(name,args){
+ return cloudRequest('rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(args)});
+}
+const rankingApi={
+ online:cloudEnabled,
+ name:getRankingName,
+ async challengeTop(seconds){return cloudRequest('rank_challenge_scores?duration_seconds=eq.'+encodeURIComponent(seconds)+'&select=client_id,player_name,pullups,achieved_at&order=pullups.desc,achieved_at.asc&limit=10')},
+ async survivalTop(){return cloudRequest('rank_survival_scores?select=client_id,player_name,stage_reached,total_pullups,perfect_stages,boss_kills,achieved_at&order=stage_reached.desc,total_pullups.desc,achieved_at.asc&limit=10')},
+ async startRun(kind,duration){
+  if(!cloudEnabled||!getRankingName())return null;
+  return rankRpc('rank_begin',{p_client_id:rankClientId,p_kind:kind,p_duration_seconds:kind==='challenge'?duration:null});
+ },
+ async submitChallenge(seconds,count,token){
+  if(!cloudEnabled||!getRankingName()||!token||count<1)return false;
+  return rankRpc('rank_finish',{p_token:token,p_client_id:rankClientId,p_player_name:getRankingName(),p_pullups:count,p_stage_reached:null,p_perfect_stages:0,p_boss_kills:0});
+ },
+ async submitSurvival(reached,pullups,perfect,boss,token){
+  if(!cloudEnabled||!getRankingName()||!token)return false;
+  return rankRpc('rank_finish',{p_token:token,p_client_id:rankClientId,p_player_name:getRankingName(),p_pullups:pullups,p_stage_reached:reached,p_perfect_stages:perfect,p_boss_kills:boss});
+ }
+};
+let challengeSessionToken=null,challengeStartPending=false;
+window.MUSCLE_RANK_API=rankingApi;
+function formatRankRows(list,container,getScore){
+ const seen=new Set(),rows=[];
+ for(const row of list){if(seen.has(row.client_id))continue;seen.add(row.client_id);rows.push(row);if(rows.length>=10)break;}
+ const el=$(container);el.replaceChildren();
+ rows.forEach((v,i)=>{
+  const li=document.createElement('li');
+  const num=document.createElement('span');num.textContent=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);
+  const name=document.createElement('span');name.className='rank-person';name.textContent=v.player_name||'ゲスト';
+  const score=document.createElement('span');score.className='rank-score';score.textContent=getScore(v);
+  li.append(num,name,score);el.append(li);
+ });
+ if(!rows.length){const li=document.createElement('li');li.style.gridTemplateColumns='1fr';li.textContent='まだ投稿がありません。最初の記録を作ろう！';el.append(li)}
+}
+async function refreshChallengeRank(){
+ const duration=challengeLength(),status=$('challengeRankStatus');
+ if(!cloudEnabled){status.textContent='⚪ オンライン未接続：運営者がSupabaseのURLと公開キーを設定すると利用できます。';$('challengeRankItems').replaceChildren();return;}
+ status.textContent='⏳ '+duration+'秒ランキングを読み込み中...';
+ try{
+  const list=await rankingApi.challengeTop(duration);
+  if(challengeLength()!==duration)return;
+  formatRankRows(list,'challengeRankItems',row=>row.pullups+'回');status.textContent='🟢 SEASON 1 · '+duration+'秒部門 · 登録者TOP10';
+ }catch(e){status.textContent='🔴 読込失敗：'+e.message+'　／　設定とSQLを確認してください';}
+}
+$('challengeRankRefresh').addEventListener('click',refreshChallengeRank);
 async function submitCloudScore(key,ms){
  if(!cloudEnabled)return;
  if(!playerName){$('nameStatus').textContent='オンライン登録するにはユーザー名を保存してください';return;}
@@ -326,8 +522,16 @@ function displayBest(){
  $('best').textContent=v;
  $('best').style.fontSize=mode==='challenge'?'33px':'19px';
 }
+function stopArcadeForSwitch(){challengeSessionToken=null;
+ if(!playing)return;
+ playing=false;cancelAnimationFrame(frame);
+ $('tap').disabled=true;$('start').classList.remove('hidden');
+ $('challengeDuration').disabled=false;$('song').disabled=false;
+}
 function setMode(m){
- if(playing)return;
+ stopArcadeForSwitch();
+ score=0;noteIndex=0;upUntil=0;lastStage=-1;awakened=false;flashUntil=0;awakenFlashUntil=0;
+ $('score').textContent='0';$('result').classList.add('hidden');
  mode=m;
  $('challengeMode').classList.toggle('active',m==='challenge');
  $('musicMode').classList.toggle('active',m==='music');
@@ -338,12 +542,13 @@ function setMode(m){
  $('rankGuideWrap').style.display=(m==='challenge'?'block':'none');
  $('rankProgressBar').classList.toggle('hidden',m==='music');
  $('songLabel').textContent='曲を選ぶ';
- $('modePanel').classList.toggle('hidden',m!=='music');
+ $('modePanel').classList.toggle('hidden',m!=='music'); $('challengeOnline').classList.toggle('hidden',m!=='challenge');
  $('leaderboard').classList.add('hidden');
  $('modeDesc').textContent=m==='challenge'?challengeLength()+'秒で回数を競う！連打するとピコピコ音が鳴る。':'時間制限なし。曲の音をすべて演奏するとクリア！';
  $('songProgressWrap').classList.toggle('hidden',m!=='music');
  $('modeHelp').textContent=m==='challenge'?challengeLength()+'秒で何回できる？ Sは'+currentRankTiers()[5].n+'回、SSSは'+currentRankTiers()[7].n+'回から！ '+awakenTarget()+'回で覚醒！':'全8曲。曲を完成すると演奏ランクC〜S判定！筋肉進化も継続。';
  $('start').textContent=m==='challenge'?challengeLength()+'秒チャレンジ START ▶':'演奏 START ▶';
+ $('tap').disabled=true;updateProgress();displayBest();updateUI();draw(performance.now());
  $('hint').textContent=m==='challenge'?'STARTで'+challengeLength()+'秒勝負！ タップ / クリック / スペースキー':'曲を選んでSTART！ 最後まで演奏してクリアしよう';
  $('result').classList.add('hidden');
  $('musicRankPanel').classList.add('hidden');
@@ -353,7 +558,7 @@ function setMode(m){
 function activeMelody(){return melodies[$('song').value]||melodies.star}
 function updateMode(){
  // Description is controlled by selected mode.
- $('musicNote').textContent='🎵 '+activeMelody().name;
+ $('musicNote').textContent=mode==='music'?'🎵 '+activeMelody().name:'🏋️ 連打チャレンジ';
 }
 function playMelodyStep(){
  audioReady();
@@ -429,164 +634,235 @@ function muscleStage(){
 }
 
 function drawBackground(now){
-  rect(0,0,384,320,'#263a55');
-  for(let x=0;x<384;x+=24){rect(x,252,2,68,'#33506f')}
-  rect(0,300,384,20,'#172435');
-  rect(32,34,12,266,'#61768f');
-  rect(340,34,12,266,'#61768f');
-  rect(28,28,328,12,'#bcc9d8');
-  rect(28,28,328,3,'#edf5ff');
-  // bar shadows
-  rect(28,40,328,2,'#6e7781');
-  if(awakened){
-    const pulse = 0.65 + 0.35*Math.sin(now/120);
-    for(let i=0;i<16;i++){
-      const a=i*(Math.PI*2/16)+now/560;
-      const rx=120+14*Math.sin(now/300+i), ry=95+14*Math.cos(now/270+i);
-      rect(192+Math.cos(a)*rx,165+Math.sin(a)*ry,6,6,`rgba(255,210,90,${0.35*pulse})`);
-    }
+  const music=mode==='music', w=384, h=320;
+  const pulse=.5+.5*Math.sin(now/340);
+  rect(0,0,w,h,music?'#111d37':'#16283d');
+  // Deep layered arcade hall: tiled wall + steel frames.
+  for(let y=16;y<268;y+=26){
+    rect(0,y,w,2,music?'#253454':'#2b4059');
+    for(let x=(Math.floor(y/26)%2?0:16);x<w;x+=32)rect(x,y+3,2,22,music?'#24304d':'#253850');
   }
-  if(now<flashUntil) rect(0,0,384,320,'rgba(255,233,132,0.18)');
-  if(now<awakenFlashUntil) rect(0,0,384,320,'rgba(255,255,255,0.32)');
-}
-
-function drawAvatar(now){
-  const stage=muscleStage();
-  const bodyGrowth = Math.min(score,170)/170; // continuous scaling
-  const scale = 1.06 + bodyGrowth*0.50;
-  const yShift = now<upUntil ? -34 : 0;
-  const centerX=192;
-  const topY=96 + yShift;
-  const skin='#e7ae81', skin2='#c77f57', hair='#23232e', pants='#314159', shoe='#e8edf6';
-  const shirtColor = stage<5 ? '#f0a840' : '#c3472d';
-
-  // base proportions grow continuously + stage bonuses
-  const shoulderHalf = Math.round((26 + bodyGrowth*28 + stage*5)*scale*0.90);
-  const torsoHalf = Math.round((20 + bodyGrowth*22 + stage*4)*scale*0.90);
-  const torsoH = Math.round((56 + bodyGrowth*18 + stage*3)*scale*0.95);
-  const armThick = Math.round(13 + bodyGrowth*10 + stage*3);
-  const legThick = Math.round(16 + bodyGrowth*9 + Math.max(0,stage-1)*2);
-  const headSize = Math.max(24, Math.round(32 - bodyGrowth*4));
-  const shoulderY = 125 + yShift;
-  const handY = 42;
-  const handX1 = 123;
-  const handX2 = 261;
-
-  // aura under awakened body
-  if(stage>=5){
-    const pulse = 0.8 + 0.2*Math.sin(now/110);
+  if(music){
     for(let i=0;i<9;i++){
-      rect(centerX-shoulderHalf-16-i*2, shoulderY-18-i*3, shoulderHalf*2+32+i*4, torsoH+72+i*6, `rgba(255,205,80,${0.05*pulse})`);
+      const x=20+i*44,level=12+Math.abs(Math.sin(now/340+i*.75))*(22+(i%3)*12);
+      rect(x,224-level,17,level,'#31496b');
+      rect(x+3,224-level,11,level,'#489bbb');
+      rect(x+5,224-level,7,4,'#a0f9ff');
+    }
+    // Two speakers and scrolling musical notes.
+    for(const sx of [48,322]){
+      rect(sx-17,112,34,82,'#111827');rect(sx-13,117,26,70,'#303653');
+      for(const sy of [142,173]){ctx.fillStyle='#20253a';ctx.beginPath();ctx.arc(sx,sy,11,0,7);ctx.fill();ctx.strokeStyle='#9e89e8';ctx.lineWidth=3;ctx.stroke();}
+      rect(sx-10,119,20,5,'#8de8f7');
+    }
+    for(let i=0;i<9;i++){
+      const x=((i*66+now*.016)%416)-16,y=70+(i*39)%150;
+      text('♪',x,y,17,i%2?'#95c4ff':'#ffe18d');
+    }
+    // Synthwave note tracks and moving laser columns for a live-show feel.
+    for(let k=0;k<8;k++){
+      const x=13+k*49, brightness=.5+.5*Math.sin(now/210+k);
+      rect(x,61,3,156,brightness>.55?'#5566a0':'#293757');
+      rect(x-3,216,9,5,brightness>.55?'#a4e6ff':'#6867ab');
+    }
+    rect(133,66,119,18,'#1a2c4e');rect(137,70,111,4,'#b3a9f7');
+    text('RHYTHM STAGE',192,80,12,'#eedaff');
+    rect(0,244,384,5,'#5483aa');
+  }else{
+    // Weight rack, posters, spotlights and gym floor.
+    rect(10,74,79,99,'#102035');rect(15,78,69,90,'#304e68');
+    rect(21,86,57,4,'#85dfff');rect(21,99,57,52,'#243b52');
+    for(let i=0;i<3;i++){rect(24,108+i*14,51,3,'#435e74');rect(31+i*9,102,8,9,'#79a4c9');}
+    rect(297,72,77,104,'#12233a');rect(301,76,69,95,'#243a56');
+    rect(306,82,59,7,'#ffcc78');text('GYM',336,115,18,'#e4f7ff');
+    rect(311,129,50,28,'#1a2e4b');
+    for(let i=0;i<3;i++){rect(314+i*15,133,8,19,'#587994')}
+    // Floor light bars, pulsing floor plates, and illuminated training banners.
+    for(let i=0;i<8;i++){
+      const x=14+i*48,l=.5+.5*Math.sin(now/310+i*.7);
+      rect(x,226,26,5,l>.58?'#8ac6eb':'#53728b');
+      rect(x+4,233,18,3,'#334e68');
+    }
+    for(let i=0;i<5;i++){rect(128+i*28,75+(i%2)*3,15,3,'rgba(255,226,154,.22)')}
+    rect(0,244,384,6,'#5c7893');
+  }
+  rect(0,250,384,70,music?'#232f4d':'#263c53');
+  for(let y=258;y<320;y+=20){rect(0,y,384,2,music?'#354469':'#334d65')}
+  for(let x=0;x<384;x+=42){rect(x,251,3,69,music?'#384867':'#38536a')}
+  // Pull-up station on both modes; behind player but dominant at the top.
+  rect(95,47,10,204,'#111b2c');rect(98,53,5,192,'#7895b1');
+  rect(281,47,10,204,'#111b2c');rect(284,53,5,192,'#7895b1');
+  rect(111,48,170,7,'#0e2035');rect(108,43,168,8,'#a6c4dc');
+  rect(107,43,171,2,'#ffffff');
+  // Large soft spotlights that don't obscure pixel silhouettes.
+  ctx.fillStyle=music?'rgba(141,122,255,.05)':'rgba(246,209,139,.06)';
+  ctx.beginPath();ctx.moveTo(152,0);ctx.lineTo(72,238);ctx.lineTo(306,238);ctx.lineTo(228,0);ctx.closePath();ctx.fill();
+  if(awakened){
+    for(let i=0;i<12;i++){
+      const a=i*6.283/12+now/880,r=92+Math.sin(now/260+i)*12;
+      rect(192+Math.cos(a)*r,165+Math.sin(a)*r*.72,5,5,i%2?'#ffbb68':'#ffe998');
     }
   }
 
-  // arms toward bar, clearer pixel art with outline pass
-  function limb(x1,y1,x2,y2,thick,color,outline='#5c3727'){
-    ctx.strokeStyle=outline; ctx.lineWidth=thick+4; ctx.lineCap='square'; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-    ctx.strokeStyle=color; ctx.lineWidth=thick; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  // Foreground metallic trim, stage spotlight and animated pixel ambience.
+  for(let i=0;i<8;i++){
+    const x=18+i*48,y=(i*53+(now*.014*(i%2?1:-1)))%216+22;
+    rect(x,y,2,4,music?'rgba(173,179,255,.45)':'rgba(240,221,154,.28)');
   }
-  // Two-part diagonal arms: elbows between hands and shoulders
-  const leftShoulder=centerX-shoulderHalf+4, rightShoulder=centerX+shoulderHalf-4;
-  const elbowY=95+yShift*0.45;
-  const elbowL=139, elbowR=245;
-  limb(handX1,handY,elbowL,elbowY,Math.max(10,armThick-2),skin);
-  limb(elbowL,elbowY,leftShoulder,shoulderY,armThick,skin);
-  limb(handX2,handY,elbowR,elbowY,Math.max(10,armThick-2),skin);
-  limb(elbowR,elbowY,rightShoulder,shoulderY,armThick,skin);
-  rect(handX1-9, handY-8, 18, 12, skin); rect(handX2-9, handY-8, 18, 12, skin);
-
-  // head
-  rect(centerX-headSize/2-2, topY-headSize/2-2, headSize+4, headSize+4, '#86563e');
-  rect(centerX-headSize/2, topY-headSize/2, headSize, headSize, skin);
-  rect(centerX-headSize/2-2, topY-headSize/2-5, headSize+4, 14, hair);
-  rect(centerX-10, topY+3, 4, 4, '#1f2029'); rect(centerX+6, topY+3, 4, 4, '#1f2029');
-  if(stage>=2) rect(centerX-5, topY+14, 10, 3, '#7a4e39');
-
-  // neck
-  const neckW = Math.max(12, Math.round(16 + bodyGrowth*6 + stage));
-  const neckTop = Math.round(topY + headSize/2 - 1);
-  const neckH = Math.max(10, Math.round(shoulderY - neckTop + 3));
-  rect(centerX-neckW/2-2, neckTop-2, neckW+4, neckH+4, '#86563e');
-  rect(centerX-neckW/2, neckTop, neckW, neckH, skin);
-
-  // shoulders and torso outline
-  rect(centerX-torsoHalf-3, shoulderY-1, torsoHalf*2+6, torsoH+4, '#8c563b');
-
-  if(stage<5){
-    // shirt on
-    rect(centerX-torsoHalf, shoulderY+1, torsoHalf*2, torsoH, shirtColor);
-    rect(centerX-torsoHalf+4, shoulderY+10, torsoHalf-6, 12, '#ffd585');
-    rect(centerX+2, shoulderY+10, torsoHalf-6, 12, '#ffd585');
-    if(stage>=1){
-      rect(centerX-torsoHalf+7, shoulderY+14, torsoHalf-9, 8, '#f8c470');
-      rect(centerX+2, shoulderY+14, torsoHalf-9, 8, '#f8c470');
+  rect(0,248,384,3,music?'#a79cff':'#b8ddfa');
+  for(let i=0;i<8;i++){rect(5+i*48,308,30,3,music?'#6e85d4':'#607e94')}
+  if(music){
+    for(let i=0;i<4;i++){
+      const sx=80+i*73,osc=Math.sin(now/340+i*2)*18;
+      ctx.strokeStyle=i%2?'rgba(181,151,255,.23)':'rgba(99,223,250,.23)';ctx.lineWidth=4;
+      ctx.beginPath();ctx.moveTo(sx-15,13);ctx.lineTo(sx+osc,215);ctx.stroke();
     }
-    if(stage>=2){
-      for(let ay=shoulderY+28; ay<shoulderY+torsoH-10; ay+=12){
-        rect(centerX-12, ay, 10, 6, '#ce7e35'); rect(centerX+2, ay, 10, 6, '#ce7e35');
-      }
+  }else{
+    for(let i=0;i<3;i++){
+      const sx=88+i*102;
+      rect(sx,18,22,8,'#273952');rect(sx+3,25,16,4,'#f6da9a');
     }
-    if(stage>=4){
-      rect(centerX-torsoHalf+5, shoulderY+3, 6, torsoH-8, '#f6bd5f');
-      rect(centerX+torsoHalf-11, shoulderY+3, 6, torsoH-8, '#f6bd5f');
-    }
-  } else {
-    // awakened: shirt ripped open, exposed chest and abs
-    rect(centerX-torsoHalf, shoulderY+1, torsoHalf*2, torsoH, skin2);
-    rect(centerX-torsoHalf+3, shoulderY+3, torsoHalf*2-6, torsoH-6, skin);
-    // pecs
-    rect(centerX-torsoHalf+8, shoulderY+11, torsoHalf-10, 14, '#f0c29e');
-    rect(centerX+2, shoulderY+11, torsoHalf-10, 14, '#f0c29e');
-    // chest split
-    rect(centerX-2, shoulderY+10, 4, torsoH-16, '#b56d47');
-    // abs
-    for(let ay=shoulderY+32; ay<shoulderY+torsoH-14; ay+=12){
-      rect(centerX-14, ay, 12, 7, '#d88f61'); rect(centerX+2, ay, 12, 7, '#d88f61');
-    }
-    // lats / delts exaggeration
-    rect(centerX-torsoHalf-8, shoulderY+8, 8, torsoH-20, '#d4956c');
-    rect(centerX+torsoHalf, shoulderY+8, 8, torsoH-20, '#d4956c');
-    // torn shirt pieces
-    rect(centerX-torsoHalf-2, shoulderY+torsoH-10, 18, 8, '#c3472d');
-    rect(centerX+torsoHalf-16, shoulderY+torsoH-8, 18, 8, '#c3472d');
-    rect(centerX-9, shoulderY+torsoH-4, 18, 6, '#c3472d');
   }
-
-  // legs
-  const legY=shoulderY+torsoH;
-  rect(centerX-20-legThick/2, legY, legThick, 56, '#465b7b');
-  rect(centerX+20-legThick/2, legY, legThick, 56, '#465b7b');
-  rect(centerX-26-legThick/2, legY+54, legThick+10, 10, shoe);
-  rect(centerX+14-legThick/2, legY+54, legThick+10, 10, shoe);
-
-  // shoulder muscles / biceps / forearm overlays for clarity
-  rect(centerX-shoulderHalf-10, shoulderY+2, 16, 20, '#efc5a1');
-  rect(centerX+shoulderHalf-6, shoulderY+2, 16, 20, '#efc5a1');
-
-  if(stage>=2){
-    rect(centerX-shoulderHalf-8, shoulderY+7, 12, 4, '#d59d79');
-    rect(centerX+shoulderHalf-4, shoulderY+7, 12, 4, '#d59d79');
-
-  }
-  if(stage>=4){
-    rect(centerX-torsoHalf-6, shoulderY+24, 6, torsoH-26, '#f3c8a6');
-    rect(centerX+torsoHalf, shoulderY+24, 6, torsoH-26, '#f3c8a6');
-  }
-
-  // sweat / power particles
-  if(score>=45*(mode==='challenge'?challengeLength()/10:1) && !awakened){
-    const p = Math.floor(now/120)%4;
-    rect(centerX+torsoHalf+14+p*3, shoulderY+10, 3, 6, '#cce4ff');
-    rect(centerX-torsoHalf-18-p*3, shoulderY+22, 3, 6, '#cce4ff');
-  }
+  if(now<flashUntil)rect(0,0,w,h,'rgba(255,232,139,.12)');
+  if(now<awakenFlashUntil)rect(0,0,w,h,'rgba(255,255,255,.20)');
 }
 
+function mainCostume(){try{const raw=JSON.parse(localStorage.getItem('pullup_survival_meta_v41')||'null');return raw&&raw.selected||'classic'}catch(e){return 'classic'}}
+function mainSkinPalette(k){
+ return ({classic:['#35b2da','#a3edff','#344e73'],blaze:['#e65745','#ffc07a','#523042'],metal:['#318b8b','#b0ffe1','#254956'],divine:['#9774dc','#e2d2ff','#4b3a6e'],legend:['#eab142','#fff4ab','#644719'],nebula:['#6f71d5','#bee5ff','#323364'],inferno:['#cc443a','#ffb98b','#582638'],frostKnight:['#4387b8','#d8faff','#274968'],zenith:['#c9a461','#ffedac','#634c29']})[k]||['#35b2da','#a3edff','#344e73'];
+}
+function drawAvatar(now){
+  const st=muscleStage(),mature=Math.min(1,score/(mode==='challenge'?challengeLength()*15:150));
+  const bob=now<upUntil?-15:0, y=123+bob;
+  const bulk=Math.min(12,Math.round(mature*8+st*.6));
+  const costume=mainCostume(), palette=mainSkinPalette(costume);
+  const tank=st>=5?'#efbe46':palette[0];
+  const glow=st>=5?'#fff3b4':palette[1];
+  const face='#f1bd93',edge='#403044',hair='#272d43',pants=palette[2];
+  function part(x,y,w,h,color){rect(x,y,w,h,color)}
+  function arm(points,width){
+    ctx.lineJoin='round';ctx.lineCap='square';
+    for(const [wd,col] of [[width+4,edge],[width,face]]){
+      ctx.strokeStyle=col;ctx.lineWidth=wd;ctx.beginPath();
+      ctx.moveTo(points[0][0],points[0][1]);
+      for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);ctx.stroke();
+    }
+  }
+  // Arms are jointed: hands stay fixed while the whole body lifts.
+  arm([[164,53],[155,y-39],[167-bulk/3,y+12]],11+st*.5);
+  arm([[220,53],[229,y-39],[217+bulk/3,y+12]],11+st*.5);
+  part(158,49,12,8,face);part(215,49,12,8,face);
+  if(costume==='frostKnight'){part(162,y-48,16,13,'#b3f6ff');part(205,y-48,16,13,'#b3f6ff');}
+  else if(costume==='zenith'){part(162,y-48,16,13,'#fff1b0');part(205,y-48,16,13,'#fff1b0');}
+  // Legs behind body
+  part(172,y+62,17,54,edge);part(195,y+62,17,54,edge);
+  part(174,y+64,13,48,pants);part(197,y+64,13,48,pants);
+  part(168,y+112,23,9,'#ecf2fa');part(194,y+112,23,9,'#ecf2fa');
+  part(167-bulk,y+44,50+2*bulk,26,edge);part(171-bulk,y+48,42+2*bulk,17,pants);
+  // Torso is outlined, progression stays human-proportioned.
+  part(165-bulk,y,54+bulk*2,54,edge);
+  part(169-bulk,y+4,46+bulk*2,47,glow);
+  part(172-bulk,y+5,40+bulk*2,43,tank);
+  part(188,y+11,8,25,st>=5?'#fff3b4':'#237faf');
+  part(177-bulk,y+8,7,7,glow);part(200+bulk,y+8,7,7,glow);
+  if(st>=2){part(180-bulk,y+37,8,3,glow);part(196+bulk,y+37,8,3,glow)}
+  if(st>=5){
+    // Awakening: golden power vest + crack lines, not anatomical distortion.
+    part(172-bulk,y+40,9,7,'#fb695a');part(203+bulk,y+40,9,7,'#fb695a');
+    part(187,y+18,10,6,'#fff9da');
+  }
+  // Neck meets head and torso with no gap.
+  part(187,y-9,10,16,edge);part(189,y-8,6,15,face);
+  part(179,y-36,26,31,edge);part(182,y-33,20,27,face);
+  part(179,y-39,26,10,hair);part(184,y-24,3,3,'#233143');part(197,y-24,3,3,'#233143');
+  part(190,y-15,5,2,'#b77364');
+  // Pixel details: jersey emblem, shoes, visor highlights, animation sweat.
+
+  // Large, distinct costume silhouettes applied to both challenge and music.
+  if(costume==='metal'){
+    part(148-bulk,y+2,18,20,'#253749');part(218+bulk,y+2,18,20,'#253749');
+    part(152-bulk,y+5,12,13,'#94f9e3');part(220+bulk,y+5,12,13,'#94f9e3');
+    part(179,y-38,26,16,'#243e54');part(185,y-31,16,7,'#93fcf1');
+    part(185,y+21,14,10,'#193843');
+  } else if(costume==='blaze'||costume==='inferno'){
+    part(179,y-50,10,16,'#ffbf64');part(196,y-50,10,16,'#ffbf64');
+    part(151-bulk,y+3,14,25,'#d44a47');part(218+bulk,y+3,14,25,'#d44a47');
+    part(154-bulk,y+7,9,13,'#ffbf75');part(220+bulk,y+7,9,13,'#ffbf75');
+    if(costume==='inferno') {part(144-bulk,y+11,11,39,'#ff7f57');part(230+bulk,y+11,11,39,'#ff7f57');}
+  } else if(costume==='divine'){
+    part(172,y-54,41,6,'#ffeaaa');part(174,y-58,37,4,'#c6a9ff');
+    part(143-bulk,y+9,20,38,'#b8abf4');part(221+bulk,y+9,20,38,'#b8abf4');
+    part(151-bulk,y+5,13,19,'#e9e4ff');part(220+bulk,y+5,13,19,'#e9e4ff');
+  } else if(costume==='legend'){
+    part(177,y-49,31,12,'#e4b63d');part(175,y-58,9,15,'#fff4a3');part(188,y-61,9,18,'#fff4a3');part(201,y-58,9,15,'#fff4a3');
+    part(144-bulk,y+5,19,57,'#b53643');part(223+bulk,y+5,19,57,'#b53643');
+    part(172-bulk,y+44,40+bulk*2,7,'#fff1ac');
+  } else if(costume==='nebula'){
+    part(177,y-44,30,17,'#444896');part(184,y-35,17,9,'#adeeff');
+    part(144-bulk,y+4,20,49,'#625cb0');part(221+bulk,y+4,20,49,'#625cb0');
+    part(151-bulk,y+15,10,23,'#a39ff0');part(223+bulk,y+15,10,23,'#a39ff0');
+  }
+  part(179,y-36,12,3,'#77859c');
+  part(174-bulk,y+6,9,2,'rgba(255,255,255,.34)');
+  part(202+bulk,y+6,9,2,'rgba(255,255,255,.32)');
+  part(168,y+113,23,3,'#b4d5f6');part(194,y+113,23,3,'#b4d5f6');
+  if(now<upUntil){part(138,y+37,17,3,'#fff5d0');part(229,y+44,17,3,'#fff5d0');part(225,y-4,4,9,'#8fe4ff');}
+  if(st>=5){
+    for(let i=0;i<8;i++){const angle=i*Math.PI/4+now/280,r=58+Math.sin(now/260+i)*4;
+      rect(192+Math.cos(angle)*r,y+17+Math.sin(angle)*r*.65,5,5,i%2?'#fff3a8':'#ffab69')}
+  }
+}
 function draw(now){
   drawBackground(now);
   drawAvatar(now);
-  if(score>=160){ text('SSS GOD!', 192, 22, 23, '#ffe67f'); }
-  if(now<flashUntil){ text('LEVEL UP!', 192, 24, 22, '#ffe067'); }
-  if(now<awakenFlashUntil){ text('覚 醒 !!', 192, 48, 26, '#ffffff'); }
+  // Frame ornaments: corner rivets, animated mode lighting and readable arcade contrast.
+  const music=mode==='music',accent=music?'#b89bff':'#ffe097';
+  for(const [x,y] of [[7,37],[372,37],[7,298],[372,298]]){
+    rect(x-3,y-3,7,7,'#091526');rect(x-1,y-1,3,3,accent);
+  }
+  for(let i=0;i<6;i++){
+    const x=42+i*59,y=35+Math.sin(now/490+i*.9)*3;
+    rect(x,y,12,2,music?'rgba(185,152,255,.38)':'rgba(255,217,147,.30)');
+    if(music){rect(x+3,y+3,6,3,'rgba(142,239,255,.18)');}
+  }
+  if(score&&now<upUntil){
+    for(let i=0;i<12;i++){
+      const a=i*Math.PI/6+now/150,rr=40+(1-(upUntil-now)/120)*35;
+      rect(192+Math.cos(a)*rr,157+Math.sin(a)*rr*.6,3+(i%2),3, i%3?'#fff0b2':'#9ffaff');
+    }
+  }
+  // Consistent arcade labels and rewards for both modes.
+  rect(103,6,178,25,'#101d31');rect(106,9,172,2,mode==='music'?'#a58bfd':'#ffcc77');
+  text(mode==='music'?'♪ RHYTHM PULL-UP':'💪 PULL-UP CHALLENGE',192,25,14,'#e6f3ff');
+  if(mode==='music'){
+    const melody=activeMelody(),total=melody.steps.length;
+    const done=Math.min(total,noteIndex);
+    rect(105,278,174,7,'#13223a');rect(105,278,174*(done/Math.max(total,1)),7,'#e6beff');
+    text('♪ '+done+' / '+total+' NOTES',192,303,16,'#f7d8ff');
+    // Musical lanes reflect the current tune, a pulsing waveform follows each tap.
+    for(let i=0;i<10;i++){
+      const h=6+Math.abs(Math.sin(now/280+i*.8+done*.8))*19;
+      rect(144+i*10,254-h,6,h,i%2?'#7d6ff1':'#93ecfb');
+    }
+    for(let k=0;k<7;k++){
+      let xx=87+k*36, yy=62+Math.sin(now/400+k*.5)*5;
+      rect(xx,yy,18,3,'rgba(188,157,255,.18)');rect(xx+6,yy-6,4,9,'rgba(158,239,255,.19)');
+    }
+    if(now<upUntil)text('♪ PERFECT BEAT!',192,90,17,'#fff3b7');
+  }else{
+    const awakenedLine=awakenTarget();
+    rect(90,274,204,8,'#10233a');
+    rect(90,274,204*Math.min(1,score/awakenedLine),8,awakened?'#ffe47d':'#72dfd8');
+    text(awakened?'🔥 AWAKENED!':'AWAKEN  '+score+' / '+awakenedLine,192,304,16,'#ffebad');
+    // Animated training sparks and milestone ornaments.
+    for(let i=0;i<12;i++){
+      const a=i*Math.PI/6+now/900,r=105+(score>0?Math.sin(now/280+i)*5:0);
+      if(score>=rankThresholds[challengeLength()][2])rect(192+Math.cos(a)*r,161+Math.sin(a)*r*.72,3,3,i%2?'#fee68c':'#a9f0ff');
+    }
+    if(now<upUntil)text('NICE PULL!',192,92,16,'#b9ffe1');
+  }
+  if(now<flashUntil)text('LEVEL UP!',192,64,21,'#ffe067');
+  if(now<awakenFlashUntil)text('覚 醒 !!',192,89,26,'#ffffff');
 }
 
 function updateUI(now=performance.now()){
@@ -633,6 +909,15 @@ function finish(){
     $('summary').textContent=`${score}回達成！${newRecord?' 🏆 NEW RECORD!':''} ${nextTier()?`あと${nextTier().n-score}回で次のランク！`:'最終ランク到達！'}`;
     $('share').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(`💪 懸垂連打${challengeLength()}秒チャレンジで${score}回！\n【ランク${t.rank}：${t.rankName}】\n#筋トレ攻略室 #連打でムキムキ`);
     $('hint').textContent='結果をシェアして友達に挑戦！';
+    if(cloudEnabled && newRecord){
+      if(playerName&&challengeSessionToken){
+       const token=challengeSessionToken;challengeSessionToken=null;
+       void rankingApi.submitChallenge(challengeLength(),score,token)
+        .then(()=>{ $('challengeRankStatus').textContent='✅ SEASON 1ランキングに登録しました！';refreshChallengeRank();})
+        .catch(e=>{$('challengeRankStatus').textContent='⚠ 記録送信失敗：'+e.message});
+      }else $('challengeRankStatus').textContent=playerName?'ローカル記録を保存（今回はオンライン開始を確認できませんでした）':'オンライン登録にはユーザー名を保存してください。';
+    }
+
   }else{
     const ms=musicElapsed,key=$('song').value;
     recordMusicTime(key,ms);renderRanking(); if(cloudEnabled)void submitCloudScore(key,ms);
@@ -648,7 +933,23 @@ function finish(){
   displayBest();
   $('result').classList.remove('hidden');
 }
-function startGame(){
+async function startGame(){
+  if(challengeStartPending||playing)return;
+  challengeStartPending=true;
+  const requestedMode=mode,requestedDuration=challengeLength();
+  $('start').disabled=true;
+  challengeSessionToken=null;
+  if(requestedMode==='challenge'&&cloudEnabled&&getRankingName()){
+    $('hint').textContent='世界ランキングのプレイ開始を確認中…';
+    try{
+      challengeSessionToken=await Promise.race([
+        rankingApi.startRun('challenge',requestedDuration),
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error('通信タイムアウト')),3500))
+      ]);
+    }catch(e){$('challengeRankStatus').textContent='⚠ ランキング開始失敗（ローカルで遊べます）：'+e.message;}
+  }
+  $('start').disabled=false;challengeStartPending=false;
+  if(mode!==requestedMode||challengeLength()!==requestedDuration)return;
   cancelAnimationFrame(frame);
   score=0;noteIndex=0;playing=true;startedAt=performance.now();end=startedAt+challengeLength()*1000;musicElapsed=0;
   upUntil=0;lastStage=-1;flashUntil=0;awakenFlashUntil=0;awakened=false;
@@ -691,15 +992,16 @@ $('song').addEventListener('change',()=>{noteIndex=0;updateMode();updateProgress
 $('toggleRanking').addEventListener('click',()=>{renderRanking();$('leaderboard').classList.toggle('hidden')});
 $('hideRanking').addEventListener('click',()=>{$('leaderboard').classList.add('hidden')});
 $('challengeMode').addEventListener('click',()=>setMode('challenge'));
-$('challengeDuration').addEventListener('change',()=>{if(!playing&&mode==='challenge')setMode('challenge');});
+$('challengeDuration').addEventListener('change',()=>{if(!playing&&mode==='challenge')setMode('challenge');void refreshChallengeRank();});
 $('musicMode').addEventListener('click',()=>setMode('music'));
+$('survivalMode').addEventListener('click',stopArcadeForSwitch);
 $('start').addEventListener('click', ()=>{audioReady();startGame()});
 // Mobile browsers and file viewers differ in pointer event support.
 // click is the most compatible input; touch-action:manipulation removes delay.
 $('tap').addEventListener('click', e=>{ e.preventDefault(); hit(); });
 document.addEventListener('keydown', e=>{ if(e.code==='Space' && !e.repeat){ e.preventDefault(); hit(); }});
 document.addEventListener('keyup', e=>{ if(e.code==='Space') e.preventDefault();});
-setMode('challenge');renderRanking();
+setMode('challenge');renderRanking();void refreshChallengeRank();
 })();
 </script>
 <script>
@@ -709,36 +1011,432 @@ const $=id=>document.getElementById(id);
 const canvas=$('surCanvas'), c=canvas.getContext('2d'); c.imageSmoothingEnabled=false;
 const W=384,H=320;
 let phase='ready',stage=1,hp=0,score=0,clock=0,startAt=0,lastFrame=0,raf=0,spawnAt=0,bullets=[],keys=new Set(),invUntil=0,drag=false,px=192,py=270,prevSurvival=false,earned=0,totalPullups=0,stageHits=0,perfectStages=0;
-let debugRun=false;
-let best=0;try{best=Number(localStorage.getItem('survival_stage_best_v22'))||0}catch(e){} $('surBest').textContent=best;
+let debugRun=false, power=0, bossHp=0, bossActive=false, bossDefeated=false, bossShots=0, flash=0;
+let armor=0,bossKills=0,powerReadyAt=0,jReleased=true,bossMaxHp=0,bossLastHitWindow=-1;
+let hazards=[],bossAttackAt=0,slowUntil=0;
+let routeTargets=[],routeIndex=0,routeOvertimeNotified=false;
+const worldForStage=()=>stage<=3?1:stage<=6?2:stage<=12?3:stage<=18?4:stage<=24?5:stage<=30?6:stage<=36?7:stage<=42?8:stage<=48?9:stage<=54?10:11;
+const worldInfo=()=>[
+ null,['🏋️ IRON GYM','#8dcdf8'],['🧪 PROTEIN LAB','#85ebdf'],['🏛 MUSCLE TEMPLE','#ffe197'],
+ ['🌌 COSMIC GYM','#b9b0ff'],['🔴 IRON FORTRESS','#ff9c99'],['✨ MUSCLE CORE','#f7e4a2'],
+ ['❄️ FROST DOJO','#b0edff'],['⚡ THUNDER ARENA','#ffeb91'],['🧬 CYBER CITY','#75fbd3'],
+ ['🕳 VOID ABYSS','#d0a7ff'],['🌟 ZENITH SANCTUM','#ffecad']][worldForStage()];
+function updateWorldLabel(){
+ const [name,col]=worldInfo();const el=$('surZone');el.textContent=`WORLD ${worldForStage()} / 11 · ${name}　|　STAGE ${stage}${stage>60?' ∞':''}`;el.style.color=col;
+}
+
+const isRouteStage=()=>stage>=4&&stageModifier()==='slalom';
+const routeDone=()=>routeIndex>=routeTargets.length;
+function setupRoute(){
+ routeIndex=0;routeOvertimeNotified=false;
+ const reverse=Math.floor(stage/3)%2===1;
+ const a={x:55,y:151},b={x:329,y:100},c={x:193,y:175};
+ routeTargets=isRouteStage()?(stage>=49?(reverse?[b,a,c,{x:314,y:214},{x:88,y:237}]:[a,b,c,{x:314,y:214},{x:88,y:237}]):stage>=25?(reverse?[b,a,c,{x:314,y:214}]:[a,b,c,{x:314,y:214}]):stage>=10?(reverse?[b,a,c]:[a,b,c]):(reverse?[b,a]:[a,b])):[];
+ updateRouteHint();
+}
+function updateRouteHint(){
+ const el=$('surRouteHint');
+ if(phase!=='dodge'||!isRouteStage()){el.textContent='';return;}
+ el.textContent=routeDone()?`✅ 補給コア ${routeTargets.length}/${routeTargets.length} 回収完了！時間まで生き残ろう`:`🧭 障害物を迂回して補給コアを回収：${routeIndex}/${routeTargets.length}（クリア必須）`;
+}
+function checkRoutePickup(){
+ if(phase!=='dodge'||!isRouteStage()||routeDone())return;
+ const g=routeTargets[routeIndex];
+ if(Math.hypot(px-g.x,py-g.y)<=20){
+   routeIndex++;hp=Math.min(maxHp(),hp+coreHeal());
+   sprinkle(g.x,g.y,['#b5fff0','#ffe99e','#ffffff'],26,2.4);
+   floatText('CORE +'+coreHeal()+' HP',g.x,Math.max(85,g.y-12),'#aefef1');
+   banner('CHECKPOINT '+routeIndex+'/'+routeTargets.length,1100);
+   updateRouteHint();
+   if(routeDone())message('✅ 全コア回収！残り時間を生き残ればクリア！');
+ }
+}
+
+const hitRadius=4; // clearly visible bright core
+// A gentle introduction: stage 1 is free movement, obstacles begin stage 4.
+const stageModifier=()=>stage===1?'intro':stage%3===1?'slalom':stage%3===2?'slow':'boss';
+const difficulty=()=>Math.min(1,Math.max(0,(stage-1)/11));
+// Endgame balancing deliberately starts after STAGE 12. Earlier stages keep the old feel.
+const maxHp=()=>stage<=12?300:stage<=18?280:stage<=24?250:stage<=30?225:stage<=42?220:stage<=54?210:200;
+const perfectHeal=()=>stage<=12?30:stage<=18?23:stage<=24?16:stage<=42?12:9;
+const bossHeal=()=>stage<=12?35:stage<=18?30:stage<=24?25:stage<=42?20:16;
+const coreHeal=()=>stage<=12?8:stage<=24?6:4;
+const spawnInterval=()=>stage<=12?Math.max(185,660-stage*35):stage<=18?220-(stage-12)*7:stage<=24?171-(stage-18)*4.5:stage<=30?Math.max(108,144-(stage-24)*4.4):stage<=42?118-(stage-31)*1.5:stage<=54?102-(stage-43)*.65:Math.max(79,94-(stage-55)*.8);
+const speedBoostForStage=()=>Math.min(20,(stage-1)*.45+Math.max(0,stage-30)*.12);
+const dangerLabel=()=>stage<=12?'BEGINNER':stage<=18?'ADVANCED':stage<=24?'EXPERT':stage<=30?'NIGHTMARE':stage<=42?'MASTER':stage<=54?'LEGEND':stage<=60?'GODLIKE':'ENDLESS';
+let pressureAt=0;
+function updatePressure(now){
+ if(phase!=='dodge'||stage<19||bossActive)return;
+ const interval=stage>=49?3200:stage>=31?3700:stage>=25?4100:5400;
+ if(now-pressureAt<interval)return;
+ if(hazards.some(h=>h.type==='laser'))return;
+ const x=Math.max(26,Math.min(358,px));
+ const warning=stage>=49?780:stage>=25?850:1050;
+ hazards.push({type:'laser',origin:'pressure',x,width:stage>=25?30:23,
+  ready:now+warning,until:now+warning+(stage>=25?760:650),damage:stage>=25?29:24});
+ pressureAt=now;
+}
+
+
+const bossStage=()=>stage%3===0;
+let best=0;try{best=Number(localStorage.getItem('survival_stage_best_v41')||localStorage.getItem('survival_stage_best_v22'))||0}catch(e){} $('surBest').textContent=best;
+
+// Unlockable cosmetic skins and accolades, separate from balance-changing skills.
+const metaKey='pullup_survival_meta_v41';
+const skinDefs={
+ classic:{label:'クラシック',skin:'#efbd91',hair:'#283145',shirt:'#30acda',shine:'#aff0ff',pants:'#324c77',shoe:'#e8f4ff',accent:'#ffe275'},
+ blaze:{label:'ブレイズ',skin:'#efbd91',hair:'#4b2a24',shirt:'#e25254',shine:'#ffa485',pants:'#523042',shoe:'#ffebcc',accent:'#ffd979'},
+ metal:{label:'メタル',skin:'#eab998',hair:'#273c45',shirt:'#35c9a0',shine:'#a8ffe5',pants:'#2b515d',shoe:'#e8feff',accent:'#e8ff98'},
+ divine:{label:'ディバイン',skin:'#f2cda5',hair:'#564077',shirt:'#9675e7',shine:'#e4d9ff',pants:'#45335a',shoe:'#fffbdb',accent:'#ffe886'},
+ legend:{label:'レジェンド',skin:'#f2cda5',hair:'#523a18',shirt:'#efbb4c',shine:'#fff5ac',pants:'#614a25',shoe:'#fffce3',accent:'#fff8cf'},
+ nebula:{label:'ネビュラ',skin:'#edc5aa',hair:'#322b6a',shirt:'#7863d4',shine:'#bde6ff',pants:'#272752',shoe:'#e1faff',accent:'#ffdb92'},
+ inferno:{label:'インフェルノ',skin:'#f1c3a5',hair:'#471d20',shirt:'#cc4342',shine:'#ffbea1',pants:'#51242d',shoe:'#fff0df',accent:'#ffec99'},
+ frostKnight:{label:'氷結騎士',skin:'#eac7ac',hair:'#274961',shirt:'#458ab6',shine:'#b9f4ff',pants:'#264766',shoe:'#efffff',accent:'#b9f4ff'},
+ zenith:{label:'天頂神',skin:'#f2d0a6',hair:'#6b4a24',shirt:'#c89e50',shine:'#fff6c0',pants:'#60492e',shoe:'#ffffe4',accent:'#fff5ba'}
+};
+let meta={unlocked:['classic'],selected:'classic',bestStage:best,bestNoMiss:0,bestBoss:0,title:'見習いトレーニー'};
+try{const v=JSON.parse(localStorage.getItem(metaKey)||'null');if(v&&typeof v==='object')Object.assign(meta,v)}catch(e){}
+meta.unlocked=Array.from(new Set((Array.isArray(meta.unlocked)?meta.unlocked:['classic']).filter(k=>skinDefs[k])));
+if(!meta.unlocked.includes('classic'))meta.unlocked.unshift('classic');
+if(!meta.unlocked.includes(meta.selected))meta.selected='classic';
+function saveMeta(){try{localStorage.setItem(metaKey,JSON.stringify(meta))}catch(e){}}
+function skin(){return skinDefs[meta.selected]||skinDefs.classic}
+
+const skinUnlockHints={classic:'初期から使用可能',blaze:'STAGE 5到達',metal:'ボス2体撃破',divine:'ノーミス2回',legend:'STAGE 10到達',nebula:'STAGE 15到達',inferno:'STAGE 22到達',frostKnight:'STAGE 36クリア',zenith:'STAGE 60クリア'};
+const skinEmblems={classic:'💪',blaze:'🔥',metal:'🤖',divine:'✨',legend:'👑',nebula:'🌌',inferno:'🌋',frostKnight:'❄️',zenith:'🌟'};
+function drawMiniSkin(canvas,key){
+ const g=canvas.getContext('2d');g.imageSmoothingEnabled=false;
+ const sk=skinDefs[key];
+ const px=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h)};
+ g.clearRect(0,0,48,64);
+ px(0,0,48,64,'#10203b');
+ for(let i=0;i<3;i++)px(5+i*16,5,2,2,sk.accent);
+ px(13,18,22,31,'#142034');px(16,21,16,25,sk.shirt);px(20,23,8,18,sk.shine);
+ px(18,10,12,13,sk.skin);px(17,8,14,6,sk.hair);
+ px(11,23,5,19,sk.skin);px(32,23,5,19,sk.skin);
+ px(16,47,8,11,sk.pants);px(24,47,8,11,sk.pants);
+ px(14,57,11,4,sk.shoe);px(24,57,11,4,sk.shoe);
+ px(20,16,2,2,'#182537');px(27,16,2,2,'#182537');
+ if(key==='blaze'||key==='inferno'){
+  px(12,12,6,13,'#fa7946');px(30,12,6,13,'#fa7946');px(20,3,5,9,'#ffe177');px(26,5,4,9,'#fa9252');
+  if(key==='inferno'){px(6,26,6,25,'#e95c48');px(36,26,6,25,'#e95c48');px(4,19,7,10,'#ffe174');px(38,19,6,10,'#ffe174')}
+ }else if(key==='metal'){
+  px(8,22,9,16,'#364b62');px(31,22,9,16,'#364b62');px(16,9,16,10,'#263c58');px(18,12,12,5,'#a2ffee');
+  px(17,52,7,8,'#233c4f');px(24,52,7,8,'#233c4f');px(21,3,5,9,'#a2ffee');
+ }else if(key==='divine'){
+  px(11,3,26,3,'#ffefaa');px(7,14,9,8,'#ded7ff');px(32,14,9,8,'#ded7ff');px(3,24,12,15,'#a18bdf');px(33,24,12,15,'#a18bdf');
+ }else if(key==='legend'){
+  px(14,6,20,6,'#ffd269');px(14,2,5,7,'#ffed9d');px(22,0,5,8,'#ffed9d');px(29,2,5,7,'#ffed9d');
+  px(6,24,8,30,'#b93a43');px(34,24,8,30,'#b93a43');px(15,37,18,5,'#ffe59a');
+ }else if(key==='nebula'){
+  px(13,6,22,7,'#565ca8');px(16,10,16,5,'#b6f6ff');px(6,24,8,26,'#5656a4');px(34,24,8,26,'#5656a4');
+  px(4,10,4,4,'#e2bcff');px(39,13,4,4,'#9af0ff');
+ }else if(key==='frostKnight'){
+  px(12,9,24,11,'#37729a');px(14,4,20,10,'#b6f5ff');px(21,0,6,9,'#e7ffff');
+  px(6,21,10,16,'#3b78a6');px(32,21,10,16,'#3b78a6');px(3,29,8,24,'#a7e5ff');px(37,29,8,24,'#a7e5ff');
+  px(15,37,18,7,'#ebffff');
+ }else if(key==='zenith'){
+  px(10,2,28,4,'#fff2c4');px(13,6,22,10,'#e5bd72');px(21,0,7,11,'#fff1a3');
+  px(4,16,12,24,'#fff7dc');px(32,16,12,24,'#fff7dc');px(1,25,10,15,'#d8b16a');px(37,25,10,15,'#d8b16a');
+  px(15,36,18,8,'#f4df96');
+ }
+}
+function renderSkinGallery(){
+ const gallery=$('surSkinGallery');if(!gallery)return;
+ gallery.replaceChildren();
+ for(const key of Object.keys(skinDefs)){
+  const unlocked=meta.unlocked.includes(key);
+  const tile=document.createElement('button');tile.type='button';tile.className='skin-tile'+(unlocked?'':' locked')+(meta.selected===key?' selected':'');
+  const sprite=document.createElement('canvas');sprite.width=48;sprite.height=64;drawMiniSkin(sprite,key);
+  const name=document.createElement('strong');name.textContent=(skinEmblems[key]||'🎨')+' '+skinDefs[key].label;
+  const desc=document.createElement('small');desc.textContent=unlocked?'使用可能 ✓':'🔒 '+skinUnlockHints[key];
+  tile.append(sprite,name,desc);
+  tile.addEventListener('click',()=>{
+    if(!unlocked){showUnlock('解放条件：'+skinUnlockHints[key]);return;}
+    meta.selected=key;saveMeta();renderSkins();paint();
+  });
+  gallery.append(tile);
+ }
+}
+function renderSkins(){
+ const sel=$('surSkin');sel.replaceChildren();
+ for(const key of meta.unlocked){const option=document.createElement('option'); option.value=key;option.textContent=skinDefs[key].label;sel.appendChild(option)}
+ sel.value=meta.selected; $('surTitle').textContent=meta.title;renderSkinGallery();
+}
+function computeTitle(){
+ if(meta.bestStage>=60) return '真・筋肉神';
+ if(meta.bestStage>=45) return '伝説の筋肉王';
+ if(meta.bestStage>=36) return '氷結の覇者';
+ if(meta.bestStage>=30) return '無限筋肉王';
+ if(meta.bestStage>=21) return '鋼鉄の覇者';
+ if(meta.bestStage>=15) return '銀河のマッスル';
+ if(meta.bestStage>=12) return '筋肉神';
+ if(meta.bestStage>=9) return '神殿踏破者';
+ if(meta.bestBoss>=3) return 'ボスハンター';
+ if(meta.bestNoMiss>=3) return 'ノーミス職人';
+ if(meta.bestStage>=6) return 'ジムマスター';
+ return '見習いトレーニー';
+}
+function unlock(key){if(meta.unlocked.includes(key))return;meta.unlocked.push(key);renderSkins();showUnlock('新スキン解放：'+skinDefs[key].label)}
+let unlockExpiry=0;
+function showUnlock(text){$('surUnlock').textContent='✨ '+text;$('surUnlock').classList.remove('hidden');unlockExpiry=performance.now()+3600}
+function grantCosmetics(reached){
+ if(debugRun)return; // developer tests never grant progression
+ meta.bestStage=Math.max(meta.bestStage||0,reached,best);
+ meta.bestNoMiss=Math.max(meta.bestNoMiss||0,perfectStages);
+ meta.bestBoss=Math.max(meta.bestBoss||0,bossKills);
+ if(meta.bestStage>=5)unlock('blaze');
+ if(meta.bestBoss>=2)unlock('metal');
+ if(meta.bestNoMiss>=2)unlock('divine');
+ if(meta.bestStage>=10)unlock('legend');
+ if(meta.bestStage>=15)unlock('nebula'); if(meta.bestStage>=22)unlock('inferno');
+ if(meta.bestStage>=36)unlock('frostKnight');if(meta.bestStage>=60)unlock('zenith');
+ meta.title=computeTitle();renderSkins();saveMeta();
+}
+$('surSkin').addEventListener('change',()=>{const key=$('surSkin').value;if(meta.unlocked.includes(key)){meta.selected=key;saveMeta();paint()}});
+renderSkins();grantCosmetics(best);
+// Canvas FX, built only with rects and Canvas2D (no SVG dependency).
+let fxParticles=[],fxText=[],fxBanner='',fxBannerUntil=0,fxShakeUntil=0,fxShake=0;
+function sprinkle(x,y,colors=['#ffe584'],amount=24,intensity=2.8){
+ for(let i=0;i<amount;i++){
+   const theta=Math.random()*Math.PI*2,spd=(.4+Math.random())*intensity;
+   fxParticles.push({x,y,vx:Math.cos(theta)*spd,vy:Math.sin(theta)*spd-.7,life:27+Math.random()*21,size:2+Math.floor(Math.random()*3),color:colors[i%colors.length]});
+ }
+}
+function floatText(text,x,y,color='#fff5b0'){fxText.push({text,x,y,life:45,color})}
+function banner(text,ms=1550){fxBanner=text;fxBannerUntil=performance.now()+ms}
+function rumble(amount=3,ms=240){fxShake=Math.max(fxShake,amount);fxShakeUntil=performance.now()+ms}
+function tickFx(dt){
+ const f=Math.min(dt*60,2.3);
+ fxParticles=fxParticles.filter(p=>{p.x+=p.vx*f;p.y+=p.vy*f;p.vy+=.06*f;p.life-=f;return p.life>0});
+ fxText=fxText.filter(t=>{t.y-=.45*f;t.life-=f;return t.life>0});
+ if(performance.now()>=fxShakeUntil){fxShake=0;canvas.style.transform='translate(0,0)'}
+ else canvas.style.transform=`translate(${(Math.random()-.5)*fxShake*2}px,${(Math.random()-.5)*fxShake*2}px)`;
+ if(unlockExpiry>0&&performance.now()>unlockExpiry){$('surUnlock').classList.add('hidden');unlockExpiry=0}
+}
+function paintFx(){
+ for(const p of fxParticles){c.globalAlpha=Math.min(1,p.life/15);rect(p.x,p.y,p.size,p.size,p.color)}
+ c.globalAlpha=1;
+ for(const t of fxText){c.globalAlpha=Math.min(1,t.life/12);txt(t.text,t.x,t.y,14,t.color)}
+ c.globalAlpha=1;
+ if(fxBanner&&performance.now()<fxBannerUntil){
+   rect(28,21,328,38,'#11223a');rect(30,23,324,34,'#31435e');rect(33,25,318,3,'#ffe29a');
+   txt(fxBanner,192,48,21,'#ffedaa');
+ }
+}
+function drawPixelHero(x,y,size=1){
+ const sk=skin(), variant=meta.selected;
+ // Consistent 2px-outline and same colors in training and dodge.
+ const rr=(ox,oy,w,h,color)=>rect(x+ox*size,y+oy*size,w*size,h*size,color);
+ rr(-8,-15,16,16,'#152435');rr(-7,-14,14,14,sk.skin);
+ rr(-8,-17,16,6,'#152435');rr(-7,-16,14,5,sk.hair);
+ rr(-4,-7,2,2,'#213246');rr(2,-7,2,2,'#213246');
+ rr(-11,0,22,16,'#152435');rr(-9,1,18,13,sk.shine);rr(-7,3,14,10,sk.shirt);
+ rr(-3,4,6,8,sk.accent);
+ rr(-13,0,5,12,sk.skin);rr(8,0,5,12,sk.skin);
+ rr(-9,14,18,7,'#152435');rr(-7,14,14,6,sk.pants);
+ rr(-8,20,7,8,sk.pants);rr(1,20,7,8,sk.pants);
+ rr(-9,27,9,4,sk.shoe);rr(1,27,9,4,sk.shoe);
+ // Silhouette-changing costumes, not just palette swaps. Each skin has unique equipment.
+ if(variant==='blaze'||variant==='inferno'){
+   rr(-15,-11,6,8,'#522437');rr(9,-11,6,8,'#522437');
+   rr(-14,-18,5,10,'#ff9f4e');rr(9,-18,5,10,'#ff9f4e');
+   rr(-13,4,4,16,'#ffb54d');rr(9,4,4,16,'#ffb54d');
+   rr(-8,12,16,5,'#ffc96c');
+   rr(-3,-21,6,5,'#ffcc72');
+   if(variant==='inferno'){rr(-19,-6,6,18,'#fd754d');rr(13,-6,6,18,'#fd754d');rr(-18,-20,6,10,'#ffdb65');rr(12,-20,6,10,'#ffdb65');rr(-10,14,20,9,'#713a45')}
+ }else if(variant==='metal'){
+   // armored exosuit with visor, massive shoulders, mechanical boots and antennae
+   rr(-17,-2,10,12,'#152a42');rr(7,-2,10,12,'#152a42');
+   rr(-15,0,8,8,'#a2f1e7');rr(7,0,8,8,'#a2f1e7');
+   rr(-9,-17,18,11,'#263c5b');rr(-7,-13,14,4,'#85faff');
+   rr(-2,-22,4,6,'#d9ffad');rr(-11,8,22,4,'#0a2631');
+   rr(-11,20,9,12,'#1c3542');rr(2,20,9,12,'#1c3542');
+   rr(-11,28,10,4,'#9bf3de');rr(1,28,10,4,'#9bf3de');
+ }else if(variant==='divine'){
+   // halo and luminous angel wings
+   rr(-12,-27,24,3,'#fff2b0');rr(-9,-24,18,3,'#a58fff');
+   rr(-24,-4,10,7,'#d5ceff');rr(-28,-9,8,6,'#fff8d0');rr(-26,4,12,8,'#9f8afa');
+   rr(14,-4,10,7,'#d5ceff');rr(20,-9,8,6,'#fff8d0');rr(14,4,12,8,'#9f8afa');
+   rr(-12,13,24,13,'#734eba');rr(-5,4,10,5,'#fffbdc');
+ }else if(variant==='legend'){
+   // royal crown, cape and championship belt
+   rr(-16,-13,8,33,'#ffe08d');rr(8,-13,8,33,'#ffe08d');
+   rr(-10,-23,20,8,'#ffce58');rr(-12,-27,5,7,'#fff7b7');rr(-2,-30,5,9,'#fff7b7');rr(7,-27,5,7,'#fff7b7');
+   rr(-10,13,20,7,'#533a34');rr(-4,14,8,5,'#fff5bd');
+   rr(-16,9,6,20,'#d73843');rr(10,9,6,20,'#d73843');
+  }else if(variant==='frostKnight'){
+   rr(-14,-16,28,8,'#a9f5ff');rr(-9,-24,18,10,'#4b86aa');rr(-3,-28,6,9,'#e6ffff');
+   rr(-19,-5,11,15,'#3a7195');rr(8,-5,11,15,'#3a7195');
+   rr(-18,9,7,18,'#a5d8f5');rr(11,9,7,18,'#a5d8f5');
+   rr(-10,15,20,5,'#ebffff');
+  }else if(variant==='zenith'){
+   rr(-15,-26,30,5,'#ffe4a1');rr(-9,-31,18,10,'#fff5c8');rr(-3,-36,6,13,'#c99c3e');
+   rr(-26,-6,12,13,'#fff4cf');rr(14,-6,12,13,'#fff4cf');
+   rr(-30,6,16,10,'#c9a469');rr(14,6,16,10,'#c9a469');
+   rr(-10,12,20,7,'#efcf78');
+  }else if(variant==='nebula'){
+   // astral helmet, orbiting planets and cape
+   rr(-12,-21,24,5,'#a9dcff');rr(-10,-25,20,6,'#5f7ee5');rr(-8,-13,16,5,'#aef7ff');
+   rr(-21,-1,9,17,'#5b55ac');rr(12,-1,9,17,'#5b55ac');
+   rr(-15,10,30,14,'#6456bd');rr(-17,16,34,7,'#b1a1ff');
+   rr(-3,4,6,6,'#fbebaf');rr(11,-20,5,5,'#f4d6ff');rr(-22,-14,5,5,'#98e5ff');
+ }
+
+}
+
+
+// Stage briefings pause the game clock. One briefing per new mechanic per run.
+const guideMap={
+ 1:['基本操作：連打→回避','懸垂2回でHPが1回復し、30回で必殺技が1回チャージされます。\nその後20秒の弾幕を生き残ればクリア！','PC：矢印キー / WASDで移動、Shiftで低速。スマホ：画面をドラッグ。必殺技はJキーまたは専用ボタン。'],
+ 2:['NEW！減速フィールド','水色のエリアに入るとキャラの移動速度が落ちます。\n弾が迫ってから入ると逃げ遅れるので注意！','まずフィールドの外側で攻撃を避け、必要なときだけ中を通ろう。'],
+ 3:['初めてのボス戦','ボスの弱点は黄色いときだけダメージを受けます。\n筋肉衝撃波を弱点が開いた瞬間に当てよう。','弱点OPEN1回につき1ダメージまで！倒すとHP＋35、永続防御＋3。'],
+ 4:['NEW！迂回ルート＆補給コア','オレンジ色の障害物は通り抜けられません。\n壁を回り込んで光る補給コアを順番に集めてください。','全コア回収がクリア条件。20秒以内に集めきれないと8秒の延長戦！'],
+ 5:['NEW！追尾大型弾','同じ場所に約2秒間居続けると、遠くから大型弾に狙われます。\n赤い予告線が出たら、狙われた位置からすぐに離れよう。','弾が発射される前に移動すれば回避できる。角で待ち続けるのは危険！'],
+ 6:['NEW！サプリ工場ボス','横長の動くプレス装置が迫ってきます。\n装置には隙間があるので、安全な位置へ移動しよう。','ボスを倒すには弱点OPENを待って必殺技！プレス装置の隙間も確認して。'],
+ 7:['NEW WORLD！筋肉神殿','神殿では黄金プレートや神秘の紋章が飛んできます。\n攻撃の方向がジムや工場とは変わります。','光る弾と背景を見分けながら、安全な空間を探そう。'],
+ 9:['NEW！レーザーボス','神殿のボスは赤いレーザーを放ちます。\n黄色の予告エリアを見たら横へ移動！','赤いレーザーの発射前に安全な場所へ。必殺技は緊急回避にも使える。'],
+ 10:['コア回収が3個に増加','障害物ステージで集める補給コアが3個になります。\n時間配分がより重要に！','上部の「補給コア 0/3」の表示を確認して順番に回収しよう。'],
+ 13:['NEW WORLD！宇宙筋肉基地','宇宙エリアに突入！流星やプラズマ弾が襲います。\nここからは新しい専用背景と弾幕パターン！','弾の先端だけでなく、進行方向もよく見て避けよう。'],
+ 14:['NEW！重力の横流れ','紫色のフィールドでは左右に流されます。\n停止していても移動するため、位置を細かく調整しよう。','フィールドの中では方向キーで押し返せる。スマホではドラッグで補正しよう。'],
+ 15:['NEW！宇宙ボス','星屑を広範囲に飛ばすボスが登場。\n広がる弾の隙間へ先回りして移動しよう。','弱点OPENがチャンス。倒せば永続防御の強化を獲得！'],
+ 19:['NEW！高難度エリア＆警告レーザー','ここから敵の弾数・弾速が段階的に増えます。\nさらに赤い警告ラインが出た約1秒後にレーザーが発射！ HP最大値も250に下がります。','警告を見たら横移動。HPを貯めるだけでなく、障害物の回り方も重要になります。'],
+ 20:['NEW！高圧エリア','減速フィールドが強化されます。\n短い移動操作を重ねて、弾幕の隙間を抜けよう。','フィールドの境界を意識して、余裕のあるときに通過しよう。'],
+ 21:['NEW！要塞ボス','赤い防御壁と重量級の弾を放つボスです。\n動く隙間をよく観察して立ち回ろう。','必殺技で弾と一部の障害物を消せる。HP管理も大事。'],
+ 25:['NIGHTMARE WORLD！筋肉コア突入','ここから弾幕がさらに速くなり、警告レーザーの間隔が短くなります。\nHP上限225、補給コアは4個。最終エリアではノーミス報酬も減少！','レーザーは予告中に移動して回避。必殺技は緊急時まで残しておこう。'],
+ 27:['NEW！コアボス','光のレーザーと量子弾が同時に飛ぶ高難度ボス！\n予告線が出たら即座に離れよう。','弱点を1回のOPEN中に何度も攻撃しても1ダメージまで。'],
+ 30:['CORE CHAMPION！','STAGE 30到達！コアボスを倒して筋肉王を目指せ。\nその先は新しい5つの世界が待っている！','弱点OPENのタイミングを逃さず、HPを維持して生き残ろう。'],
+ 31:['NEW WORLD！❄ 氷結道場','ステージ31からは氷結道場。氷塊弾が直進・分裂して迫ります。\n移動し続けると転びやすい氷のレーンも登場！','大きな氷は進路を予測して、早めに横へ移動しよう。'],
+ 32:['NEW！氷結スローフィールド','青く光る床では通常の減速に加え、横流れが強くなります。\n端に寄せられる前に位置を調整しよう。','外側の床を使うと移動速度を保てます。'],
+ 36:['氷結の守護者','巨大な氷の盾と氷柱の列を放つボスです。\n弾とレーザーの隙間をよく観察しよう。','弱点が開くたびに必殺技を当てよう！'],
+ 37:['NEW WORLD！⚡ 雷神アリーナ','雷鳴が鳴り響く競技場！電撃球は斜めに飛び、雷レーザーには予告が出ます。','赤い予告と黄色い弾の区別に注意。'],
+ 38:['NEW！感電フィールド','中央のエリアではさらに移動しにくくなります。\nレーザーの予告が見えたら外側へ逃げよう。','足元の白い当たり判定を意識して！'],
+ 42:['雷神チャンピオン','広がる電撃弾と2方向レーザーが襲います。','ガード解除中に必殺技を命中させよう。'],
+ 43:['NEW WORLD！🧬 サイバー都市','機械都市ではホーミングビットと電子ブレードが登場します。','角にこもらず予告の場所から離れよう。'],
+ 44:['NEW！デジタル重力床','床が強く引っ張り、連続でスライドしやすくなります。','最短距離より安全な迂回を優先しよう。'],
+ 48:['電脳司令塔','ボスの横向きレーザーとビット弾の連携攻撃です。','先に逃げ道を確保してから弱点を狙おう。'],
+ 49:['NEW WORLD！🕳 虚無の深淵','暗い空間に紫色の危険弾が浮かびます。\n左右の壁が視界を遮るので注意。','弾には輪郭がある。飛ぶ方向を確認しよう。'],
+ 50:['NEW！虚無の引力','中央では移動が鈍り、重力の横流れも強まります。','移動方向をこまめに修正しよう。'],
+ 54:['虚無の王','ワープ弾と予告レーザーのボスです。','隙間に入るだけでなく次の攻撃を予測しよう。'],
+ 55:['FINAL WORLD！🌟 天頂神殿','ステージ55～60は最終決戦！聖なる流星と光弾が降ります。\nHP上限200。残りHPを慎重に管理しよう。','必殺技を使うタイミングが重要になります。'],
+ 56:['NEW！天頂の試練','中央フィールドが激しく揺れ、弾幕密度もさらに上がります。','光る予告線が出たら早めに移動！'],
+ 60:['TRUE FINAL BOSS！','ステージ60は真の筋肉神との戦い！\n弱点OPENごとに必殺技を当てて、真のエンディングへ。','ステージ60を突破すると、栄光の称号を獲得！'],
+ 61:['ENDLESS MODE！','ステージ60クリア、おめでとう！真のエンドレスに突入。\nここからは到達ステージの限界に挑戦！','世界ランキングとXで記録をシェアしよう。']
+};
+let shownGuides=new Set(),pendingGuideAction=null;
+function showStageGuide(onProceed,force=false){
+ const info=guideMap[stage];
+ if(!info||(!force&&shownGuides.has(stage)))return false;
+ shownGuides.add(stage);pendingGuideAction=onProceed;
+ cancelAnimationFrame(raf);phase='guide';updateRouteHint();
+ $('surGuideStage').textContent=`WORLD ${worldForStage()} · STAGE ${stage} · NEW MECHANIC`;
+ $('surGuideTitle').textContent=info[0];$('surGuideText').textContent=info[1];$('surGuideTip').textContent='💡 '+info[2];
+ show('surTutorial',true);show('surTap',false);show('surPower',false);show('surStart',false);show('surContinue',false);
+ updateWorldLabel();message('新しいギミックの説明を読んでから始めよう！');paint();return true;
+}
+$('surGuideConfirm').addEventListener('click',()=>{
+ show('surTutorial',false);const start=pendingGuideAction;pendingGuideAction=null;
+ if(start)start();
+});
+
 function show(id,on){$(id).classList.toggle('hidden',!on)}
-function update(){ $('surStage').textContent=stage;$('surHp').textContent=`${Math.max(0,Math.round(hp))} / 300`;$('surHealthFill').style.width=(Math.max(0,hp)/300*100)+'%';$('surTime').textContent=Math.max(0,clock).toFixed(1);}
+function update(){ updateWorldLabel();$('surStage').textContent=stage;$('surHp').textContent=`${Math.max(0,Math.round(hp))} / ${maxHp()}`;$('surHealthFill').style.width=(Math.max(0,hp)/maxHp()*100)+'%';$('surTime').textContent=Math.max(0,clock).toFixed(1);$('surDanger').textContent=`${dangerLabel()} ｜ STAGE ${stage} ｜ HP最大${maxHp()} ｜ 弾幕間隔 ${Math.round(spawnInterval())}ms`;$('surDanger').style.color=stage>=25?'#ffe49b':stage>=19?'#ffb8a0':'#bdeeff';$('surPowerInfo').textContent=`⚡筋肉衝撃波 ${power}/3｜懸垂30回で＋1｜🛡防御 ${armor}｜👑撃破 ${bossKills}｜${bossStage()?'👑 ボスステージ':'通常ステージ'}`;$('surPower').textContent=`⚡ 筋肉衝撃波 ×${power}`;$('surPower').disabled=power<=0||phase!=='dodge'||performance.now()<powerReadyAt;}
 function message(t){$('surMessage').textContent=t}
-function stop(){cancelAnimationFrame(raf);show('surResult',false);phase='ready';show('surTap',false);show('surContinue',false);show('surStart',true);$('surStart').textContent='▶ START';}
+
+async function refreshSurRank(){
+ const status=$('surRankStatus'),api=window.MUSCLE_RANK_API;
+ if(!api||!api.online){status.textContent='⚪ オンライン未接続：運営者がSupabaseのURLと公開キーを設定すると利用できます。';$('surRankItems').replaceChildren();return;}
+ status.textContent='⏳ 世界ランキングを読み込み中...';
+ try{
+  const all=await api.survivalTop();
+  const seen=new Set(),rows=[];
+  for(const entry of all){if(seen.has(entry.client_id))continue;seen.add(entry.client_id);rows.push(entry);if(rows.length>=10)break;}
+  const el=$('surRankItems');el.replaceChildren();
+  rows.forEach((v,i)=>{const li=document.createElement('li');const medal=document.createElement('span'),name=document.createElement('span'),value=document.createElement('span');
+   medal.textContent=i===0?'🥇':i===1?'🥈':i===2?'🥉':String(i+1);name.className='rank-person';name.textContent=v.player_name||'ゲスト';value.className='rank-score';value.textContent='ST '+v.stage_reached+' / '+v.total_pullups+'回';li.append(medal,name,value);el.append(li)});
+  if(!rows.length){const li=document.createElement('li');li.style.gridTemplateColumns='1fr';li.textContent='まだ投稿がありません。最初の記録を作ろう！';el.append(li)}
+  status.textContent='🟢 SEASON 1 · 全プレイヤー TOP10';
+ }catch(e){status.textContent='🔴 読込失敗：'+e.message+'　／　設定とSQLを確認してください'}
+}
+$('surRankRefresh').addEventListener('click',refreshSurRank);
+void refreshSurRank();
+function stop(){pendingGuideAction=null;show('surTutorial',false);routeTargets=[];routeIndex=0;cancelAnimationFrame(raf);canvas.style.transform='translate(0,0)';show('surResult',false);phase='ready';updateRouteHint();show('surTap',false);show('surContinue',false);show('surPower',false);show('surStart',true);$('surStart').textContent='▶ START';}
 function survivalMode(){if(prevSurvival)return;prevSurvival=true;document.body.classList.add('survival-active');$('survivalMode').classList.add('active');$('challengeMode').classList.remove('active');$('musicMode').classList.remove('active'); stop();paint();}
 function exit(){if(!prevSurvival)return;prevSurvival=false;document.body.classList.remove('survival-active');$('survivalMode').classList.remove('active');stop();}
 $('survivalMode').addEventListener('click',survivalMode);
 $('challengeMode').addEventListener('click',exit);$('musicMode').addEventListener('click',exit);
-function beginTraining(){phase='train';score=0;earned=0;clock=10;startAt=performance.now();lastFrame=startAt;bullets=[];show('surStart',false);show('surTap',true);show('surContinue',false);message(`STAGE ${stage}｜10秒連打でHP回復！（上限300）`);update();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
-function newRun(){debugRun=false;hp=0;stage=1;totalPullups=0;stageHits=0;perfectStages=0;show('surResult',false);beginTraining()}
+function beginTrainingRaw(){hp=Math.min(hp,maxHp());phase='train';updateRouteHint();score=0;earned=0;clock=10;startAt=performance.now();lastFrame=startAt;bullets=[];show('surStart',false);show('surTap',true);show('surContinue',false);show('surPower',false);message(`STAGE ${stage}${bossStage()?' 👑 BOSS':''}｜10秒連打！30回ごとに必殺技を獲得`);update();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+function beginTraining(){if(showStageGuide(beginTrainingRaw))return;beginTrainingRaw()}
+let survivalSessionPromise=Promise.resolve(null);
+function newRun(){survivalSessionPromise=Promise.resolve(null);
+ if(window.MUSCLE_RANK_API&&window.MUSCLE_RANK_API.online&&window.MUSCLE_RANK_API.name()){
+   survivalSessionPromise=window.MUSCLE_RANK_API.startRun('survival',null).catch(e=>{
+     $('surRankStatus').textContent='⚠ ランキング開始失敗（ゲームは継続）：'+e.message;return null;
+   });
+ }
+ shownGuides.clear();fxParticles=[];fxText=[];fxBannerUntil=0;debugRun=false;hp=0;stage=1;totalPullups=0;stageHits=0;perfectStages=0;power=0;armor=0;bossKills=0;bossActive=false;bossHp=0;show('surResult',false);beginTraining()}
 $('surDebugToggle').addEventListener('change',()=>show('surDebugTools',$('surDebugToggle').checked));
-$('surTestTemple').addEventListener('click',()=>{if(!$('surDebugToggle').checked)return;debugRun=true;stage=7;hp=140;totalPullups=0;stageHits=0;perfectStages=0;show('surResult',false);beginTraining();});
+$('surTestObstacle').addEventListener('click',()=>{
+ if(!$('surDebugToggle').checked)return;
+ debugRun=true;stage=4;hp=180;power=2;totalPullups=0;stageHits=0;perfectStages=0;armor=0;bossKills=0;bossActive=false;bossHp=0;
+ show('surResult',false);show('surStart',false);show('surContinue',false);
+ launchTestDodge();
+ message('🧭 テスト：障害物を回り込み、左右の補給コアを回収してクリアしよう！');
+});
+document.querySelectorAll('[data-teststage]').forEach(btn=>btn.addEventListener('click',()=>{
+ if(!$('surDebugToggle').checked)return;
+ debugRun=true;stage=Number(btn.dataset.teststage);hp=Math.min(220,maxHp());power=3;totalPullups=0;stageHits=0;perfectStages=0;armor=0;bossKills=0;
+ shownGuides.delete(stage);show('surResult',false);launchTestDodge();
+}));
+function launchTestDodge(){
+ const launch=()=>{const now=performance.now();cancelAnimationFrame(raf);startDodge(now);raf=requestAnimationFrame(loop)};
+ if(!showStageGuide(launch,true))launch();
+}
+$('surTestTemple').addEventListener('click',()=>{if(!$('surDebugToggle').checked)return;debugRun=true;stage=7;hp=140;totalPullups=0;stageHits=0;perfectStages=0;power=0;armor=0;bossKills=0;bossActive=false;bossHp=0;show('surResult',false);beginTraining();});
+document.querySelectorAll('[data-bosstest]').forEach(btn=>btn.addEventListener('click',()=>{
+ if(!$('surDebugToggle').checked)return;
+ debugRun=true;stage=Number(btn.dataset.bosstest);hp=240;power=3;totalPullups=0;
+ stageHits=0;perfectStages=0;armor=0;bossKills=0;bossActive=false;bossHp=0;
+ show('surResult',false);show('surStart',false);show('surContinue',false);
+ launchTestDodge();
+ message(`🧪 開発テスト STAGE ${stage}：ボス戦を直接開始！ HP240／必殺技3回`);
+}));
 $('surStart').addEventListener('click',newRun);
 $('surContinue').addEventListener('click',beginTraining);
-function tap(){if(!prevSurvival||phase!=='train')return;if(performance.now()-startAt>=10000)return;score++;earned++;totalPullups++;hp=Math.min(300,hp+1);update();paint();}
+function tap(){if(!prevSurvival||phase!=='train')return;if(performance.now()-startAt>=10000)return;score++;totalPullups++;if(score%2===0){const beforeHp=hp;hp=Math.min(maxHp(),hp+1);earned+=hp-beforeHp;}if(score%15===0)sprinkle(192,82,['#fcfdff','#b9f1fe'],9,1.2);if(score%30===0){power=Math.min(3,power+1);floatText('POWER +1',192,98,'#9bffff')}update();paint();}
 $('surTap').addEventListener('click',e=>{e.preventDefault();tap()});
 window.addEventListener('keydown',e=>{if(!prevSurvival)return;const key=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' ','w','a','s','d','shift'].includes(key)){e.preventDefault();keys.add(key)}if(e.code==='Space'&&!e.repeat)tap()});
 window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
 // Mobile: player appears above the fingertip so bullets remain visible.
 // Touch uses an 82px in-game offset; mouse/pen preserves exact targeting.
 let activePointer=null;
+// Solid barriers shared by keyboard and touch movement.
+const stageWalls=()=>stage>=19?[
+ {x:34,y:190,w:133,h:14},{x:203,y:132,w:147,h:14},{x:108,y:237,w:160,h:13}
+]:[{x:40,y:190,w:135,h:14},{x:210,y:132,w:140,h:14}];
+function intersectsWall(x,y){
+ if(phase!=='dodge'||stageModifier()!=='slalom')return false;
+ const r=7;
+ return stageWalls().some(w=>x+r>w.x&&x-r<w.x+w.w&&y+r>w.y&&y-r<w.y+w.h);
+}
+function movePlayerTo(tx,ty){
+ tx=Math.max(13,Math.min(W-13,tx));ty=Math.max(80,Math.min(H-14,ty));
+ const n=Math.max(1,Math.ceil(Math.hypot(tx-px,ty-py)/3));
+ const dx=(tx-px)/n,dy=(ty-py)/n;
+ for(let i=0;i<n;i++){
+   if(!intersectsWall(px+dx,py+dy)){px+=dx;py+=dy;}
+   else {
+     if(!intersectsWall(px+dx,py))px+=dx;
+     if(!intersectsWall(px,py+dy))py+=dy;
+   }
+ }
+}
 function aim(e){
  const r=canvas.getBoundingClientRect();
  const x=(e.clientX-r.left)/r.width*W;
  const y=(e.clientY-r.top)/r.height*H;
  const offset=e.pointerType==='touch'?82:0;
- px=Math.max(14,Math.min(W-14,x));
- py=Math.max(84,Math.min(H-14,y-offset));
+ movePlayerTo(x,y-offset);checkRoutePickup();
 }
 canvas.addEventListener('pointerdown',e=>{
  if(phase!=='dodge'||activePointer!==null)return;
@@ -752,57 +1450,194 @@ function finishDrag(e){if(activePointer===e.pointerId){drag=false;activePointer=
 canvas.addEventListener('pointerup',finishDrag);
 canvas.addEventListener('pointercancel',finishDrag);
 canvas.addEventListener('lostpointercapture',finishDrag);
-function startDodge(now){phase='dodge';stageHits=0;clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);message(`HP ${hp}で弾幕開始！20秒生き残れ！ 弾速・弾数アップ！`);update();}
-function clearStage(){phase='clear';if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}const perfect=stageHits===0;
-if(perfect){hp=Math.min(300,hp+30);perfectStages++;}
-message(perfect?`🏆 STAGE ${stage} ノーミスクリア！ HP +30 ボーナス！ 残りHP ${Math.round(hp)}`:`STAGE ${stage} クリア！ 被弾 ${stageHits}回。残りHP ${Math.round(hp)}`);
-show('surContinue',true);stage++;update();}
+// Boss shield cycles: after 2 seconds, the core opens for 2.8 seconds every 6 seconds.
+function bossWindow(now=performance.now()){
+ const t=(now-startAt)/1000;
+ return t>=2?Math.floor((t-2)/6):-1;
+}
+function bossWeak(now=performance.now()){
+ if(!bossActive||phase!=='dodge')return false;
+ const t=(now-startAt)/1000;
+ return t>=2&&((t-2)%6)<(stage>=25?1.85:stage>=19?2.25:2.8);
+}
+function bossCanHit(now=performance.now()){
+ return bossWeak(now)&&bossLastHitWindow!==bossWindow(now);
+}
+function usePower(){
+ if(!prevSurvival||phase!=='dodge'||power<=0||performance.now()<powerReadyAt)return;
+ power--;bullets=[];hazards=[];flash=performance.now()+420;hp=Math.min(maxHp(),hp+5);sprinkle(px,py,['#9bfaff','#d6ffff','#fff2a3'],44,4.2);floatText('MUSCLE BURST!',px,py-20,'#b7ffff');rumble(4,280);
+ if(bossActive&&bossHp>0){
+  if(bossCanHit()){
+   bossLastHitWindow=bossWindow();
+   bossHp--;sprinkle(192,57,['#fff0a6','#ff9c68'],25,2.9);rumble(5,220);
+   if(bossHp===0){bossDefeated=true;bossActive=false;bossKills++;armor=Math.min(9,armor+3);hp=Math.min(maxHp(),hp+bossHeal());message(`👑 ボス撃破！HP+${bossHeal()}＆永久防御+3！ 現在防御 ${armor}`);sprinkle(192,62,['#ffe775','#ff6f83','#8cf6ff'],110,5);banner('BOSS DEFEATED!',2100);rumble(7,470);}
+   else message(`💥 弱点に命中！ボス残りHP ${bossHp}/${bossMaxHp}`);
+  }else message(bossWeak()?'🛡 この弱点OPEN中はすでに命中済み！次のOPENを待とう':'🛡 ボスのガード中！弾幕は消したがボスにダメージなし');
+ }else message('⚡筋肉衝撃波！弾を全消去＆HP+5！');
+ update();paint();
+}
+$('surPower').addEventListener('click',usePower);
+window.addEventListener('keydown',e=>{if(e.code==='KeyJ'&&!e.repeat&&jReleased){jReleased=false;usePower()}});
+window.addEventListener('keyup',e=>{if(e.code==='KeyJ')jReleased=true});
+function startDodge(now){hazards=[];slowUntil=0;bossAttackAt=now;pressureAt=now+1200;hp=Math.min(hp,maxHp());phase='dodge';setupRoute();powerReadyAt=now+1800;stageHits=0;stationaryFor=0;lastHunterAt=now;hunterWarning=null;lastPositionX=192;lastPositionY=270;clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);show('surPower',true);bossActive=bossStage();bossDefeated=false;bossMaxHp=bossActive?(stage<=6?2:3):0;bossHp=bossMaxHp;bossLastHitWindow=-1;bossShots=now;
+message(bossActive?`👑 ボスHP ${bossHp}！黄色く光る弱点が開いた時だけ必殺技が効く！`:'弾幕開始！必殺技は1.8秒後から使用可能！');update();}
+function clearStage(){
+ if(stage===60 && !bossDefeated){
+   phase='clear';show('surContinue',true);show('surPower',false);
+   message('👑 真の筋肉神はまだ健在！このステージを再挑戦。懸垂で必殺技を貯めてから挑もう！');
+   update();return;
+ }
+ phase='clear';updateRouteHint();if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v41',String(best))}catch(e){}$('surBest').textContent=best}const perfect=stageHits===0;
+if(perfect){hp=Math.min(maxHp(),hp+perfectHeal());perfectStages++;sprinkle(190,85,['#ffe77b','#ffffff','#a0f8ff'],65,4);banner('PERFECT CLEAR!',2100);floatText('HP +'+perfectHeal(),192,110,'#a6ffc9');rumble(3,240);}
+message(bossStage()?`👑 ボスステージ突破！${bossDefeated?'撃破成功・永続防御アップ！':'時間切れで生還！'} ${perfect?'🏆ノーミスHP+'+perfectHeal()+'！':''}`:(perfect?`🏆 STAGE ${stage} ノーミスクリア！ HP +${perfectHeal()} ボーナス！ 残りHP ${Math.round(hp)}`:`STAGE ${stage} クリア！ 被弾 ${stageHits}回。残りHP ${Math.round(hp)}`));
+if(stage===60&&!debugRun){banner('🏆 TRUE MUSCLE GOD!',2600);sprinkle(192,100,['#ffe685','#a9faff','#ffffff'],95,4.3);message('👑 STAGE 60クリア！真の筋肉神！61以降はエンドレス！');}
+show('surContinue',true);show('surPower',false);const clearedStage=stage;stage++;grantCosmetics(clearedStage);updateWorldLabel();update();}
 function gameOver(){
  phase='over';
- if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v22',String(best))}catch(e){}$('surBest').textContent=best}
+ if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v41',String(best))}catch(e){}$('surBest').textContent=best}
  $('surTotalPullups').textContent=totalPullups+' 回';
  $('surPerfectStages').textContent=perfectStages+' ステージ';
+ $('surBossKills').textContent=bossKills+' 体（防御 +'+armor+'）';
  $('surReachedStage').textContent='STAGE '+stage+(debugRun?'（テスト）':'');
- const tweet=`💪 連打でムキムキ！サバイバル懸垂\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}\nノーミスクリア：${perfectStages}ステージ${debugRun?'（テストプレイ）':''}\nみんなは何ステージまで行ける？\n#筋トレ攻略室 #連打でムキムキ`;
+ grantCosmetics(stage); $('surResultTitle').textContent=meta.title;
+ // Developer/test runs must never appear in the public rankings.
+ if(!debugRun){const api=window.MUSCLE_RANK_API;
+  if(api&&api.online){if(api.name()){
+   const run=survivalSessionPromise;
+   void Promise.resolve(run).then(token=>{
+     if(!token){$('surRankStatus').textContent='ローカル記録を保存（今回はオンライン開始を確認できませんでした）';return null;}
+     return api.submitSurvival(stage,totalPullups,perfectStages,bossKills,token);
+   }).then(result=>{if(result!==null){$('surRankStatus').textContent='✅ SEASON 1に記録登録！';refreshSurRank();}})
+    .catch(e=>{$('surRankStatus').textContent='⚠ 記録送信失敗：'+e.message});
+  }
+  else $('surRankStatus').textContent='記録の公開にはユーザー名の保存が必要です。';}
+ }
+
+ const tweet=`💪 連打でムキムキ！サバイバル懸垂\n称号：${meta.title}\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}\nノーミスクリア：${perfectStages}ステージ\nボス撃破：${bossKills}体（防御+${armor}）${debugRun?'（テストプレイ）':''}\n全60ステージ＋∞！後半の高難度に挑戦！\n#筋トレ攻略室 #連打でムキムキ`;
  $('surShare').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(tweet);
  show('surResult',true);
  message('GAME OVER！今回の記録はこちら！');
- show('surTap',false);show('surContinue',false);show('surStart',true);
+ show('surTap',false);show('surContinue',false);show('surPower',false);show('surStart',true);
  $('surStart').textContent='↻ 再挑戦';update();
 }
 
 function currentTheme(){
   if(stage<=3) return 'gym';
   if(stage<=6) return 'factory';
-  return 'temple';
+  if(stage<=12) return 'temple';
+  if(stage<=18) return 'cosmos';
+  if(stage<=24) return 'fortress';
+  if(stage<=30) return 'core';
+  if(stage<=36) return 'frost';
+  if(stage<=42) return 'thunder';
+  if(stage<=48) return 'cyber';
+  if(stage<=54) return 'void';
+  return 'zenith';
 }
 function currentThemeName(){
   const t=currentTheme();
-  return t==='gym'?'ジム':t==='factory'?'サプリ工場':'筋肉神殿';
+  return {gym:'ジム',factory:'サプリ工場',temple:'筋肉神殿',cosmos:'宇宙筋肉基地',fortress:'紅蓮の筋肉要塞',core:'筋肉コア',frost:'氷結道場',thunder:'雷神アリーナ',cyber:'サイバー都市',void:'虚無の深淵',zenith:'天頂神殿'}[t];
 }
 
 
+// Aimed heavy projectiles: telegraphed so stationary corner camping isn't safe.
+let lastPositionX=192,lastPositionY=270,stationaryFor=0,lastHunterAt=0,hunterWarning=null;
+function updateHunter(now,dt){
+ const moved=Math.hypot(px-lastPositionX,py-lastPositionY);
+ stationaryFor=moved<2.1?stationaryFor+dt:0;
+ lastPositionX=px;lastPositionY=py;
+ if(hunterWarning&&now>=hunterWarning.until){
+   const h=hunterWarning;
+   const dx=h.x-h.sx,dy=h.y-h.sy;
+   const speed=118+Math.min(stage,13)*8;
+   const len=Math.hypot(dx,dy)||1;
+   bullets.push({theme:currentTheme(),type:currentTheme()==='temple'?'goldPlate':currentTheme()==='factory'?'bottle':'kettlebell',
+     x:h.sx,y:h.sy,vx:dx/len*speed,vy:dy/len*speed,r:14,damage:24});
+   hunterWarning=null;
+ }
+ // Anti-camping starts after stage 2; warning gives time to dodge.
+ if(stage>=5&&!hunterWarning&&now-lastHunterAt>(6400-1700*difficulty())&&stationaryFor>=2.1){
+   const side=px<W/2?W+16:-16;
+   hunterWarning={x:px,y:py,sx:side,sy:Math.max(85,py-105),until:now+1150};
+   lastHunterAt=now;
+   stationaryFor=0;
+ }
+}
 function spawn(now){
  const theme=currentTheme();
- const rate=Math.max(110, theme==='temple'?360-stage*30: theme==='factory'?385-stage*32: 410-stage*35);
+ if(bossActive && now-bossAttackAt>(stage<=3?1900:stage<=6?1550:stage<=18?1350:stage<=24?1170:stage<=36?1130:stage<=48?1080:990)){
+   bossAttackAt=now;
+   const elapsed=(now-startAt)/1000;
+   if(theme==='gym'){
+     // HEAVY WEIGHT: large alternating weights with visible lanes.
+     const lane=Math.floor(elapsed/2.3)%4;
+     const x=[55,145,239,329][lane];
+     bullets.push({theme,type:'kettlebell',x,y:74,vx:0,vy:128+stage*5,r:stage<=3?15:19,damage:stage<=3?23:30});
+     if(Math.floor(elapsed)%3===0)bullets.push({theme,type:'plate',x:W-x,y:60,vx:0,vy:168,r:13,damage:18});
+   }else if(theme==='factory'){
+     // MOVING MACHINERY: horizontal sweeping hazard gates with a wide opening.
+     if(hazards.length<2){
+       const gap=65+Math.floor(elapsed*71)%230;
+       hazards.push({type:'gate',y:76,gap,gapWidth:stage<=6?148:Math.max(92,148-(stage-6)*8),vy:58+stage*2,damage:18});
+     }
+     const x=40+Math.random()*304;
+     bullets.push({theme,type:'capsule',x,y:64,vx:Math.sin(elapsed)*32,vy:145,r:8,damage:12});
+   }else if(theme==='cosmos'){
+     const dir=Math.sin(elapsed*1.3)>0?1:-1;
+     for(let i=-2;i<=2;i++)bullets.push({theme,type:'meteor',x:192+i*31,y:71,vx:i*36+dir*24,vy:115+stage*2,r:9,damage:17});
+     if(stage>=15&&Math.floor(elapsed)%3===0&&!hazards.some(h=>h.type==='laser'))hazards.push({type:'laser',x:Math.max(36,Math.min(348,px)),width:20,ready:now+1120,until:now+1790,damage:20});
+   }else if(theme==='fortress'){
+     if(hazards.filter(h=>h.type==='gate').length<2){const gap=80+Math.floor(elapsed*48)%220;hazards.push({type:'gate',y:79,gap,gapWidth:125,vy:70+Math.min(stage,30),damage:20});}
+     for(let i=-1;i<=1;i++)bullets.push({theme,type:'gear',x:192+i*55,y:70,vx:i*30,vy:138+Math.min(stage,30)*2,r:11,damage:18});
+   }else if(theme==='core'){
+     for(let i=-2;i<=2;i++)bullets.push({theme,type:'quantum',x:192+i*33,y:69,vx:i*32,vy:125+Math.min(stage,32)*2,r:8,damage:15});
+     if(!hazards.some(h=>h.type==='laser'))hazards.push({type:'laser',x:Math.max(40,Math.min(344,px)),width:22,ready:now+1000,until:now+1750,damage:24});
+   }else if(theme==='frost'){
+     const shift=Math.floor(elapsed*2)%4;
+     for(let i=-2;i<=2;i++)bullets.push({theme,type:'iceCrystal',x:192+i*33,y:70,vx:i*25+(shift-2)*12,vy:154+stage*2,r:9,damage:17});
+     if(!hazards.some(h=>h.type==='laser'))hazards.push({type:'laser',x:Math.max(35,Math.min(349,px)),width:21,ready:now+1150,until:now+1770,damage:22});
+   }else if(theme==='thunder'){
+     for(let i=-3;i<=3;i++)bullets.push({theme,type:'voltOrb',x:192+i*20,y:74,vx:i*46,vy:138+stage*2,r:8,damage:16});
+     if(hazards.filter(h=>h.type==='laser').length<2){const x=65+Math.floor(elapsed*91)%255;hazards.push({type:'laser',x,width:18,ready:now+960,until:now+1590,damage:22});}
+   }else if(theme==='cyber'){
+     const x=40+Math.floor(elapsed*103)%304;
+     for(let i=-2;i<=2;i++)bullets.push({theme,type:'cyberBlade',x:192+i*34,y:72,vx:i*44,vy:155+stage*1.5,r:9,damage:17});
+     if(!hazards.some(h=>h.type==='gate'))hazards.push({type:'gate',y:78,gap:x,gapWidth:111,vy:70+stage,damage:20});
+   }else if(theme==='void'){
+     for(let i=-2;i<=2;i++)bullets.push({theme,type:'voidOrb',x:192+i*28,y:66,vx:Math.sin(elapsed*2+i)*65,vy:144+stage*2,r:10,damage:18});
+     if(!hazards.some(h=>h.type==='laser'))hazards.push({type:'laser',x:Math.max(32,Math.min(352,px)),width:24,ready:now+920,until:now+1650,damage:24});
+   }else if(theme==='zenith'){
+     for(let i=-3;i<=3;i++)bullets.push({theme,type:i%2?'zenithStar':'haloOrb',x:192+i*20,y:68,vx:i*47,vy:160+stage*1.5,r:9,damage:18});
+     if(hazards.filter(h=>h.type==='laser').length<2){const x=45+Math.floor(elapsed*73)%294;hazards.push({type:'laser',x,width:22,ready:now+930,until:now+1690,damage:26});}
+   }else{
+     // TEMPLE LASER: forecast beam then active for a short duration.
+     if(!hazards.some(h=>h.type==='laser')){
+       const x=Math.max(42,Math.min(342,px));
+       hazards.push({type:'laser',x,width:stage<=9?21:27,ready:now+1100,until:now+1700,damage:22});
+     }
+     for(const dir of [-1,1]) bullets.push({theme,type:'holyOrb',x:192,y:68,vx:dir*70,vy:125+stage*5,r:9,damage:13});
+   }
+ }
+ // Smooth rate progression rather than a sudden bullet storm at the theme boundary.
+ const rate=spawnInterval();
  if(now-spawnAt<rate)return;
  spawnAt=now;
- const speedBoost=Math.min(stage-1,12);
+ const speedBoost=speedBoostForStage();
  const kind=Math.random();
  if(theme==='gym'){
-   if(kind<0.26){
+   if(kind<0.35){
      const x=18+Math.random()*348;
-     bullets.push({theme,type:'plate',x,y:-12,vx:0,vy:138+speedBoost*19,r:9,damage:12});
-   }else if(kind<0.60){
+     bullets.push({theme,type:'plate',x,y:-12,vx:0,vy:112+speedBoost*12,r:9,damage:12});
+   }else if(kind<0.68){
      const x=15+Math.random()*355;
-     const ang=Math.atan2(py+10,px-x),v=148+speedBoost*18;
+     const ang=Math.atan2(py+10,px-x),v=125+speedBoost*13;
      bullets.push({theme,type:'dumbbell',x,y:8,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v,r:10,damage:12,rot:Math.random()*6.28});
-   }else if(kind<0.80){
+   }else if(kind<0.87){
      const x=20+Math.random()*344;
-     bullets.push({theme,type:'kettlebell',x,y:-12,vx:Math.sin(now/150)*39,vy:118+speedBoost*15,r:14,damage:28});
+     bullets.push({theme,type:'kettlebell',x,y:-12,vx:Math.sin(now/150)*39,vy:112+speedBoost*12,r:14,damage:28});
    }else{
      const x=50+Math.random()*284;
-     const count=stage>=4?5:stage>=2?3:2;
+     const count=stage>=7?5:stage>=4?3:2;
      for(let i=0;i<count;i++){
        const offset=i-(count-1)/2;
        bullets.push({theme,type:'barbell',x,y:-8,vx:offset*56,vy:135+speedBoost*12,r:8,damage:12,rot:Math.random()*6.28});
@@ -811,26 +1646,58 @@ function spawn(now){
  }else if(theme==='factory'){
    if(kind<0.28){
      const x=18+Math.random()*348;
-     bullets.push({theme,type:'capsule',x,y:-10,vx:0,vy:150+speedBoost*17,r:8,damage:12,rot:Math.random()*6.28});
+     bullets.push({theme,type:'capsule',x,y:-10,vx:0,vy:128+speedBoost*14,r:8,damage:12,rot:Math.random()*6.28});
    }else if(kind<0.58){
      const x=30+Math.random()*324;
-     const spread=stage>=5?5:3;
+     const spread=stage>=9?5:3;
      for(let i=0;i<spread;i++){
        const offset=i-(spread-1)/2;
        bullets.push({theme,type:'shaker',x,y:-8,vx:offset*48,vy:136+speedBoost*13,r:8,damage:12,tilt:offset});
      }
    }else if(kind<0.82){
      const side=Math.random()<0.5?-18:W+18;
-     const ang=Math.atan2(py-(90+Math.random()*160),px-side),v=160+speedBoost*14;
+     const ang=Math.atan2(py-(90+Math.random()*160),px-side),v=140+speedBoost*12;
      bullets.push({theme,type:'bottle',x:side,y:95+Math.random()*140,vx:Math.cos(ang)*v,vy:Math.sin(ang)*v,r:12,damage:24,rot:Math.random()*6.28});
    }else{
      const x=28+Math.random()*330;
      bullets.push({theme,type:'powder',x,y:-8,vx:Math.sin(now/130)*42,vy:128+speedBoost*14,r:12,damage:20});
    }
+ }else if(theme==='cosmos'){
+   if(kind<.38){let x=22+Math.random()*340;bullets.push({theme,type:'meteor',x,y:-12,vx:Math.sin(now/370)*39,vy:127+speedBoost*15,r:10,damage:17});}
+   else if(kind<.75){let x=32+Math.random()*320;for(let i=-1;i<=1;i++)bullets.push({theme,type:'starShard',x,y:-10,vx:i*58,vy:127+speedBoost*12,r:8,damage:13});}
+   else{let x=20+Math.random()*344;bullets.push({theme,type:'quantum',x,y:-12,vx:Math.sin(now/330)*40,vy:123+speedBoost*13,r:11,damage:22});}
+ }else if(theme==='fortress'){
+   if(kind<.4){let x=20+Math.random()*344;bullets.push({theme,type:'gear',x,y:-12,vx:Math.sin(now/400)*32,vy:124+speedBoost*14,r:12,damage:18});}
+   else if(kind<.7){let x=20+Math.random()*344;bullets.push({theme,type:'redCore',x,y:-12,vx:Math.sin(now/240)*53,vy:118+speedBoost*11,r:9,damage:14});}
+   else{let x=35+Math.random()*320;for(let i=-1;i<=1;i++)bullets.push({theme,type:'gear',x,y:-10,vx:i*54,vy:123+speedBoost*10,r:9,damage:15});}
+ }else if(theme==='frost'){
+   if(kind<.32){const x=20+Math.random()*344;bullets.push({theme,type:'iceCrystal',x,y:-10,vx:Math.sin(now/390)*40,vy:136+speedBoost*11,r:10,damage:16});}
+   else if(kind<.7){const x=24+Math.random()*336;for(let i=-1;i<=1;i++)bullets.push({theme,type:'frostChunk',x,y:0,vx:i*58,vy:135+speedBoost*9,r:8,damage:15});}
+   else {const x=20+Math.random()*344;bullets.push({theme,type:'iceCrystal',x,y:-10,vx:Math.sin(now/170)*80,vy:138+speedBoost*10,r:12,damage:22});}
+ }else if(theme==='thunder'){
+   if(kind<.4){const x=23+Math.random()*338;bullets.push({theme,type:'voltOrb',x,y:0,vx:Math.sin(now/200)*70,vy:153+speedBoost*12,r:10,damage:18});}
+   else if(kind<.75){const x=25+Math.random()*330;for(let i=-1;i<=1;i++)bullets.push({theme,type:'thunderBolt',x,y:-9,vx:i*63,vy:148+speedBoost*10,r:9,damage:16});}
+   else{const x=30+Math.random()*310;bullets.push({theme,type:'thunderBolt',x,y:-9,vx:Math.sin(now/240)*82,vy:166+speedBoost*11,r:11,damage:23});}
+ }else if(theme==='cyber'){
+   if(kind<.37){const x=22+Math.random()*340;const v=125+speedBoost*11,a=Math.atan2(py,px-x);bullets.push({theme,type:'dataNode',x,y:-9,vx:Math.cos(a)*v,vy:Math.max(98,Math.sin(a)*v),r:9,damage:17});}
+   else if(kind<.72){const x=20+Math.random()*344;for(let i=-1;i<=1;i++)bullets.push({theme,type:'cyberBlade',x,y:-10,vx:i*77,vy:138+speedBoost*12,r:9,damage:17});}
+   else{const x=25+Math.random()*332;bullets.push({theme,type:'dataNode',x,y:-10,vx:Math.sin(now/155)*105,vy:152+speedBoost*10,r:11,damage:23});}
+ }else if(theme==='void'){
+   if(kind<.41){const x=21+Math.random()*342;bullets.push({theme,type:'voidShard',x,y:-10,vx:Math.sin(now/185)*81,vy:143+speedBoost*11,r:9,damage:17});}
+   else if(kind<.72){const x=35+Math.random()*314;for(let i=-1;i<=1;i++)bullets.push({theme,type:'voidOrb',x,y:-10,vx:i*60,vy:152+speedBoost*9,r:9,damage:18});}
+   else{const x=22+Math.random()*340;bullets.push({theme,type:'voidOrb',x,y:-10,vx:Math.sin(now/130)*112,vy:155+speedBoost*11,r:12,damage:26});}
+ }else if(theme==='zenith'){
+   if(kind<.42){const x=25+Math.random()*334;bullets.push({theme,type:'zenithStar',x,y:-10,vx:Math.sin(now/300)*58,vy:148+speedBoost*11,r:11,damage:18});}
+   else if(kind<.74){const x=25+Math.random()*334;for(let i=-2;i<=2;i++)bullets.push({theme,type:'haloOrb',x,y:-10,vx:i*43,vy:154+speedBoost*10,r:7,damage:16});}
+   else{const x=23+Math.random()*340;bullets.push({theme,type:'zenithStar',x,y:-10,vx:Math.sin(now/160)*86,vy:170+speedBoost*12,r:13,damage:26});}
+ }else if(theme==='core'){
+   if(kind<.42){let x=20+Math.random()*344;bullets.push({theme,type:'quantum',x,y:-12,vx:Math.sin(now/300)*42,vy:125+speedBoost*13,r:10,damage:16});}
+   else if(kind<.74){let x=20+Math.random()*344;for(let i=-1;i<=1;i++)bullets.push({theme,type:'starShard',x,y:0,vx:i*74,vy:135+speedBoost*12,r:8,damage:14});}
+   else{let x=30+Math.random()*324;bullets.push({theme,type:'meteor',x,y:-8,vx:Math.sin(now/600)*65,vy:125+speedBoost*15,r:12,damage:22});}
  }else{
    if(kind<0.25){
      const x=20+Math.random()*344;
-     bullets.push({theme,type:'goldPlate',x,y:-12,vx:0,vy:160+speedBoost*18,r:10,damage:16});
+     bullets.push({theme,type:'goldPlate',x,y:-12,vx:0,vy:137+speedBoost*15,r:10,damage:16});
    }else if(kind<0.55){
      const x=22+Math.random()*340;
      const count=stage>=9?5:3;
@@ -846,15 +1713,42 @@ function spawn(now){
      bullets.push({theme,type:'sigil',x,y:-12,vx:Math.sin(now/140)*34,vy:120+speedBoost*12,r:14,damage:28,rot:Math.random()*6.28});
    }
  }
- if(stage>=4 && Math.random()<0.18){
+ if(stage>=4 && Math.random()<(stage>=25?0.37:stage>=19?0.29:0.18)){
    const fromLeft=Math.random()<0.5;
-   const themeType = theme==='gym'?'miniWeight':theme==='factory'?'miniCapsule':'miniOrb';
+   const themeType = theme==='gym'?'miniWeight':theme==='factory'?'miniCapsule':theme==='fortress'?'redCore':theme==='cosmos'?'starShard':'miniOrb';
    bullets.push({theme,type:themeType,x:fromLeft?3:W-3,y:100+Math.random()*160,vx:(fromLeft?1:-1)*(118+speedBoost*10),vy:25,r:8,damage:10,rot:Math.random()*6.28});
  }
 }
 
 function drawThemeBullet(b){
   const t=b.type;
+  const newPalette={iceCrystal:['#5ac9ec','#edffff'],frostChunk:['#347a9e','#d9f9ff'],voltOrb:['#ea9b36','#fffac2'],thunderBolt:['#d1a12e','#fff3a6'],dataNode:['#188c93','#b3fff1'],cyberBlade:['#187b74','#c0ffea'],voidShard:['#703eac','#ead2ff'],voidOrb:['#8255bd','#f5e7ff'],zenithStar:['#c49c47','#fffcde'],haloOrb:['#d1b65d','#fffbdc']};
+  if(newPalette[t]){
+    const [outer,inner]=newPalette[t],rot=(performance.now()/340)+(b.rot||0);
+    c.save();c.translate(b.x,b.y);c.rotate(rot);
+    const r=b.r;
+    c.fillStyle='#08121e';c.beginPath();c.arc(0,0,r+4,0,Math.PI*2);c.fill();
+    c.fillStyle=outer;c.beginPath();c.arc(0,0,r+2,0,Math.PI*2);c.fill();
+    c.fillStyle=inner;
+    if(['iceCrystal','frostChunk','voidShard','cyberBlade','thunderBolt','zenithStar'].includes(t)){
+      c.beginPath();c.moveTo(0,-r-1);c.lineTo(r*.7,0);c.lineTo(0,r+1);c.lineTo(-r*.7,0);c.closePath();c.fill();
+      rect(-2,-r+3,4,r*.9,outer);
+    }else{c.beginPath();c.arc(0,0,r-3,0,Math.PI*2);c.fill();rect(-2,-r-2,4,4,'#ffffff');}
+    c.restore();return;
+  }
+  if(['meteor','starShard','quantum','gear','redCore'].includes(t)){
+    c.save(); c.translate(b.x,b.y);c.rotate(performance.now()/(t==='gear'?220:440)+(b.rot||0));
+    const outer=t==='meteor'?'#695ca7':t==='starShard'?'#66bdef':t==='gear'?'#c25c69':t==='redCore'?'#ee7181':'#e6ce7e';
+    const light=t==='meteor'?'#c0b8ff':t==='starShard'?'#e3f8ff':t==='gear'?'#ffb39b':t==='redCore'?'#fff0d0':'#fffee2';
+    const r=b.r;
+    if(t==='gear'){
+      for(let i=0;i<8;i++){const a=i*Math.PI/4;rect(Math.cos(a)*r-3,Math.sin(a)*r-3,6,6,outer)}
+      c.fillStyle=outer;c.beginPath();c.arc(0,0,r-2,0,Math.PI*2);c.fill();
+    }else if(t==='starShard'||t==='quantum'){
+      rect(-r,-2,r*2,4,outer);rect(-2,-r,4,r*2,outer);rect(-r*.65,-r*.65,4,4,light);rect(r*.45,r*.45,4,4,light);
+    }else{rect(-r,-r,r*2,r*2,outer);rect(-r+3,-r+3,r*1.3,r*1.3,light)}
+    rect(-2,-2,4,4,light);c.restore();return;
+  }
   if(t==='plate'||t==='goldPlate'){
     const outer=t==='goldPlate'?'#cf9f2f':'#555b67', mid=t==='goldPlate'?'#f6d26e':'#8e97a7', inner=t==='goldPlate'?'#8b6720':'#35404f';
     c.fillStyle=outer; c.beginPath(); c.arc(b.x,b.y,b.r,0,Math.PI*2); c.fill();
@@ -911,15 +1805,46 @@ function drawThemeBullet(b){
 function loop(now){if(!prevSurvival)return;let dt=Math.min((now-lastFrame)/1000,.04);lastFrame=now;
 if(phase==='train'){clock=Math.max(0,10-(now-startAt)/1000);if(clock<=0){if(hp<=0){message('HPを1以上貯めよう！');gameOver()}else startDodge(now)}}
 if(phase==='dodge'){
- clock=Math.max(0,20-(now-startAt)/1000);
- const speed=(keys.has('shift')?90:185)*dt;
- if(keys.has('arrowleft')||keys.has('a'))px-=speed;if(keys.has('arrowright')||keys.has('d'))px+=speed;if(keys.has('arrowup')||keys.has('w'))py-=speed;if(keys.has('arrowdown')||keys.has('s'))py+=speed;
- px=Math.max(13,Math.min(W-13,px));py=Math.max(80,Math.min(H-14,py));spawn(now);
- for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;if(now>=invUntil&&Math.hypot(b.x-px,b.y-py)<b.r+7){hp=Math.max(0,hp-b.damage);stageHits++;invUntil=now+700;b.y=H+100;}}
+ const elapsed=(now-startAt)/1000;
+ const routePending=isRouteStage()&&!routeDone();
+ const overtime=routePending&&elapsed>=20;
+ clock=Math.max(0,(overtime?28:20)-elapsed);
+ if(overtime&&!routeOvertimeNotified){
+   routeOvertimeNotified=true;banner('OVERTIME! コアを回収しろ！',1750);
+   message('⚠️ コア未回収！延長8秒で残りを回収しないとゲームオーバー！');
+ }
+ const slowZone=stageModifier()==='slow'&&py>206&&px>112&&px<272;
+ const speed=(keys.has('shift')?90:185)*(slowZone?(stage<=5?0.82:stage<=8?0.70:stage<=19?0.60:stage<=24?0.50:0.42):1)*dt;
+ let tx=px,ty=py;
+ if(keys.has('arrowleft')||keys.has('a'))tx-=speed;if(keys.has('arrowright')||keys.has('d'))tx+=speed;
+ if(keys.has('arrowup')||keys.has('w'))ty-=speed;if(keys.has('arrowdown')||keys.has('s'))ty+=speed;
+ movePlayerTo(tx,ty);
+ if(stage>=14 && stageModifier()==='slow' && px>112&&px<272&&py>206){
+   const drift=Math.sin(elapsed*.95)*(stage>=20?47:26)*dt;
+   movePlayerTo(px+drift,py);
+ }
+ checkRoutePickup();
+ spawn(now);updateHunter(now,dt);updatePressure(now);
+ for(const h of hazards){
+   if(h.type==='gate'){
+      const oldY=h.y;h.y+=h.vy*dt;
+      const blocked=Math.abs(px-h.gap)>h.gapWidth/2-hitRadius;
+      const inGate=blocked&&Math.abs(py-h.y)<12;
+      // Physical collision: moving solid bar pushes the player downward instead of passing through.
+      if(blocked&&oldY<py+hitRadius&&h.y>=py-hitRadius){
+        py=Math.min(H-14,h.y+12+hitRadius);
+      }
+      if(inGate&&now>=invUntil){hp=Math.max(0,hp-Math.max(1,h.damage-armor));stageHits++;invUntil=now+700}
+   } else if(h.type==='laser'&&now>=h.ready&&now<h.until&&Math.abs(px-h.x)<h.width/2+hitRadius){
+      if(now>=invUntil){hp=Math.max(0,hp-Math.max(1,h.damage-armor));stageHits++;invUntil=now+700}
+   }
+ }
+ hazards=hazards.filter(h=>h.type==='gate'?h.y<H+20:now<h.until);
+ for(const b of bullets){b.x+=b.vx*dt;b.y+=b.vy*dt;if(now>=invUntil&&Math.hypot(b.x-px,b.y-py)<b.r+hitRadius){hp=Math.max(0,hp-Math.max(1,b.damage-armor));stageHits++;invUntil=now+700;b.y=H+100;rumble(3,160);sprinkle(px,py,['#ff8c9a','#fff1a1'],8,1.3);}}
  bullets=bullets.filter(b=>b.y<H+25&&b.x>-35&&b.x<W+35);
- if(hp<=0){gameOver()}else if(clock<=0){clearStage()}
+ if(hp<=0){gameOver()}else if(elapsed>=20 && (!isRouteStage()||routeDone())){clearStage()}else if(isRouteStage()&&elapsed>=28){message('補給コアを回収できなかった！');gameOver()}
 }
-update();paint();if(phase==='train'||phase==='dodge')raf=requestAnimationFrame(loop);
+tickFx(dt);update();paint();if(phase==='train'||phase==='dodge'||(performance.now()<fxBannerUntil)||fxParticles.length||fxText.length)raf=requestAnimationFrame(loop);
 }
 function rect(x,y,w,h,color){c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
 function txt(s,x,y,size=14,col='#fff'){c.fillStyle=col;c.font=`bold ${size}px monospace`;c.textAlign='center';c.fillText(s,x,y)}
@@ -927,22 +1852,96 @@ function txt(s,x,y,size=14,col='#fff'){c.fillStyle=col;c.font=`bold ${size}px mo
 function paint(){
  c.clearRect(0,0,W,H);
  const theme=currentTheme();
- // themed background
+ // Themed scenery with shared 4px pixel grid and dark, readable attack lanes.
+ const now=performance.now();
  if(theme==='gym'){
-   rect(0,0,W,H,'#17253a');
-   for(let i=0;i<16;i++){rect((i*67)%W,(i*43)%H,2,2,'#334e70')}
-   rect(0,232,W,88,'#20324a'); rect(0,240,W,4,'#2d4766');
-   for(let x=18;x<W;x+=48){rect(x,244,3,76,'#314b67')}
+   rect(0,0,W,H,'#14243a');
+   for(let y=18;y<230;y+=24){rect(0,y,W,2,'#213954');for(let x=(y%48?14:0);x<W;x+=32)rect(x,y+3,2,20,'#1a304a')}
+   rect(0,236,W,84,'#223951');rect(0,234,W,6,'#577b97');
+   for(let x=0;x<W;x+=40){rect(x,244,3,76,'#2e4e68');rect(x,280,40,2,'#2e4e68')}
+   for(const x of [22,340]){rect(x,76,22,142,'#101e32');rect(x+5,80,12,120,'#4a7391');for(let i=0;i<4;i++)rect(x-6,98+i*24,34,5,'#759eb3');}
+   rect(58,61,268,10,'#0d1d2e');rect(60,63,264,6,'#809fb6');
+   rect(149,51,88,18,'#1a3046');txt('IRON GYM',193,65,11,'#bce7ff');
  }else if(theme==='factory'){
-   rect(0,0,W,H,'#141d28');
-   rect(0,228,W,92,'#252f3d'); rect(0,236,W,4,'#526077');
-   for(let x=0;x<W;x+=42){rect(x,255,28,10,'#455262'); rect(x+10,243,8,8,'#426277')}
-   rect(20,68,44,96,'#354352'); rect(30,86,24,60,'#41647a'); rect(320,58,36,120,'#354352'); rect(329,78,18,82,'#765645');
+   rect(0,0,W,H,'#111e2b');
+   for(let y=16;y<236;y+=22){rect(0,y,W,2,'#263c4a');for(let x=14;x<W;x+=46)rect(x,y+2,3,20,'#203545')}
+   rect(0,234,W,86,'#263443');rect(0,231,W,6,'#586c7b');
+   for(let x=0;x<W;x+=44){rect(x+2,251,30,10,'#394e60');rect(x+13,254,8,4,'#7ac2c4');rect(x,278,44,3,'#3e5361')}
+   for(const x of [16,318]){rect(x,61,48,123,'#172837');rect(x+5,65,38,111,'#34495b');rect(x+11,82,26,70,'#34627c');rect(x+14,89,20,10,'#9ae9ed');rect(x+14,130,20,4,'#8bd6e5');}
+   rect(68,67,246,9,'#566b7e');for(let i=0;i<6;i++){rect(79+i*37,79,26,11,'#304353');rect(84+i*37,82,16,4,'#78bfd3')}
+   txt('PROTEIN LAB',193,55,12,'#b8f8ef');
+ }else if(theme==='temple'){
+   rect(0,0,W,H,'#1d1831');
+   for(let y=18;y<232;y+=26){rect(0,y,W,2,'#33284a');for(let x=8;x<W;x+=54)rect(x,y+3,3,22,'#29223f')}
+   rect(0,237,W,83,'#342943');rect(0,231,W,7,'#967c47');
+   for(let x=0;x<W;x+=45){rect(x,258,45,2,'#58445d');rect(x,292,3,28,'#55425d')}
+   for(const x of [32,335]){rect(x-11,58,28,173,'#3e304c');rect(x-7,62,20,166,'#806c55');rect(x-15,53,36,13,'#a68d64');rect(x-15,226,36,8,'#a68d64');}
+   for(let i=0;i<8;i++){const x=19+i*47;rect(x,31+Math.sin(now/450+i)*5,5,5,'#b69b52')}
+   rect(126,55,132,19,'#3d304e');txt('MUSCLE TEMPLE',192,69,12,'#ffe39a');
+ }else if(theme==='cosmos'){
+   rect(0,0,W,H,'#0b1030');
+   for(let i=0;i<70;i++){const x=(i*79)%W,y=(i*47)%H;const tw=.5+.5*Math.sin(now/370+i*2);rect(x,y,i%3===0?3:2,2,tw>.6?'#b1d5ff':'#53618d')}
+   rect(0,236,W,84,'#20244c');rect(0,231,W,5,'#8b85ff');
+   for(let x=8;x<W;x+=40){rect(x,247,4,73,'#4d5086');rect(x+4,282,32,2,'#53548e')}
+   for(const x of [27,332]){rect(x-14,64,30,162,'#152044');rect(x-10,68,22,153,'#47539c');rect(x-6,79,14,12,'#a7d9ff');rect(x-6,104,14,3,'#8ca5e6')}
+   rect(125,50,136,22,'#242b58');rect(130,53,126,3,'#b6caff');txt('COSMIC GYM',192,68,13,'#dce0ff');
+   for(let i=0;i<4;i++){const x=63+i*85;rect(x,129+Math.sin(now/400+i)*10,7,7,'rgba(172,153,255,.27)')}
+ }else if(theme==='fortress'){
+   rect(0,0,W,H,'#271423');
+   for(let y=12;y<230;y+=28){rect(0,y,W,3,'#4d2938');for(let x=(y%56?19:0);x<W;x+=44)rect(x,y+3,3,25,'#3b2332')}
+   rect(0,237,W,83,'#3b2733');rect(0,231,W,6,'#e37e63');
+   for(let x=0;x<W;x+=52){rect(x,252,49,3,'#714152');rect(x+7,263,6,57,'#603948')}
+   for(const x of [20,337]){rect(x,73,31,153,'#231c2a');rect(x+5,77,21,146,'#794356');for(let i=0;i<5;i++)rect(x+8,91+i*24,15,5,'#ed8667')}
+   rect(114,52,157,22,'#562c3d');rect(120,55,145,3,'#f9a17a');txt('IRON FORTRESS',192,69,13,'#ffd0b1');
+   for(let i=0;i<11;i++){const x=16+i*33;rect(x,185+(i%3)*9,5,6,'rgba(255,134,98,.22)')}
+ }else if(theme==='frost'){
+   rect(0,0,W,H,'#14243e');
+   for(let y=20;y<234;y+=32){rect(0,y,W,2,'#244a64');for(let x=8;x<W;x+=42)rect(x+(y%31),y+4,3,20,'#1e3c55');}
+   rect(0,232,W,88,'#274e68');rect(0,236,W,4,'#8ad9f7');
+   for(let x=0;x<W;x+=48){rect(x,250,45,3,'#3d7895');rect(x+14,252,3,65,'#3a6b8d');}
+   for(const x of [25,340]){rect(x-9,67,26,166,'#294c66');rect(x-2,72,12,159,'#80bedc');rect(x-15,63,40,9,'#ceeaff');}
+   for(let i=0;i<16;i++){let x=(i*47)%W,y=(i*31+now/48)%232;rect(x,y,3,3,'rgba(191,243,255,.26)')}
+   rect(126,51,132,22,'#1e4a67');txt('FROST DOJO',192,67,13,'#ddfbff');
+ }else if(theme==='thunder'){
+   rect(0,0,W,H,'#231d39');
+   for(let y=12;y<231;y+=26){rect(0,y,W,2,'#4a385a');for(let x=12;x<W;x+=50)rect(x,y+3,3,19,'#342c4c')}
+   rect(0,234,W,86,'#392a4e');rect(0,234,W,5,'#e9bd69');
+   for(let x=0;x<W;x+=46){rect(x,250,45,3,'#584064');rect(x+9,256,5,60,'#594462')}
+   for(const x of [19,339]){rect(x-6,70,30,160,'#251f40');rect(x,78,18,145,'#635188');for(let y=88;y<210;y+=24)rect(x+3,y,12,6,'#c6a26a')}
+   for(let i=0;i<5;i++){const x=32+i*75,y=33+(i%2)*11;rect(x,y,8,3,'rgba(255,222,133,.35)');rect(x+3,y+3,4,9,'rgba(255,222,133,.35)')}
+   rect(116,50,152,22,'#483051');txt('THUNDER ARENA',192,67,13,'#fff0b7');
+ }else if(theme==='cyber'){
+   rect(0,0,W,H,'#091b25');
+   for(let x=8;x<W;x+=34){rect(x,40+(x%6)*6,24,190,'#102c3b');rect(x+4,54,16,4,'#1b5761');for(let y=73;y<230;y+=27)rect(x+7,y,9,8,'rgba(72,228,193,.22)')}
+   rect(0,232,W,88,'#163a46');rect(0,236,W,4,'#47cab3');
+   for(let x=0;x<W;x+=40){rect(x,259,39,3,'#226879');rect(x+17,260,3,56,'#1d596a')}
+   for(let i=0;i<10;i++){let x=(i*59+now/40)%W;rect(x,82+(i%4)*36,12,3,'rgba(124,255,218,.27)')}
+   rect(121,49,142,25,'#102f39');txt('CYBER CITY',192,67,14,'#a3ffdd');
+ }else if(theme==='void'){
+   rect(0,0,W,H,'#140d25');
+   for(let i=0;i<38;i++){let x=(i*79)%W,y=(i*47)%233;rect(x,y,2+(i%2),2,i%3===0?'#7f61a5':'#392950')}
+   rect(0,232,W,88,'#221a3c');rect(0,234,W,4,'#7555a8');
+   for(let x=0;x<W;x+=46){rect(x,255,42,3,'#453169');rect(x+11,265,4,51,'#493269')}
+   for(const x of [27,340]){rect(x-9,70,29,160,'#251438');rect(x-3,77,17,150,'#50316b');for(let y=93;y<223;y+=33)rect(x+2,y,9,5,'#79519e')}
+   for(let i=0;i<5;i++){let x=38+i*77,y=97+Math.sin(now/800+i)*18;rect(x,y,15,3,'rgba(196,153,255,.22)');rect(x+6,y-6,3,15,'rgba(196,153,255,.18)')}
+   rect(120,51,144,24,'#2e1b45');txt('VOID ABYSS',192,68,14,'#e0bbff');
+ }else if(theme==='zenith'){
+   rect(0,0,W,H,'#231b2d');
+   for(let y=0;y<232;y+=33){rect(0,y,W,2,'#493746');for(let x=13;x<W;x+=48)rect(x,y+4,3,25,'#34263c')}
+   rect(0,233,W,87,'#42344c');rect(0,234,W,7,'#c3a46a');
+   for(let x=0;x<W;x+=46){rect(x,257,45,3,'#68545d');rect(x+11,260,4,57,'#705763')}
+   for(const x of [31,336]){rect(x-12,69,30,162,'#604759');rect(x-6,72,18,155,'#a88973');rect(x-16,64,38,12,'#dbc087');rect(x-16,227,38,7,'#dac08a')}
+   for(let i=0;i<18;i++){const x=20+i*21,y=59+Math.cos(now/730+i)*7;rect(x,y,4,4,'rgba(255,235,164,.27)')}
+   rect(110,50,164,24,'#554257');txt('ZENITH SANCTUM',192,67,12,'#fff0b3');
  }else{
-   rect(0,0,W,H,'#231a33');
-   rect(0,228,W,92,'#352848'); rect(0,236,W,4,'#806a33');
-   for(let x=48;x<W;x+=96){rect(x,78,16,160,'#74624c'); rect(x+4,72,8,8,'#dac16f')}
-   for(let i=0;i<6;i++){rect(28+i*62,46+(i%2)*8,12,12,'rgba(246,217,109,.22)')}
+   rect(0,0,W,H,'#20192a');
+   for(let y=0;y<232;y+=32){rect(0,y,W,3,'#38304b');for(let x=(y%64?14:0);x<W;x+=45)rect(x,y+3,3,29,'#31283f')}
+   rect(0,232,W,88,'#383445');rect(0,230,W,7,'#f9d477');
+   for(let x=0;x<W;x+=48){rect(x,256,48,2,'#615276');rect(x+9,267,5,52,'#56455f')}
+   for(const x of [39,335]){rect(x-17,58,34,171,'#54455e');rect(x-13,62,26,162,'#a28b78');rect(x-20,55,40,10,'#f8d97d')}
+   const glow=Math.sin(now/480)*6;
+   rect(131,40+glow,122,32,'#514367');rect(137,44+glow,110,5,'#ffe5a0');txt('MUSCLE CORE',192,66+glow,15,'#fff4b4');
+   for(let i=0;i<14;i++){const a=i*.448+now/1000;rect(192+Math.sin(a)*115,153+Math.cos(a)*60,5,5,'rgba(255,228,150,.33)')}
  }
  if(phase==='ready'){
    txt('SURVIVAL PULL-UP',192,100,23,'#ffcb62');
@@ -950,65 +1949,129 @@ function paint(){
    txt('弾幕を避けろ！',192,193,19);
    txt('STARTで挑戦',192,250,16,'#7fdbed');
    txt('舞台: '+currentThemeName(),192,278,14,'#dce8fb');
+   paintFx();
    return;
  }
  if(phase==='train'){
-   const grow=Math.min(score/120,1), up=score%2?8:0;
-   const barBend=Math.min(8,score/16);
-   // rack
-   rect(96,62,7,208,'#6a7f98'); rect(281,62,7,208,'#6a7f98');
-   rect(82,56+barBend/2,102,7,'#bfd1e5'); rect(184,56+barBend/2,118,7,'#bfd1e5'); rect(182,56+barBend,10,3,'#eff7ff');
-   for(let i=0;i<6;i++){ const off=(i*37+score*3)%W; rect((off)%W, 92+i*22, 8, 2, 'rgba(255,255,255,.14)'); }
-   for(let i=0;i<6;i++){ const dx=((i*19+score*5)%34)-17; rect(192+dx, 74+(i%3)*7, 2, 2, '#eef5ff'); }
-   // chibi macho character
-   const bodyY=116-up;
-   const shoulder=20+grow*12, torsoW=34+grow*10, torsoH=52+grow*10;
-   // Diagonal arms: hands remain attached to the bar while shoulders rise.
-   // Two thick, joined segments for each arm (hand -> elbow -> shoulder).
-   function pixelArm(points, main, shade){
-     c.lineJoin='bevel'; c.lineCap='square';
-     c.beginPath(); c.moveTo(points[0][0],points[0][1]);
-     for(let i=1;i<points.length;i++)c.lineTo(points[i][0],points[i][1]);
-     c.strokeStyle='#80533e';c.lineWidth=17;c.stroke();
-     c.strokeStyle=main;c.lineWidth=13;c.stroke();
-     c.beginPath();c.moveTo(points[1][0],points[1][1]);c.lineTo(points[2][0],points[2][1]);
-     c.strokeStyle=shade;c.lineWidth=4;c.stroke();
+   const sk=skin(),bob=score%2?9:0,bodyY=124-bob,bulk=Math.min(6,Math.floor(score/25));
+   // Pixel-art pull-up rig with visible posts and grips.
+   rect(98,53,10,219,'#182638');rect(100,57,6,210,'#617f9d');
+   rect(278,53,10,219,'#182638');rect(280,57,6,210,'#617f9d');
+   rect(84,54,218,11,'#172337');rect(86,55,214,8,'#c4d8e9');rect(86,55,214,2,'#f7fcff');
+   for(let i=0;i<6;i++){rect(150+i*17,(82+i*31+score*4)%190,3,3,'rgba(231,248,255,.3)')}
+   function limb(points,width,color){c.beginPath();c.moveTo(...points[0]);for(const pt of points.slice(1))c.lineTo(...pt);c.lineCap='square';c.lineJoin='round';c.lineWidth=width+4;c.strokeStyle='#40334a';c.stroke();c.lineWidth=width;c.strokeStyle=color;c.stroke()}
+   // Angled connected arms; bar grip stays fixed as character rises.
+   limb([[174,bodyY+8],[163,bodyY-15],[164,62]],10,sk.skin);
+   limb([[210,bodyY+8],[221,bodyY-15],[220,62]],10,sk.skin);
+   rect(159,59,12,8,sk.skin);rect(214,59,12,8,sk.skin);
+   // legs and shorts behind torso.
+   rect(174,bodyY+49,15,47,sk.pants);rect(195,bodyY+49,15,47,sk.pants);
+   rect(171,bodyY+94,20,8,sk.shoe);rect(194,bodyY+94,20,8,sk.shoe);
+   rect(172,bodyY+44,40,18,sk.pants);
+   // Neck joins directly into shirt and head.
+   rect(186,bodyY-11,12,17,sk.skin);
+   rect(170-bulk,bodyY,44+2*bulk,51,'#1a2a40');
+   rect(173-bulk,bodyY+3,38+2*bulk,45,sk.shine);
+   rect(177-bulk,bodyY+5,30+2*bulk,42,sk.shirt);
+   rect(188,bodyY+12,8,25,sk.accent);
+   rect(180,bodyY-31,24,23,'#1c273c');rect(182,bodyY-29,20,21,sk.skin);
+   rect(179,bodyY-34,26,9,sk.hair);
+   rect(186,bodyY-18,3,3,'#202c40');rect(195,bodyY-18,3,3,'#202c40');
+   // Training skin silhouettes stay in sync with the dodge sprite.
+   const variant=meta.selected;
+   if(variant==='metal'){
+     rect(168-bulk,bodyY-2,11,22,'#26394e');rect(205+bulk,bodyY-2,11,22,'#26394e');
+     rect(171-bulk,bodyY+1,8,16,'#8cf7eb');rect(205+bulk,bodyY+1,8,16,'#8cf7eb');
+     rect(181,bodyY-27,22,9,'#2c4154');rect(184,bodyY-24,16,4,'#9afcff');
+     rect(176-bulk,bodyY+18,9,26,'#284a59');rect(199+bulk,bodyY+18,9,26,'#284a59');
+   }else if(variant==='blaze'||variant==='inferno'){
+     rect(171-bulk,bodyY-9,7,12,'#ff8845');rect(206+bulk,bodyY-9,7,12,'#ff8845');
+     rect(182,bodyY-42,7,12,'#ffd16e');rect(195,bodyY-42,7,12,'#ffd16e');
+     if(variant==='inferno'){rect(161-bulk,bodyY+11,8,36,'#f26d46');rect(215+bulk,bodyY+11,8,36,'#f26d46')}
+   }else if(variant==='divine'){
+     rect(174,bodyY-43,36,4,'#fff3b5');rect(164-bulk,bodyY+9,9,37,'#cbb9ff');rect(212+bulk,bodyY+9,9,37,'#cbb9ff');
+   }else if(variant==='legend'){
+     rect(177,bodyY-43,29,7,'#eebc42');rect(178,bodyY-49,6,9,'#ffec98');rect(189,bodyY-51,6,11,'#ffec98');rect(199,bodyY-49,6,9,'#ffec98');
+     rect(164-bulk,bodyY+8,8,35,'#c94149');rect(212+bulk,bodyY+8,8,35,'#c94149');
+   }else if(variant==='frostKnight'){
+     rect(177,bodyY-43,30,12,'#4c92b7');rect(188,bodyY-50,8,12,'#e1fbff');
+     rect(159-bulk,bodyY+3,15,26,'#4a8cb1');rect(212+bulk,bodyY+3,15,26,'#4a8cb1');
+     rect(165-bulk,bodyY+29,10,27,'#b9ebff');rect(209+bulk,bodyY+29,10,27,'#b9ebff');
+   }else if(variant==='zenith'){
+     rect(177,bodyY-44,30,9,'#ffeaa2');rect(186,bodyY-51,12,9,'#caa04f');
+     rect(161-bulk,bodyY+5,14,35,'#e8cc87');rect(209+bulk,bodyY+5,14,35,'#e8cc87');
+     rect(164-bulk,bodyY+40,12,17,'#fff8d6');rect(208+bulk,bodyY+40,12,17,'#fff8d6');
+   }else if(variant==='nebula'){
+     rect(178,bodyY-38,28,11,'#4e4b95');rect(182,bodyY-31,20,6,'#acf3ff');rect(162-bulk,bodyY+10,9,35,'#685eae');rect(213+bulk,bodyY+10,9,35,'#685eae');
    }
-   const leftShoulderX=192-torsoW/2+3, rightShoulderX=192+torsoW/2-3;
-   const shoulderY=bodyY+10;
-   pixelArm([[165,67],[156,96-up*0.5],[leftShoulderX,shoulderY]],'#e7b48f','#d99b75');
-   pixelArm([[219,67],[228,96-up*0.5],[rightShoulderX,shoulderY]],'#e7b48f','#d99b75');
-   // hands wrap around the fixed bar
-   rect(157,60,16,11,'#e7b48f'); rect(211,60,16,11,'#e7b48f');
-   // Connected neck: bridge the full distance from jaw to shirt neckline.
-   // Draw the neck behind the head and shirt, keeping the same bobbing offset.
-   const neckBottom=bodyY+5;
-   rect(186,100-up,12,neckBottom-(100-up),'#915e48');
-   rect(188,102-up,8,neckBottom-(102-up),'#e7ae87');
-   // natural neck-to-shoulder join
-   rect(182,bodyY-6,20,10,'#d89a74');
-   rect(185,bodyY-5,14,10,'#e7ae87');
-   // face and hair, a short neck below the chin
-   rect(180,80-up,24,22,'#efbe99'); rect(179,76-up,26,8,'#2a2936');
-   rect(186,88-up,3,3,'#222834'); rect(195,88-up,3,3,'#222834'); rect(188,96-up,8,2,'#8c5d46');
-   // delts / upper arms
-   rect(192-shoulder-8, bodyY+2, 14, 16, '#f0c5a3'); rect(192+shoulder-6, bodyY+2, 14, 16, '#f0c5a3');
-   // tank top torso
-   rect(192-torsoW/2, bodyY, torsoW, torsoH, '#38a7d9');
-   rect(192-torsoW/2+5, bodyY+8, torsoW-10, 6, '#7fd7ff');
-   rect(192-torsoW/2+6, bodyY+14, 6, torsoH-20, '#2d88bc'); rect(192+torsoW/2-12, bodyY+14, 6, torsoH-20, '#2d88bc');
-   // chest/ab lines subtle
-   rect(189, bodyY+12, 4, torsoH-18, '#22729e');
-   for(let ay=bodyY+24; ay<bodyY+torsoH-10; ay+=10){ rect(182,ay,8,5,'#2d88bc'); rect(194,ay,8,5,'#2d88bc'); }
-   // legs
-   rect(171,bodyY+torsoH,16,56,'#455e80'); rect(197,bodyY+torsoH,16,56,'#455e80');
-   rect(168,bodyY+torsoH+54,21,7,'#eef3fb'); rect(195,bodyY+torsoH+54,21,7,'#eef3fb');
-   // floating info
-   txt(`+${earned} HP`, 304, 88, 16, '#90f4a7');
-   txt(`${score} PULL UPS`,192,292,21,'#ffdc79');
-   txt('舞台: '+currentThemeName(), 80, 24, 12, '#dce8fb');
-   txt('筋肉をためて弾幕に備えろ！',224,24,12,'#9fd8ff');
+
+   rect(188,bodyY-11,7,2,'#af6c5e');
+   if(bob){rect(135,bodyY+30,13,3,'#89dcff');rect(236,bodyY+44,14,3,'#89dcff')}
+   txt('+'+earned+' HP',316,97,15,'#b1ffba');
+   txt(score+' PULL UPS',192,294,21,'#ffe29c');
+   txt('TRAINING • '+currentThemeName(),192,29,14,'#d6eaff');
+   paintFx();
    return;
+ }
+ if(phase==='dodge'&&stageModifier()==='slalom'){
+   for(const wall of stageWalls()){
+     rect(wall.x-3,wall.y-3,wall.w+6,wall.h+6,'#0b1424');
+     rect(wall.x,wall.y,wall.w,wall.h,theme==='temple'?'#b69b68':'#d4a15b');
+     rect(wall.x,wall.y,wall.w,3,'#ffdfa1');
+     for(let i=4;i<wall.w-5;i+=19)rect(wall.x+i,wall.y+5,9,7,theme==='temple'?'#63445b':'#4c4352');
+     rect(wall.x+1,wall.y+4,3,8,'#ffebc4');rect(wall.x+wall.w-4,wall.y+4,3,8,'#ffebc4');
+   }
+ }
+ if(phase==='dodge'&&isRouteStage()){
+   const total=routeTargets.length;
+   // In-world route arrow: goal visible even when occluded by bullets.
+   for(let i=0;i<total;i++){
+     const g=routeTargets[i],done=i<routeIndex,active=i===routeIndex;
+     const r=active?16+Math.sin(now/155)*3:12;
+     c.strokeStyle=done?'#476c76':active?'#d2fff2':'#526f83';c.lineWidth=active?3:1.8;
+     c.beginPath();c.arc(g.x,g.y,r,0,Math.PI*2);c.stroke();
+     c.fillStyle=done?'#376b66':active?'#77f7d8':'#325469';c.beginPath();c.arc(g.x,g.y,9,0,Math.PI*2);c.fill();
+     rect(g.x-3,g.y-3,6,6,done?'#b3f6d5':active?'#ffffff':'#92abc2');
+     if(active){txt('GO!',g.x,Math.max(82,g.y-23),13,'#c5ffee');}
+     else if(!done)txt('LOCK',g.x,Math.max(82,g.y-22),9,'#9fb4c2');
+   }
+   rect(104,292,176,25,'rgba(8,19,33,.93)');
+   txt('補給コア '+routeIndex+' / '+total+(routeOvertimeNotified?'  延長中！':''),192,309,13,routeOvertimeNotified?'#ffca76':'#aaffea');
+ }
+ if(phase==='dodge'&&stageModifier()==='slow'){
+   rect(112,206,160,114,'rgba(94,171,255,.15)');
+   c.strokeStyle='#83d3ff';c.lineWidth=2;c.strokeRect(112,206,160,114);
+   if(stage>=14){
+     for(let i=0;i<7;i++){const x=126+i*21+Math.sin(now/480+i)*9,y=244+(i%3)*18;
+       rect(x,y,12,3,'#a8b6ff');rect(x+9,y-3,3,9,'#b9bdff');
+     }
+     txt('GRAVITY FLOW',192,224,12,'#d6c9ff');
+   }else txt('SLOW ZONE',192,224,12,'#b4e8ff');
+ }
+ for(const h of hazards){
+   if(h.type==='gate'){
+      const left=h.gap-h.gapWidth/2,right=h.gap+h.gapWidth/2;
+      rect(0,h.y-7,left,14,'#141d29');rect(0,h.y-4,left,8,'#ffca62');
+      rect(right,h.y-7,W-right,14,'#141d29');rect(right,h.y-4,W-right,8,'#ffca62');
+   }else if(h.type==='laser'){
+      const active=performance.now()>=h.ready;
+      rect(h.x-h.width/2,75,h.width,H-75,active?'rgba(255,61,94,.75)':'rgba(255,227,120,.13)');
+      c.strokeStyle=active?'#fff3c0':'#ffea7f';c.lineWidth=active?3:2;
+      c.strokeRect(h.x-h.width/2,75,h.width,H-75);
+      if(h.origin==='pressure'){
+        const remain=Math.max(0,((h.ready-now)/1000));
+        rect(h.x-16,75,32,18,active?'#c6284c':'#926f34');
+        txt(active?'!!':remain.toFixed(1),h.x,89,12,'#fff3d5');
+      }
+   }
+ }
+ if(phase==='dodge'&&hunterWarning){
+   const h=hunterWarning;
+   c.save();c.strokeStyle='#ff657e';c.lineWidth=2;c.setLineDash([7,5]);
+   c.beginPath();c.moveTo(h.sx,h.sy);c.lineTo(h.x,h.y);c.stroke();c.setLineDash([]);
+   c.beginPath();c.arc(h.x,h.y,16,0,Math.PI*2);c.stroke();
+   c.beginPath();c.moveTo(h.x-23,h.y);c.lineTo(h.x+23,h.y);
+   c.moveTo(h.x,h.y-23);c.lineTo(h.x,h.y+23);c.stroke();c.restore();
  }
  for(const b of bullets){
    if(theme==='factory'){
@@ -1016,12 +2079,89 @@ function paint(){
      c.fillStyle='rgba(3,8,18,.92)'; c.beginPath(); c.arc(b.x,b.y,b.r+5,0,Math.PI*2); c.fill();
      c.strokeStyle='#ffe56d'; c.lineWidth=2.5; c.beginPath(); c.arc(b.x,b.y,b.r+4,0,Math.PI*2); c.stroke();
    }
+   if(theme!=='factory'){c.fillStyle='#071321';c.beginPath();c.arc(b.x,b.y,b.r+3,0,Math.PI*2);c.fill();c.strokeStyle='#f4dc85';c.lineWidth=1.5;c.beginPath();c.arc(b.x,b.y,b.r+2,0,Math.PI*2);c.stroke();}
    drawThemeBullet(b);
  }
+ // boss enters only on stages divisible by 3
+ if(bossActive&&phase==='dodge'){
+   const gold=theme==='temple'||theme==='core'?'#ffd66a':theme==='factory'?'#78e6ef':theme==='cosmos'?'#bca6ff':'#e5a2a9';
+   // Boss silhouettes are distinct by theme, with the same outline and pixel shading.
+   rect(137,34,110,42,'#101929');
+   if(theme==='gym'){
+      rect(147,38,90,30,'#6b768a');rect(153,40,78,5,'#a2b5c6');
+      rect(139,30,19,47,'#404d63');rect(225,30,19,47,'#404d63');
+      rect(144,35,10,38,'#9eb2ca');rect(230,35,10,38,'#9eb2ca');
+      rect(175,44,34,21,'#29364e');
+   }else if(theme==='factory'){
+      rect(143,34,98,40,'#315363');rect(148,39,88,6,'#7ea4b4');
+      for(let i=0;i<5;i++)rect(151+i*17,52,10,18,'#183044');
+      rect(161,22,14,17,'#829baf');rect(210,22,14,17,'#829baf');
+   }else if(theme==='cosmos'){
+      rect(144,36,96,38,'#43448c');rect(146,40,92,6,'#9294ff');
+      for(let i=0;i<3;i++)rect(153+i*30,30,14,10,'#a8b7fd');
+      rect(172,26,40,13,'#bfcaff');
+   }else if(theme==='fortress'){
+      rect(144,39,96,33,'#663743');rect(148,43,88,6,'#e38872');
+      rect(133,30,21,47,'#ad5a5a');rect(230,30,21,47,'#ad5a5a');
+      for(let i=0;i<4;i++)rect(155+i*22,28,12,11,'#ef9b75');
+   }else if(theme==='frost'){
+      rect(142,37,100,37,'#2b6e9d');rect(146,40,92,8,'#86d6ef');
+      for(let i=0;i<4;i++){let x=153+i*24;rect(x,28,12,15,'#c9f4ff')}
+      rect(176,20,32,11,'#c1ecff');
+   }else if(theme==='thunder'){
+      rect(138,37,108,37,'#765386');rect(142,42,100,7,'#ffd273');
+      for(let i=0;i<5;i++)rect(143+i*23,23+(i%2)*7,11,16,'#c49960');
+      rect(174,20,36,12,'#ffdc89');
+   }else if(theme==='cyber'){
+      rect(140,38,104,36,'#155e64');rect(145,41,94,5,'#86ffe1');
+      for(let i=0;i<6;i++)rect(150+i*16,26,8,13,'#1a7c82');
+      rect(170,20,44,12,'#2cbba8');
+   }else if(theme==='void'){
+      rect(142,36,100,38,'#533475');rect(145,40,94,7,'#a37ad2');
+      rect(135,32,16,42,'#8761a6');rect(231,32,16,42,'#8761a6');
+      rect(169,20,46,13,'#b992e7');
+   }else if(theme==='zenith'){
+      rect(140,35,104,38,'#91745b');rect(145,40,94,6,'#ffdb92');
+      rect(131,25,18,46,'#d5b879');rect(234,25,18,46,'#d5b879');
+      for(let i=0;i<5;i++)rect(162+i*13,18+(i%2)*5,10,16,'#ffe6a9');
+   }else if(theme==='core'){
+      rect(142,36,100,38,'#b39e8a');rect(147,39,90,6,'#fff3c4');
+      rect(133,30,22,42,'#f1d69f');rect(229,30,22,42,'#f1d69f');
+      rect(175,20,34,16,'#fff0b0');
+   }else{
+      rect(144,40,96,30,'#6f5978');rect(148,43,88,5,'#e9cb84');
+      rect(137,30,16,47,'#987d59');rect(232,30,16,47,'#987d59');
+      rect(169,26,48,11,'#c8ab65');rect(185,17,15,13,'#fff0a0');
+   }
+   rect(171,47,42,20,'#12233a');
+   // Shield animation + distinct vulnerable appearance.
+   const weak=bossWeak();
+   rect(178,41,28,20,weak?'#ffd56d':'#557da0');
+   rect(185,45,14,12,weak?'#fff3b6':'#23425b');
+   if(!weak){c.strokeStyle='#7acaf8';c.lineWidth=3;c.strokeRect(138,31,108,40);}
+   const bw=108/bossMaxHp;
+   rect(138,74,108,8,'#3c2b43');
+   rect(138,74,108*(bossHp/bossMaxHp),8,'#ff6e87');
+   txt(weak?(bossCanHit()?'弱点 OPEN！':'HIT済 次のOPEN待ち'):'SHIELD',192,97,13,weak&&bossCanHit()?'#ffe18c':'#89d2fa');
+   txt('BOSS',192,25,16,gold);
+ }
+ if(phase==='dodge'&&flash>performance.now()){
+   c.fillStyle='rgba(125,239,255,.26)';c.fillRect(0,0,W,H);
+   c.strokeStyle='#b6ffff';c.lineWidth=6;c.beginPath();c.arc(px,py,85+(flash-performance.now())/8,0,Math.PI*2);c.stroke();
+ }
  // player
- const bodyCol=theme==='temple'?'#f4e59d':theme==='factory'?'#9df0e7':'#90e5ce';
- const shadowCol=theme==='temple'?'#7f6c2d':theme==='factory'?'#2d6e67':'#305d6b';
- if(phase!=='over'||hp>0){c.fillStyle=bodyCol;c.beginPath();c.arc(px,py,10,0,Math.PI*2);c.fill();rect(px-4,py-3,8,6,shadowCol)}
+ if(phase!=='over'||hp>0){const glow=skin().accent;c.fillStyle=invUntil>performance.now()?'rgba(255,255,255,.24)':'rgba(112,221,255,.13)';c.beginPath();c.arc(px,py,18+Math.sin(performance.now()/120)*2,0,Math.PI*2);c.fill();drawPixelHero(px,py-3);}
+ if(phase==='dodge'&&stage>=31){
+   const palette={frost:'#96e9ff',thunder:'#ffe28b',cyber:'#85ffdc',void:'#dcafff',zenith:'#ffeaa3'};
+   c.strokeStyle=palette[theme]||'#94f5ff';c.lineWidth=1.5;
+   c.beginPath();c.arc(px,py,23+Math.sin(now/175)*2,Math.PI*.25,Math.PI*1.72);c.stroke();
+ }
+ if(phase==='dodge'){
+   c.fillStyle='#fbfbff';c.beginPath();c.arc(px,py,hitRadius,0,Math.PI*2);c.fill();
+   c.strokeStyle='#17223e';c.lineWidth=1.5;c.stroke();
+   if(!isRouteStage())txt(stageModifier()==='slow'?'水色エリアは減速':stageModifier()==='intro'?'基本操作を覚えよう':'ボス戦！',192,307,12,'#ffe8a3');
+ }
+ paintFx();
  txt('舞台: '+currentThemeName(),192,20,14,'#f5f2ff');
  if(phase==='over'){txt('GAME OVER',192,138,33,'#ff8195')} if(phase==='clear'){txt('STAGE CLEAR!',192,138,29,'#f9da71')}
 }
