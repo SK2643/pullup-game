@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>連打でムキムキ！ Ver.46 — NEO ARCADE</title>
+<title>連打でムキムキ！ Ver.49 — MOBILE ARCADE EDITION</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#0f1727;color:#f7f8ff;font-family:system-ui,'Noto Sans JP',sans-serif;text-align:center}
@@ -89,8 +89,6 @@ body:not(.survival-active) #survivalPanel{display:none!important}
 #survivalPanel .sur-result-grid small{display:block;color:#b7c9df;font-size:12px}
 #survivalPanel .sur-result-grid strong{display:block;font-size:22px;color:#fff;margin-top:6px}
 #survivalPanel .sur-share{display:block;margin-top:12px;padding:12px;border-radius:10px;background:#28537c;color:white;font-weight:900;text-decoration:none}
-#survivalPanel .sur-debug{margin:14px 0 0;border:1px dashed #67768b;border-radius:9px;padding:8px;font-size:12px;color:#bdcee2}
-#survivalPanel .sur-debug button{font-size:12px;padding:8px 10px;background:#3b587b;color:white}
 
 /* Mobile friendly input and embedded HTML preview diagnostics */
 #previewNotice{padding:12px;margin:10px 0;background:#4a2933;border:2px solid #fca5a5;border-radius:12px;color:white;font-weight:700;font-size:13px;line-height:1.6}
@@ -209,19 +207,75 @@ h1{letter-spacing:.045em;text-shadow:0 3px #100d1e,0 0 18px #ffcc7340}
 .game-guide{font-size:11px;color:#b7ccea;margin:4px 0}
 @media(prefers-reduced-motion:reduce){.mode-switch button,.tap,.btn,#surPower{transition:none}}
 @media(max-width:480px){h1{font-size:clamp(24px,7vw,36px)}}
+
+/* Public edition: survival is the front-page experience */
+.featured-main{display:inline-flex;vertical-align:middle;align-items:center;margin-right:8px;padding:3px 8px;background:#ffd273;color:#182943;border-radius:7px;font-size:10px;font-weight:1000;letter-spacing:.06em;box-shadow:0 2px 0 #866020}
+.mode-switch{margin-top:13px;margin-bottom:9px}
+.mode-switch #survivalMode{flex:1.4;font-size:clamp(12px,3.8vw,16px)}
+.mode-switch #challengeMode,.mode-switch #musicMode{flex:1}
+.profile-settings{margin-top:7px;margin-bottom:9px}
+body.survival-active #survivalPanel{margin-top:9px}
+#survivalPanel>h2{margin-top:4px;margin-bottom:8px}
+@media(max-width:480px){.mode-switch{gap:4px}.mode-switch #survivalMode{padding-left:3px;padding-right:3px}}
+
+.sur-cosmetics-section{margin-top:18px;padding:11px 8px 8px;border:1px solid #4d6486;border-radius:13px;background:rgba(14,28,45,.42)}
+.sur-cosmetics-heading{font-size:13px;font-weight:900;color:#ffe09b;margin-bottom:9px}
+.sur-cosmetics-section .sur-meta{margin:0 0 8px}
+.sur-cosmetics-section .skin-catalog{margin-bottom:0}
+
+/* Ver.49: two-thumb mobile arcade mode. The HUD and action stay in one viewport. */
+.sur-playfield{position:relative;min-width:0;margin:9px auto;width:100%;display:flex;justify-content:center;align-items:center}
+.sur-playfield #surCanvas{margin:0 auto}
+#surPowerTouch,.sur-compact-bar,.sur-compact-power{display:none}
+@media (max-width:700px) and (pointer:coarse){
+  #survivalPanel #surPowerTouch{display:none}
+  body.sur-mobile-play{position:fixed;inset:0;overflow:hidden;width:100%;height:100dvh;overscroll-behavior:none;touch-action:none}
+  body.sur-mobile-play main{display:flex;flex-direction:column;width:100%;height:100dvh;max-width:100%;min-height:0;margin:0;padding:env(safe-area-inset-top,0px) 5px env(safe-area-inset-bottom,0px);border:0;overflow:hidden;background:#0b1729}
+  body.sur-mobile-play main>h1,body.sur-mobile-play main>.game-guide,body.sur-mobile-play main>.mode-switch,body.sur-mobile-play main>.profile-settings{display:none!important}
+  body.sur-mobile-play #survivalPanel{display:flex!important;flex-direction:column;min-height:0;height:100%;flex:1;margin:0;padding:4px 5px 5px;border:0;border-radius:0;overflow:hidden;box-shadow:none;background:#101b30}
+  body.sur-mobile-play #survivalPanel>h2,body.sur-mobile-play #survivalPanel>p.sur-info,body.sur-mobile-play #survivalPanel>#surDanger,body.sur-mobile-play #survivalPanel>#surPowerInfo,body.sur-mobile-play #survivalPanel>#surZone,body.sur-mobile-play #survivalPanel>#surUnlock,body.sur-mobile-play #survivalPanel>.sur-cosmetics-section,body.sur-mobile-play #survivalPanel>#survivalOnline{display:none!important}
+  body.sur-mobile-play #surCompactBar{display:flex;gap:7px;align-items:center;justify-content:space-between;flex:0 0 auto;min-height:32px;padding:2px 4px;color:#ffdb88;font-size:12px}
+  body.sur-mobile-play #surCompactBar strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}
+  body.sur-mobile-play #survivalPanel #surExitMobile{flex:0 0 auto;min-height:28px;padding:5px 9px;font-size:11px;color:#d8eaff;background:#243b5b;border:1px solid #6c8ba9;border-radius:7px}
+  body.sur-mobile-play #survivalPanel .sur-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));flex:0 0 auto;gap:4px;margin:2px 0 5px}
+  body.sur-mobile-play #survivalPanel .sur-stats>div{min-width:0;padding:4px 2px 3px;border-radius:7px;line-height:1.25;font-size:clamp(12px,3.4vw,17px);white-space:nowrap}
+  body.sur-mobile-play #survivalPanel .sur-stats small{font-size:clamp(9px,2.3vw,11px);font-weight:800;margin-bottom:2px}
+  body.sur-mobile-play #survivalPanel .sur-health{height:7px;min-height:7px;flex:0 0 auto;border-radius:10px;margin:1px 3px 2px}
+  body.sur-mobile-play #surCompactPower{display:block;flex:0 0 auto;margin:2px 0;padding:0 3px;text-align:center;font-size:11px;line-height:1.3;color:#e6f2ff;font-weight:800}
+  body.sur-mobile-play #surRouteHint{flex:0 0 auto;min-height:0;max-height:18px;overflow:hidden;font-size:10px;line-height:1.4;margin:0;padding:0}
+  body.sur-mobile-play .sur-playfield{flex:1 1 auto;min-height:0;max-height:100%;margin:2px 0 3px;align-items:center;justify-content:center;overflow:hidden}
+  body.sur-mobile-play .sur-playfield #surCanvas{height:auto;width:100%;max-width:100%;max-height:100%;aspect-ratio:384 / 320;object-fit:contain;flex:0 0 auto;border:2px solid #739bc0;border-radius:7px;box-shadow:none}
+  body.sur-mobile-play #survivalPanel .sur-msg{flex:0 0 auto;min-height:0;max-height:32px;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.2;font-size:11px;margin:2px 2px 3px;padding:0}
+  body.sur-mobile-play #survivalPanel>.sur-controls{flex:0 0 auto;display:flex;min-height:0;margin:2px 0 2px;gap:3px}
+  body.sur-mobile-play #survivalPanel #surPower{display:none!important}
+  body.sur-mobile-play #survivalPanel #surTap,body.sur-mobile-play #survivalPanel #surContinue,body.sur-mobile-play #survivalPanel #surStart{font-size:clamp(15px,4.1vw,19px)!important;padding:11px!important;min-height:47px;border-radius:9px;box-shadow:none}
+  body.sur-mobile-play #survivalPanel #surPowerTouch:not(.hidden){display:flex;position:absolute;bottom:8px;right:8px;z-index:6;width:86px;height:75px;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:2px solid #ddffff;border-radius:17px;background:linear-gradient(145deg,#b9ffff,#39c4ea)!important;color:#063047!important;box-shadow:0 3px 0 #276b84,0 0 18px #77f8ff88;font-size:27px!important;font-weight:1000;padding:5px!important;user-select:none;-webkit-user-select:none;touch-action:none;-webkit-tap-highlight-color:transparent}
+  body.sur-mobile-play #survivalPanel #surPowerTouch span{font-size:12px;line-height:1.2;white-space:nowrap}
+  body.sur-mobile-play #survivalPanel #surPowerTouch:disabled{opacity:.55;filter:grayscale(.4);border-color:#9eafba;background:#596e85!important;box-shadow:none}
+  body.sur-mobile-play #survivalPanel #surPowerTouch:active:not(:disabled){transform:scale(.94);box-shadow:0 0 20px #a6fcff}
+  body.sur-mobile-play #surTutorial:not(.hidden){position:absolute;z-index:15;inset:8px;margin:0;max-height:calc(100% - 16px);overflow-y:auto;overscroll-behavior:contain;padding:13px;box-shadow:0 0 0 120vh #07101acc}
+  body.sur-mobile-play #survivalPanel>.sur-result:not(.hidden){position:absolute;z-index:15;inset:8px;overflow-y:auto;max-height:calc(100% - 16px)}
+}
+@media (max-width:700px) and (pointer:coarse) and (max-height:650px){
+  body.sur-mobile-play #survivalPanel #surTap,body.sur-mobile-play #survivalPanel #surContinue{min-height:39px;padding:7px!important}
+  body.sur-mobile-play #survivalPanel #surPowerTouch:not(.hidden){width:68px;height:62px;font-size:22px!important;bottom:5px;right:5px}
+  body.sur-mobile-play #survivalPanel #surPowerTouch span{font-size:10px}
+  body.sur-mobile-play #survivalPanel .sur-msg{font-size:10px;max-height:24px}
+}
 </style>
 </head>
-<body>
+<body class="survival-active">
 <main>
 <div id="previewNotice" role="alert">⚠️ この画面ではゲームのJavaScriptが実行されていません。STARTや連打ボタンも動かない場合、HTMLプレビューではなくSafari / Chromeで直接開くか、Webサイトとして公開して開いてください。</div>
-<h1>💪 連打でムキムキ！ <span class="final-badge">FINAL EDITION</span></h1><p class="game-guide">全60ステージ＋エンドレス | 3モード | SEASON 1ランキング</p>
-<section class="profile-settings" aria-label="プレイヤー設定"><label for="playerName">👤 ユーザー名</label><input id="playerName" type="text" maxlength="16" placeholder="例：マッスル太郎" autocomplete="nickname"><button type="button" id="saveName">保存</button><span id="nameStatus" aria-live="polite">ランキング表示名を設定しよう</span></section>
-<div class="mode-switch"><button type="button" id="challengeMode" class="active">💪 連打チャレンジ</button><button type="button" id="musicMode">🎵 演奏モード</button><button type="button" id="survivalMode">🔥 サバイバル懸垂</button></div>
+<h1>💪 連打でムキムキ！ <span class="final-badge">PUBLIC EDITION</span></h1><p class="game-guide">サバイバル懸垂がメイン！ | 60ステージ＋エンドレス | 3モード</p>
+<nav class="mode-switch" aria-label="ゲームモード"><button type="button" id="survivalMode" class="active">🔥 サバイバル懸垂</button><button type="button" id="challengeMode">💪 連打チャレンジ</button><button type="button" id="musicMode">🎵 演奏モード</button></nav><section class="profile-settings" aria-label="プレイヤー設定"><label for="playerName">👤 ユーザー名</label><input id="playerName" type="text" maxlength="16" placeholder="例：マッスル太郎" autocomplete="nickname"><button type="button" id="saveName">保存</button><span id="nameStatus" aria-live="polite">ランキング表示名を設定しよう</span></section>
+
 <section id="survivalPanel" aria-label="サバイバル懸垂">
-<h2>🔥 サバイバル懸垂 <small style="font-size:12px;color:#ffe09a">Ver.46</small></h2>
+<h2><span class="featured-main">MAIN GAME</span>🔥 サバイバル懸垂 <small style="font-size:12px;color:#ffe09a">Ver.49</small></h2>
 <p class="sur-info">10秒懸垂2回でHP＋1・必殺技チャージ → 20秒弾幕！全60ステージ＋エンドレス！新ギミックは説明付き。3ステージごとにボスが登場！</p>
+<div id="surCompactBar" class="sur-compact-bar"><strong id="surCompactWorld">STAGE 1 · ジム</strong><button type="button" id="surExitMobile">← メニュー</button></div>
 <div class="sur-stats"><div><small>STAGE</small><span id="surStage">1</span></div><div><small>HP</small><span id="surHp">0 / 300</span></div><div><small>残り時間</small><span id="surTime">10.0</span></div><div><small>最高到達</small><span id="surBest">0</span></div></div>
-<div class="sur-health"><div id="surHealthFill"></div></div><div id="surDanger" class="sur-danger" aria-live="polite">初級エリア ｜ HP最大300</div><div class="sur-meta"><div class="sur-pill"><small>🏅 獲得称号</small><span id="surTitle">見習いトレーニー</span></div><label class="sur-pill" for="surSkin"><small>🎨 キャラクタースキン</small><select id="surSkin"></select></label></div><div id="surUnlock" class="sur-unlock hidden" aria-live="polite"></div><details class="skin-catalog"><summary>🎭 7種類のスキン図鑑・解放条件</summary><div id="surSkinGallery" class="skin-tiles"></div></details><p class="sur-info" id="surPowerInfo">⚡必殺技：懸垂30回ごとに1回分（最大3回）</p>
+<div class="sur-health"><div id="surHealthFill"></div></div><div id="surCompactPower" class="sur-compact-power">⚡ 必殺技 ×0　│　🛡 防御0</div><div id="surDanger" class="sur-danger" aria-live="polite">初級エリア ｜ HP最大300</div><div id="surUnlock" class="sur-unlock hidden" aria-live="polite"></div><p class="sur-info" id="surPowerInfo">⚡必殺技：懸垂30回ごとに1回分（最大3回）</p>
 <div class="sur-zone" id="surZone">WORLD 1 / 6　🏋️ IRON GYM</div>
 <div id="surRouteHint" aria-live="polite"></div>
 <section id="surTutorial" class="sur-tutorial hidden" aria-live="polite" aria-label="新ギミックの遊び方">
@@ -230,29 +284,21 @@ h1{letter-spacing:.045em;text-shadow:0 3px #100d1e,0 0 18px #ffcc7340}
   <p id="surGuideText"></p><div class="guide-tip" id="surGuideTip"></div>
   <button type="button" id="surGuideConfirm">わかった！ スタート ▶</button>
 </section>
+<div class="sur-playfield" id="surPlayfield">
 <canvas id="surCanvas" width="384" height="320"></canvas>
+<button id="surPowerTouch" class="hidden" type="button" aria-label="筋肉衝撃波を発動" disabled>⚡<span>必殺 ×0</span></button>
+</div>
 <p id="surMessage" class="sur-msg">STARTを押して懸垂2回でHP＋1！</p>
 <div id="surResult" class="sur-result hidden" aria-live="polite"><div class="sur-result-title">GAME OVER｜RESULT</div><div class="sur-result-grid"><div><small>合計懸垂回数</small><strong id="surTotalPullups">0 回</strong></div><div><small>今回の最高到達ステージ</small><strong id="surReachedStage">STAGE 1</strong></div><div><small>ノーミスクリア</small><strong id="surPerfectStages">0 ステージ</strong></div><div><small>ボス撃破・防御強化</small><strong id="surBossKills">0 体</strong></div><div><small>称号</small><strong id="surResultTitle">見習いトレーニー</strong></div></div><a id="surShare" class="sur-share" href="https://x.com/intent/post" target="_blank" rel="noopener noreferrer">𝕏 で今回の結果をシェア</a></div>
 <div class="sur-controls"><button id="surPower" class="hidden" type="button" style="background:#72def1;margin-top:14px;min-height:58px">⚡ 筋肉衝撃波 ×0</button><button id="surStart">▶ START</button><button id="surTap" class="hidden">💪 懸垂！連打！</button><button id="surContinue" class="hidden">次のステージへ ▶</button></div>
+<div class="sur-cosmetics-section"><div class="sur-cosmetics-heading">🎭 スキン・称号のカスタマイズ</div><div class="sur-meta"><div class="sur-pill"><small>🏅 獲得称号</small><span id="surTitle">見習いトレーニー</span></div><label class="sur-pill" for="surSkin"><small>🎨 キャラクタースキン</small><select id="surSkin"></select></label></div><details class="skin-catalog"><summary>🎭 7種類のスキン図鑑・解放条件</summary><div id="surSkinGallery" class="skin-tiles"></div></details></div>
 <section id="survivalOnline" class="arcade-rank" aria-label="サバイバル・オンラインランキング">
  <div class="rank-head"><span class="rank-title">🏆 SEASON 1｜サバイバルランキング</span><button type="button" id="surRankRefresh">↻ 最新TOP 10</button></div>
  <div class="rank-status" id="surRankStatus">オンライン接続を確認中...</div>
  <ol class="rank-items" id="surRankItems"></ol>
- <div class="rank-note">到達ステージ優先・同ステージなら懸垂回数で比較。テスト記録は送信されません。1端末1ベスト記録。</div>
+ <div class="rank-note">到達ステージ優先・同ステージなら懸垂回数で比較。ユーザー名を登録するとオンライン記録に参加できます。1端末1ベスト記録。</div>
 </section>
-<div class="sur-debug"><label><input type="checkbox" id="surDebugToggle"> 開発用テストを有効にする</label><div id="surDebugTools" class="hidden"><button type="button" id="surTestTemple">🏛 STAGE 7（筋肉神殿）からテスト</button><div class="sur-controls" style="margin:8px 0"><button type="button" id="surTestObstacle">🧭 STAGE 4 障害物をテスト</button><button type="button" data-teststage="13">🌌 STAGE 13 宇宙エリア</button><button type="button" data-teststage="14">🌀 STAGE 14 重力フィールド</button><button type="button" data-teststage="19">🔴 STAGE 19 要塞エリア</button><button type="button" data-teststage="25">✨ STAGE 25 最終エリア</button><button type="button" data-teststage="30">🏆 STAGE 30 コア決戦</button><button type="button" data-teststage="31">❄ STAGE 31 氷結道場</button>
-<button type="button" data-teststage="37">⚡ STAGE 37 雷神アリーナ</button>
-<button type="button" data-teststage="43">🧬 STAGE 43 サイバー都市</button>
-<button type="button" data-teststage="49">🕳 STAGE 49 虚無の深淵</button>
-<button type="button" data-teststage="55">🌟 STAGE 55 天頂神殿</button>
-<button type="button" data-teststage="60">👑 STAGE 60 最終決戦</button>
-<button type="button" data-teststage="61">♾ STAGE 61 エンドレス</button><button type="button" data-bosstest="3">🏋️ ジムボス STAGE 3</button><button type="button" data-bosstest="6">🧪 工場ボス STAGE 6</button><button type="button" data-bosstest="9">🏛 神殿ボス STAGE 9</button><button type="button" data-bosstest="15">🌌 宇宙ボス STAGE 15</button><button type="button" data-bosstest="21">🔴 要塞ボス STAGE 21</button><button type="button" data-bosstest="27">✨ コアボス STAGE 27</button>
-<button type="button" data-bosstest="36">❄ 氷結ボス STAGE 36</button>
-<button type="button" data-bosstest="42">⚡ 雷神ボス STAGE 42</button>
-<button type="button" data-bosstest="48">🧬 電脳ボス STAGE 48</button>
-<button type="button" data-bosstest="54">🕳 虚無ボス STAGE 54</button>
-<button type="button" data-bosstest="60">🌟 真・筋肉神 STAGE 60</button></div><p>ボス戦テストは懸垂をスキップして即開始します。テスト記録は通常記録とは別扱いです。</p></div></div>
-<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホはキャラより下の位置を指でドラッグ（キャラは指の約70px上に表示）。被弾時は少し無敵になります。PCのJキーは弾幕開始1.8秒後から有効。障害物のあるステージでは補給コアを順番に回収して突破！ STAGE 13以降は新エリアと重力ギミックが登場。 STAGE 5以降、同じ場所に居続けると赤い予告線付きの大型弾が狙ってきます。ボス撃破で以後の被ダメージが永久に3減少（最大9）。ボスは弱点OPEN1回につき必殺技1発しかダメージを与えられません。</p>
+<p class="sur-info">弾幕：PCは矢印キー/WASD、Shiftで低速。スマホはキャラより下の位置を指でドラッグ（水色エリア内は低速移動）（キャラは指の約70px上に表示）。被弾時は少し無敵になります。PCのJキーは弾幕開始1.8秒後から有効。障害物のあるステージでは補給コアを順番に回収して突破！ STAGE 13以降は新エリアと重力ギミックが登場。 STAGE 5以降、同じ場所に居続けると赤い予告線付きの大型弾が狙ってきます。ボス撃破で以後の被ダメージが永久に3減少（最大9）。ボスは弱点OPEN1回につき必殺技1発しかダメージを与えられません。</p>
 </section>
 <div class="duration-settings" id="durationSettings"><label for="challengeDuration">⏱ 制限時間</label><select id="challengeDuration"><option value="5">5秒</option><option value="10" selected>10秒</option><option value="15">15秒</option><option value="30">30秒</option></select><span>時間ごとに自己ベストを記録</span></div><div id="rankGuideWrap" class="rank-guide"><strong>🏆 この時間のランク基準</strong><div id="rankGuide"></div><small>覚醒ラインは制限時間に応じて変化：5秒＝50回／10秒＝100回／15秒＝150回／30秒＝300回。</small></div>
 <div class="top">
@@ -1011,7 +1057,7 @@ const $=id=>document.getElementById(id);
 const canvas=$('surCanvas'), c=canvas.getContext('2d'); c.imageSmoothingEnabled=false;
 const W=384,H=320;
 let phase='ready',stage=1,hp=0,score=0,clock=0,startAt=0,lastFrame=0,raf=0,spawnAt=0,bullets=[],keys=new Set(),invUntil=0,drag=false,px=192,py=270,prevSurvival=false,earned=0,totalPullups=0,stageHits=0,perfectStages=0;
-let debugRun=false, power=0, bossHp=0, bossActive=false, bossDefeated=false, bossShots=0, flash=0;
+let power=0, bossHp=0, bossActive=false, bossDefeated=false, bossShots=0, flash=0;
 let armor=0,bossKills=0,powerReadyAt=0,jReleased=true,bossMaxHp=0,bossLastHitWindow=-1;
 let hazards=[],bossAttackAt=0,slowUntil=0;
 let routeTargets=[],routeIndex=0,routeOvertimeNotified=false;
@@ -1181,7 +1227,6 @@ function unlock(key){if(meta.unlocked.includes(key))return;meta.unlocked.push(ke
 let unlockExpiry=0;
 function showUnlock(text){$('surUnlock').textContent='✨ '+text;$('surUnlock').classList.remove('hidden');unlockExpiry=performance.now()+3600}
 function grantCosmetics(reached){
- if(debugRun)return; // developer tests never grant progression
  meta.bestStage=Math.max(meta.bestStage||0,reached,best);
  meta.bestNoMiss=Math.max(meta.bestNoMiss||0,perfectStages);
  meta.bestBoss=Math.max(meta.bestBoss||0,bossKills);
@@ -1331,7 +1376,7 @@ function showStageGuide(onProceed,force=false){
  cancelAnimationFrame(raf);phase='guide';updateRouteHint();
  $('surGuideStage').textContent=`WORLD ${worldForStage()} · STAGE ${stage} · NEW MECHANIC`;
  $('surGuideTitle').textContent=info[0];$('surGuideText').textContent=info[1];$('surGuideTip').textContent='💡 '+info[2];
- show('surTutorial',true);show('surTap',false);show('surPower',false);show('surStart',false);show('surContinue',false);
+ show('surTutorial',true);show('surTap',false);show('surPower',false);show('surStart',false);show('surContinue',false);show('surPowerTouch',false);syncArcadeView();
  updateWorldLabel();message('新しいギミックの説明を読んでから始めよう！');paint();return true;
 }
 $('surGuideConfirm').addEventListener('click',()=>{
@@ -1340,7 +1385,14 @@ $('surGuideConfirm').addEventListener('click',()=>{
 });
 
 function show(id,on){$(id).classList.toggle('hidden',!on)}
-function update(){ updateWorldLabel();$('surStage').textContent=stage;$('surHp').textContent=`${Math.max(0,Math.round(hp))} / ${maxHp()}`;$('surHealthFill').style.width=(Math.max(0,hp)/maxHp()*100)+'%';$('surTime').textContent=Math.max(0,clock).toFixed(1);$('surDanger').textContent=`${dangerLabel()} ｜ STAGE ${stage} ｜ HP最大${maxHp()} ｜ 弾幕間隔 ${Math.round(spawnInterval())}ms`;$('surDanger').style.color=stage>=25?'#ffe49b':stage>=19?'#ffb8a0':'#bdeeff';$('surPowerInfo').textContent=`⚡筋肉衝撃波 ${power}/3｜懸垂30回で＋1｜🛡防御 ${armor}｜👑撃破 ${bossKills}｜${bossStage()?'👑 ボスステージ':'通常ステージ'}`;$('surPower').textContent=`⚡ 筋肉衝撃波 ×${power}`;$('surPower').disabled=power<=0||phase!=='dodge'||performance.now()<powerReadyAt;}
+function update(){ updateWorldLabel();$('surStage').textContent=stage;$('surHp').textContent=`${Math.max(0,Math.round(hp))} / ${maxHp()}`;$('surHealthFill').style.width=(Math.max(0,hp)/maxHp()*100)+'%';$('surTime').textContent=phase==='ready'?'10.0':Math.max(0,clock).toFixed(1);$('surDanger').textContent=`${dangerLabel()} ｜ STAGE ${stage} ｜ HP最大${maxHp()} ｜ 弾幕間隔 ${Math.round(spawnInterval())}ms`;$('surDanger').style.color=stage>=25?'#ffe49b':stage>=19?'#ffb8a0':'#bdeeff';$('surPowerInfo').textContent=`⚡筋肉衝撃波 ${power}/3｜懸垂30回で＋1｜🛡防御 ${armor}｜👑撃破 ${bossKills}｜${bossStage()?'👑 ボスステージ':'通常ステージ'}`;$('surPower').textContent=`⚡ 筋肉衝撃波 ×${power}`;$('surPower').disabled=power<=0||phase!=='dodge'||performance.now()<powerReadyAt;
+ const mobilePower=$('surPowerTouch');mobilePower.disabled=$('surPower').disabled;
+ mobilePower.querySelector('span').textContent=`必殺 ×${power}`;
+ mobilePower.classList.toggle('hidden',phase!=='dodge');
+ $('surCompactPower').textContent=`⚡ 必殺 ×${power}　│　🛡 防御 ${armor}　│　👑 撃破 ${bossKills}${insideSlowZone()?'　│　🐢 減速中':''}`;
+ const compactWorld=$('surCompactWorld');if(compactWorld) compactWorld.textContent=`STAGE ${stage} · ${currentThemeName()}`;
+ syncArcadeView();}
+function syncArcadeView(){document.body.classList.toggle('sur-mobile-play',prevSurvival&&['guide','train','dodge','clear'].includes(phase));}
 function message(t){$('surMessage').textContent=t}
 
 async function refreshSurRank(){
@@ -1360,7 +1412,7 @@ async function refreshSurRank(){
 }
 $('surRankRefresh').addEventListener('click',refreshSurRank);
 void refreshSurRank();
-function stop(){pendingGuideAction=null;show('surTutorial',false);routeTargets=[];routeIndex=0;cancelAnimationFrame(raf);canvas.style.transform='translate(0,0)';show('surResult',false);phase='ready';updateRouteHint();show('surTap',false);show('surContinue',false);show('surPower',false);show('surStart',true);$('surStart').textContent='▶ START';}
+function stop(){drag=false;activePointer=null;pointerTarget=null;document.body.classList.remove('sur-mobile-play');show('surPowerTouch',false);pendingGuideAction=null;show('surTutorial',false);routeTargets=[];routeIndex=0;cancelAnimationFrame(raf);canvas.style.transform='translate(0,0)';show('surResult',false);phase='ready';updateRouteHint();show('surTap',false);show('surContinue',false);show('surPower',false);show('surStart',true);$('surStart').textContent='▶ START';}
 function survivalMode(){if(prevSurvival)return;prevSurvival=true;document.body.classList.add('survival-active');$('survivalMode').classList.add('active');$('challengeMode').classList.remove('active');$('musicMode').classList.remove('active'); stop();paint();}
 function exit(){if(!prevSurvival)return;prevSurvival=false;document.body.classList.remove('survival-active');$('survivalMode').classList.remove('active');stop();}
 $('survivalMode').addEventListener('click',survivalMode);
@@ -1374,39 +1426,37 @@ function newRun(){survivalSessionPromise=Promise.resolve(null);
      $('surRankStatus').textContent='⚠ ランキング開始失敗（ゲームは継続）：'+e.message;return null;
    });
  }
- shownGuides.clear();fxParticles=[];fxText=[];fxBannerUntil=0;debugRun=false;hp=0;stage=1;totalPullups=0;stageHits=0;perfectStages=0;power=0;armor=0;bossKills=0;bossActive=false;bossHp=0;show('surResult',false);beginTraining()}
-$('surDebugToggle').addEventListener('change',()=>show('surDebugTools',$('surDebugToggle').checked));
-$('surTestObstacle').addEventListener('click',()=>{
- if(!$('surDebugToggle').checked)return;
- debugRun=true;stage=4;hp=180;power=2;totalPullups=0;stageHits=0;perfectStages=0;armor=0;bossKills=0;bossActive=false;bossHp=0;
- show('surResult',false);show('surStart',false);show('surContinue',false);
- launchTestDodge();
- message('🧭 テスト：障害物を回り込み、左右の補給コアを回収してクリアしよう！');
-});
-document.querySelectorAll('[data-teststage]').forEach(btn=>btn.addEventListener('click',()=>{
- if(!$('surDebugToggle').checked)return;
- debugRun=true;stage=Number(btn.dataset.teststage);hp=Math.min(220,maxHp());power=3;totalPullups=0;stageHits=0;perfectStages=0;armor=0;bossKills=0;
- shownGuides.delete(stage);show('surResult',false);launchTestDodge();
-}));
-function launchTestDodge(){
- const launch=()=>{const now=performance.now();cancelAnimationFrame(raf);startDodge(now);raf=requestAnimationFrame(loop)};
- if(!showStageGuide(launch,true))launch();
-}
-$('surTestTemple').addEventListener('click',()=>{if(!$('surDebugToggle').checked)return;debugRun=true;stage=7;hp=140;totalPullups=0;stageHits=0;perfectStages=0;power=0;armor=0;bossKills=0;bossActive=false;bossHp=0;show('surResult',false);beginTraining();});
-document.querySelectorAll('[data-bosstest]').forEach(btn=>btn.addEventListener('click',()=>{
- if(!$('surDebugToggle').checked)return;
- debugRun=true;stage=Number(btn.dataset.bosstest);hp=240;power=3;totalPullups=0;
- stageHits=0;perfectStages=0;armor=0;bossKills=0;bossActive=false;bossHp=0;
- show('surResult',false);show('surStart',false);show('surContinue',false);
- launchTestDodge();
- message(`🧪 開発テスト STAGE ${stage}：ボス戦を直接開始！ HP240／必殺技3回`);
-}));
+ shownGuides.clear();fxParticles=[];fxText=[];fxBannerUntil=0;hp=0;stage=1;totalPullups=0;stageHits=0;perfectStages=0;power=0;armor=0;bossKills=0;bossActive=false;bossHp=0;show('surResult',false);beginTraining()}
 $('surStart').addEventListener('click',newRun);
 $('surContinue').addEventListener('click',beginTraining);
+$('surExitMobile').addEventListener('click',()=>{if(['train','dodge'].includes(phase)&&!confirm('今回のプレイを終了してメニューに戻りますか？'))return;stop();update();paint();});
 function tap(){if(!prevSurvival||phase!=='train')return;if(performance.now()-startAt>=10000)return;score++;totalPullups++;if(score%2===0){const beforeHp=hp;hp=Math.min(maxHp(),hp+1);earned+=hp-beforeHp;}if(score%15===0)sprinkle(192,82,['#fcfdff','#b9f1fe'],9,1.2);if(score%30===0){power=Math.min(3,power+1);floatText('POWER +1',192,98,'#9bffff')}update();paint();}
 $('surTap').addEventListener('click',e=>{e.preventDefault();tap()});
 window.addEventListener('keydown',e=>{if(!prevSurvival)return;const key=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' ','w','a','s','d','shift'].includes(key)){e.preventDefault();keys.add(key)}if(e.code==='Space'&&!e.repeat)tap()});
 window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+// Consistent slow-zone physics for keyboard and touchscreen.
+// Pointer movement uses a target rather than teleporting directly to it;
+// the animation loop applies velocity limits each frame.
+function insideSlowZone(x=px,y=py){
+ return phase==='dodge'&&stageModifier()==='slow' && x>=112&&x<=272&&y>=206&&y<=H;
+}
+function slowRate(){
+ return stage<=5?0.40:stage<=8?0.36:stage<=19?0.33:stage<=24?0.30:0.27;
+}
+let pointerTarget=null;
+function applyPointerMovement(dt){
+ if(!pointerTarget||!drag||phase!=='dodge')return;
+ let remaining=dt;
+ // Substep ensures entering the blue zone is slowed immediately (no tunneling).
+ while(remaining>0.0001){
+  const step=Math.min(remaining,1/120); remaining-=step;
+  const dx=pointerTarget.x-px,dy=pointerTarget.y-py,dist=Math.hypot(dx,dy);
+  if(dist<0.4)break;
+  const limit=425*(insideSlowZone()?slowRate():1)*step;
+  const move=Math.min(dist,limit);
+  movePlayerTo(px+dx/dist*move,py+dy/dist*move);
+ }
+}
 // Mobile: player appears above the fingertip so bullets remain visible.
 // Touch uses an 82px in-game offset; mouse/pen preserves exact targeting.
 let activePointer=null;
@@ -1433,10 +1483,12 @@ function movePlayerTo(tx,ty){
 }
 function aim(e){
  const r=canvas.getBoundingClientRect();
+ if(!r.width||!r.height)return;
  const x=(e.clientX-r.left)/r.width*W;
  const y=(e.clientY-r.top)/r.height*H;
  const offset=e.pointerType==='touch'?82:0;
- movePlayerTo(x,y-offset);checkRoutePickup();
+ // A held pointer steers a target; it must not bypass the speed reduction.
+ pointerTarget={x:Math.max(13,Math.min(W-13,x)),y:Math.max(80,Math.min(H-14,y-offset))};
 }
 canvas.addEventListener('pointerdown',e=>{
  if(phase!=='dodge'||activePointer!==null)return;
@@ -1446,7 +1498,7 @@ canvas.addEventListener('pointerdown',e=>{
 canvas.addEventListener('pointermove',e=>{
  if(drag&&phase==='dodge'&&activePointer===e.pointerId){e.preventDefault();aim(e)}
 });
-function finishDrag(e){if(activePointer===e.pointerId){drag=false;activePointer=null}}
+function finishDrag(e){if(activePointer===e.pointerId){drag=false;activePointer=null;pointerTarget=null}}
 canvas.addEventListener('pointerup',finishDrag);
 canvas.addEventListener('pointercancel',finishDrag);
 canvas.addEventListener('lostpointercapture',finishDrag);
@@ -1477,9 +1529,14 @@ function usePower(){
  update();paint();
 }
 $('surPower').addEventListener('click',usePower);
+const touchPower=$('surPowerTouch');
+touchPower.addEventListener('pointerdown',e=>{if(phase!=='dodge')return;e.preventDefault();e.stopPropagation();if(e.pointerType!=='mouse')usePower();});
+touchPower.addEventListener('click',e=>{e.stopPropagation();if(e.detail===0||e.pointerType==='mouse')usePower();});
+touchPower.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+
 window.addEventListener('keydown',e=>{if(e.code==='KeyJ'&&!e.repeat&&jReleased){jReleased=false;usePower()}});
 window.addEventListener('keyup',e=>{if(e.code==='KeyJ')jReleased=true});
-function startDodge(now){hazards=[];slowUntil=0;bossAttackAt=now;pressureAt=now+1200;hp=Math.min(hp,maxHp());phase='dodge';setupRoute();powerReadyAt=now+1800;stageHits=0;stationaryFor=0;lastHunterAt=now;hunterWarning=null;lastPositionX=192;lastPositionY=270;clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);show('surPower',true);bossActive=bossStage();bossDefeated=false;bossMaxHp=bossActive?(stage<=6?2:3):0;bossHp=bossMaxHp;bossLastHitWindow=-1;bossShots=now;
+function startDodge(now){drag=false;activePointer=null;pointerTarget=null;hazards=[];slowUntil=0;bossAttackAt=now;pressureAt=now+1200;hp=Math.min(hp,maxHp());phase='dodge';setupRoute();powerReadyAt=now+1800;stageHits=0;stationaryFor=0;lastHunterAt=now;hunterWarning=null;lastPositionX=192;lastPositionY=270;clock=20;startAt=now;lastFrame=now;spawnAt=now;bullets=[];px=192;py=270;invUntil=0;show('surTap',false);show('surPower',true);bossActive=bossStage();bossDefeated=false;bossMaxHp=bossActive?(stage<=6?2:3):0;bossHp=bossMaxHp;bossLastHitWindow=-1;bossShots=now;
 message(bossActive?`👑 ボスHP ${bossHp}！黄色く光る弱点が開いた時だけ必殺技が効く！`:'弾幕開始！必殺技は1.8秒後から使用可能！');update();}
 function clearStage(){
  if(stage===60 && !bossDefeated){
@@ -1487,21 +1544,21 @@ function clearStage(){
    message('👑 真の筋肉神はまだ健在！このステージを再挑戦。懸垂で必殺技を貯めてから挑もう！');
    update();return;
  }
- phase='clear';updateRouteHint();if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v41',String(best))}catch(e){}$('surBest').textContent=best}const perfect=stageHits===0;
+ phase='clear';updateRouteHint();if(stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v41',String(best))}catch(e){}$('surBest').textContent=best}const perfect=stageHits===0;
 if(perfect){hp=Math.min(maxHp(),hp+perfectHeal());perfectStages++;sprinkle(190,85,['#ffe77b','#ffffff','#a0f8ff'],65,4);banner('PERFECT CLEAR!',2100);floatText('HP +'+perfectHeal(),192,110,'#a6ffc9');rumble(3,240);}
 message(bossStage()?`👑 ボスステージ突破！${bossDefeated?'撃破成功・永続防御アップ！':'時間切れで生還！'} ${perfect?'🏆ノーミスHP+'+perfectHeal()+'！':''}`:(perfect?`🏆 STAGE ${stage} ノーミスクリア！ HP +${perfectHeal()} ボーナス！ 残りHP ${Math.round(hp)}`:`STAGE ${stage} クリア！ 被弾 ${stageHits}回。残りHP ${Math.round(hp)}`));
-if(stage===60&&!debugRun){banner('🏆 TRUE MUSCLE GOD!',2600);sprinkle(192,100,['#ffe685','#a9faff','#ffffff'],95,4.3);message('👑 STAGE 60クリア！真の筋肉神！61以降はエンドレス！');}
+if(stage===60){banner('🏆 TRUE MUSCLE GOD!',2600);sprinkle(192,100,['#ffe685','#a9faff','#ffffff'],95,4.3);message('👑 STAGE 60クリア！真の筋肉神！61以降はエンドレス！');}
 show('surContinue',true);show('surPower',false);const clearedStage=stage;stage++;grantCosmetics(clearedStage);updateWorldLabel();update();}
 function gameOver(){
  phase='over';
- if(!debugRun && stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v41',String(best))}catch(e){}$('surBest').textContent=best}
+ if(stage>best){best=stage;try{localStorage.setItem('survival_stage_best_v41',String(best))}catch(e){}$('surBest').textContent=best}
  $('surTotalPullups').textContent=totalPullups+' 回';
  $('surPerfectStages').textContent=perfectStages+' ステージ';
  $('surBossKills').textContent=bossKills+' 体（防御 +'+armor+'）';
- $('surReachedStage').textContent='STAGE '+stage+(debugRun?'（テスト）':'');
+ $('surReachedStage').textContent='STAGE '+stage;
  grantCosmetics(stage); $('surResultTitle').textContent=meta.title;
- // Developer/test runs must never appear in the public rankings.
- if(!debugRun){const api=window.MUSCLE_RANK_API;
+ // Send normal play results to connected rankings.
+ {const api=window.MUSCLE_RANK_API;
   if(api&&api.online){if(api.name()){
    const run=survivalSessionPromise;
    void Promise.resolve(run).then(token=>{
@@ -1513,7 +1570,7 @@ function gameOver(){
   else $('surRankStatus').textContent='記録の公開にはユーザー名の保存が必要です。';}
  }
 
- const tweet=`💪 連打でムキムキ！サバイバル懸垂\n称号：${meta.title}\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}\nノーミスクリア：${perfectStages}ステージ\nボス撃破：${bossKills}体（防御+${armor}）${debugRun?'（テストプレイ）':''}\n全60ステージ＋∞！後半の高難度に挑戦！\n#筋トレ攻略室 #連打でムキムキ`;
+ const tweet=`💪 連打でムキムキ！サバイバル懸垂\n称号：${meta.title}\n合計懸垂：${totalPullups}回\n最高到達：STAGE ${stage}\nノーミスクリア：${perfectStages}ステージ\nボス撃破：${bossKills}体（防御+${armor}）\n全60ステージ＋∞！後半の高難度に挑戦！\n#筋トレ攻略室 #連打でムキムキ`;
  $('surShare').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(tweet);
  show('surResult',true);
  message('GAME OVER！今回の記録はこちら！');
@@ -1813,12 +1870,13 @@ if(phase==='dodge'){
    routeOvertimeNotified=true;banner('OVERTIME! コアを回収しろ！',1750);
    message('⚠️ コア未回収！延長8秒で残りを回収しないとゲームオーバー！');
  }
- const slowZone=stageModifier()==='slow'&&py>206&&px>112&&px<272;
- const speed=(keys.has('shift')?90:185)*(slowZone?(stage<=5?0.82:stage<=8?0.70:stage<=19?0.60:stage<=24?0.50:0.42):1)*dt;
+ const slowZone=insideSlowZone();
+ const speed=(keys.has('shift')?90:185)*(slowZone?slowRate():1)*dt;
  let tx=px,ty=py;
  if(keys.has('arrowleft')||keys.has('a'))tx-=speed;if(keys.has('arrowright')||keys.has('d'))tx+=speed;
  if(keys.has('arrowup')||keys.has('w'))ty-=speed;if(keys.has('arrowdown')||keys.has('s'))ty+=speed;
  movePlayerTo(tx,ty);
+ applyPointerMovement(dt);
  if(stage>=14 && stageModifier()==='slow' && px>112&&px<272&&py>206){
    const drift=Math.sin(elapsed*.95)*(stage>=20?47:26)*dt;
    movePlayerTo(px+drift,py);
@@ -2039,8 +2097,10 @@ function paint(){
    txt('補給コア '+routeIndex+' / '+total+(routeOvertimeNotified?'  延長中！':''),192,309,13,routeOvertimeNotified?'#ffca76':'#aaffea');
  }
  if(phase==='dodge'&&stageModifier()==='slow'){
-   rect(112,206,160,114,'rgba(94,171,255,.15)');
-   c.strokeStyle='#83d3ff';c.lineWidth=2;c.strokeRect(112,206,160,114);
+   const slowed=insideSlowZone();
+   rect(112,206,160,114,slowed?'rgba(56,164,255,.31)':'rgba(94,171,255,.16)');
+   c.strokeStyle=slowed?'#c7f7ff':'#83d3ff';c.lineWidth=slowed?4:2;c.strokeRect(112,206,160,114);
+   if(slowed){rect(130,234,124,20,'rgba(8,25,51,.86)');txt('🐢 SLOWED!',192,249,14,'#c5f7ff');}
    if(stage>=14){
      for(let i=0;i<7;i++){const x=126+i*21+Math.sin(now/480+i)*9,y=244+(i%3)*18;
        rect(x,y,12,3,'#a8b6ff');rect(x+9,y-3,3,9,'#b9bdff');
@@ -2165,7 +2225,7 @@ function paint(){
  txt('舞台: '+currentThemeName(),192,20,14,'#f5f2ff');
  if(phase==='over'){txt('GAME OVER',192,138,33,'#ff8195')} if(phase==='clear'){txt('STAGE CLEAR!',192,138,29,'#f9da71')}
 }
-paint();
+survivalMode();update();
 })();
 </script>
 </body>
